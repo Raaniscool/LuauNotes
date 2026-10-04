@@ -1,0 +1,62 @@
+{
+  "id": "find-first-child",
+  "title": "FindFirstChild()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Non-yielding lookup: returns the child with that name, or nil if absent. The safe, crash-proof alternative to direct indexing (parent.ChildName) whenever existence isn't guaranteed.",
+  "keywords": ["safe lookup", "might not exist", "nil check", "child exists", "optional child"],
+  "tags": ["instance", "lookup", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Instance:FindFirstChild(childName: string, recursive: boolean?) --> Instance?",
+    "parameters": [
+      { "name": "childName", "type": "string", "description": "Name to search for." },
+      { "name": "recursive", "type": "boolean", "default": "false", "description": "Search the whole subtree, not just direct children." }
+    ],
+    "returns": "The child, or nil. Siblings with the same name: returns the first found (order not guaranteed).",
+    "details": [
+      {
+        "heading": "Family of lookups",
+        "body": "FindFirstChildOfClass(className) — first child of an exact class. FindFirstChildWhichIsA(className) — class or subclass. Both non-recursive direct-child scans."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The polite knock: 'is there a child named X?' — answer comes back instantly as an object or nil, never as a crash.",
+    "whyItExists": "Direct indexing `parent.X` ERRORS when X is missing. FindFirstChild converts 'missing' into a value you can branch on.",
+    "whenToUse": [
+      "Checks before use: `local h = char:FindFirstChild(\"Humanoid\") if h then …`",
+      "Feature detection (does this model have a 'Seat'?)",
+      "Anywhere absence is possible or meaningful"
+    ],
+    "whenNotToUse": [
+      "Waiting for something that WILL arrive — WaitForChild",
+      "Deep searches across huge trees — GetDescendants or tags are better designs"
+    ],
+    "tips": [
+      "Idiom: `local x = parent:FindFirstChild(\"X\"); if not x then return end`",
+      "For classes: FindFirstChildOfClass(\"Humanoid\") beats name guessing",
+      "Truthiness: `if parent:FindFirstChild(\"Coin\") then` is a valid existence test"
+    ],
+    "commonMistakes": [
+      "Calling a method on the result without a nil check — FindFirstChild can ALWAYS return nil",
+      "Assuming which duplicate-named child comes back",
+      "Using recursive=true as a crutch for a disorganized hierarchy"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Touched-handler safety",
+      "code": "part.Touched:Connect(function(hit)\n    -- hit.Parent might be anything — check before touching:\n    local humanoid = hit.Parent and hit.Parent:FindFirstChildOfClass(\"Humanoid\")\n    if humanoid then\n        humanoid:TakeDamage(10)\n    end\nend)",
+      "whyItWorks": "Two guards: hit.Parent could be nil-ish for terrain/effects, and only characters have Humanoids. No crash path."
+    }
+  ],
+  "related": ["wait-for-child", "waitforchild-vs-findfirstchild", "get-children", "get-descendants", "instance", "unexpected-nil"],
+  "added": "2026-10-04"
+}

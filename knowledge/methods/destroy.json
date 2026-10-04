@@ -1,0 +1,60 @@
+{
+  "id": "destroy",
+  "title": "Destroy()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Permanently removes an instance and disconnects its events. The instance becomes unusable: Parent is locked nil forever. For timed cleanup use Debris:AddItem instead of manual delays.",
+  "keywords": ["remove", "delete instance", "cleanup", "lifetime", "leak prevention"],
+  "tags": ["instance", "cleanup", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Instance:Destroy()",
+    "details": [
+      {
+        "heading": "Finality",
+        "body": "A destroyed instance cannot be re-parented or revived. Its Parent property is sealed at nil, Changed fires one last time, and holding references just keeps a zombie object in memory."
+      },
+      {
+        "heading": "Destroy vs parent=nil",
+        "body": "Setting Parent = nil merely detaches (the object remains usable and can return). Destroy is permanent and slightly cheaper for garbage collection."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The delete button — for instances that should never come back.",
+    "whyItExists": "Games spawn endlessly; without destruction, memory and the hierarchy fill with garbage.",
+    "whenToUse": [
+      "Finished effects, dead projectiles, consumed pickups",
+      "Replacing old objects with new ones",
+      "Timed removal via Debris:AddItem (preferred for simple cases)"
+    ],
+    "whenNotToUse": [
+      "Temporary hiding — parent to nil, or set Transparency/Enabled instead",
+      "Objects you might re-use — pool them"
+    ],
+    "tips": [
+      "Destroy connections too: disconnect stored RBXScriptConnections when their owner dies",
+      "Destroying a parent destroys the whole subtree",
+      "Never Destroy the Player or services' core objects"
+    ],
+    "commonMistakes": [
+      "Destroying but keeping variables pointing at the zombie — later ':IsA' etc. errors",
+      "Destroying on the client expecting server removal — destruction must happen where the instance is authoritative",
+      "Double-destroying (harmless but indicates sloppy lifecycle)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Clean projectile lifecycle",
+      "code": "local Debris = game:GetService(\"Debris\")\n\nlocal bullet = Instance.new(\"Part\")\nbullet.Parent = workspace\n-- …fly…\nDebris:AddItem(bullet, 5)      -- auto-Destroy after 5s\n\n-- Manual equivalent:\n-- task.delay(5, function() bullet:Destroy() end)"
+    }
+  ],
+  "related": ["debris", "clone", "object-lifetime", "event-cleanup", "instance"],
+  "added": "2026-10-04"
+}

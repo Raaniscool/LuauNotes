@@ -1,0 +1,45 @@
+{
+  "id": "get-tagged",
+  "title": "CollectionService:GetTagged()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Returns every instance currently carrying a tag — instantly, no hierarchy scanning. Pair with GetInstanceAddedSignal to also catch future taggings.",
+  "keywords": ["all tagged", "find by tag", "tagged instances", "group lookup"],
+  "tags": ["tags", "collections", "architecture"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/CollectionService",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "CollectionService:GetTagged(tag: string) --> { Instance }",
+    "returns": "Array of all instances with that tag right now."
+  },
+  "explanation": {
+    "whatItIs": "'Everyone wearing the red badge, step forward.' Instant group retrieval by tag.",
+    "whyItExists": "Replaces fragile GetDescendants scans with a maintained index.",
+    "whenToUse": [
+      "Initial setup loops over existing tagged instances",
+      "Any 'all X' question where X is a tag"
+    ],
+    "whenNotToUse": ["Without also handling FUTURE tags — combine with GetInstanceAddedSignal"],
+    "tips": [
+      "Canonical pattern: for loop over GetTagged + Connect(GetInstanceAddedSignal) — both",
+      "Tag name constants in a shared module prevent typo drift"
+    ],
+    "commonMistakes": [
+      "Only handling existing instances — late-tagged objects never initialize",
+      "Only handling the signal — existing instances at script start are missed"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Both-halves pattern",
+      "code": "local CS = game:GetService(\"CollectionService\")\n\nlocal function initCoin(coin)\n    -- one-time setup\nend\n\nfor _, coin in CS:GetTagged(\"Coin\") do   -- existing\n    initCoin(coin)\nend\nCS:GetInstanceAddedSignal(\"Coin\"):Connect(initCoin)   -- future"
+    }
+  ],
+  "related": ["collection-service", "attributes", "get-descendants", "instance-hierarchy"],
+  "added": "2026-10-04"
+}

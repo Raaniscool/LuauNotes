@@ -1,0 +1,51 @@
+{
+  "id": "get-player-from-character",
+  "title": "Players:GetPlayerFromCharacter()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Given a character model (or anything in it), finds the owning Player — the standard bridge from 'some part got touched' to 'which player did it'.",
+  "keywords": ["who touched", "character to player", "identify player", "touched player lookup"],
+  "tags": ["players", "lookup", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Players",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Players:GetPlayerFromCharacter(character: Model?) --> Player?",
+    "parameters": [
+      { "name": "character", "type": "Model?", "description": "The character model. Passing a body part returns nil — pass hit.Parent (the model)." }
+    ],
+    "returns": "The Player, or nil if the model isn't a current player character."
+  },
+  "explanation": {
+    "whatItIs": "The reverse lookup: body → person.",
+    "whyItExists": "Touched events and physics interactions hand you PARTS; gameplay needs the PLAYER.",
+    "whenToUse": [
+      "Touched handlers: who stepped on this pad?",
+      "Attributing kills, pickups, zones to players"
+    ],
+    "whenNotToUse": [
+      "On the hit part itself — pass its Parent model",
+      "For NPCs/robots — they're not Players; nil is correct"
+    ],
+    "tips": [
+      "Always handle the nil case (parts, debris, pets also touch things)",
+      "Chain with hit.Parent:FindFirstChildOfClass(\"Humanoid\") checks for character-ness"
+    ],
+    "commonMistakes": [
+      "Passing `hit` instead of `hit.Parent` → always nil",
+      "Assuming non-nil means human — zombies built from player rigs can fool naive checks; combine with your own markers"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Touch → player attribution",
+      "code": "local Players = game:GetService(\"Players\")\n\npad.Touched:Connect(function(hit)\n    local character = hit.Parent\n    local player = character and Players:GetPlayerFromCharacter(character)\n    if player then\n        print(player.Name .. \" stepped on the pad\")\n    end\nend)"
+    }
+  ],
+  "related": ["players", "player", "touched", "humanoid", "player-detection"],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,48 @@
+{
+  "id": "tween-create",
+  "title": "TweenService:Create()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Builds a Tween object for an instance: which properties move toward which goal values, over what duration and easing curve. Returns the Tween — remember to :Play() it.",
+  "keywords": ["create tween", "define animation", "tween goal", "TweenInfo", "property animation"],
+  "tags": ["animation", "gui", "tweening"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/TweenService",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "TweenService:Create(instance: Instance, tweenInfo: TweenInfo, goal: { [string]: any }) --> Tween",
+    "parameters": [
+      { "name": "instance", "type": "Instance", "description": "The object whose properties will animate." },
+      { "name": "tweenInfo", "type": "TweenInfo", "description": "TweenInfo.new(time, easingStyle, easingDirection, repeatCount, reverses, delayTime)." },
+      { "name": "goal", "type": "{ [string]: any }", "description": "Map of property name → target value. Names must be real properties of the instance with tweenable types." }
+    ],
+    "returns": "A Tween object: Play(), Pause(), Cancel(), Completed event. Creation does NOT start playback."
+  },
+  "explanation": {
+    "whatItIs": "The planning step: describe the destination and the journey; you get a reusable player object back.",
+    "whyItExists": "Separating definition from playback lets you configure, replay, and cancel animations cleanly.",
+    "whenToUse": ["Before every tween: Create → configure → Play"],
+    "whenNotToUse": ["Expecting Create alone to animate — it doesn't"],
+    "tips": [
+      "Keep the Tween object if you need to Cancel or await Completed",
+      "Recreating per-play is fine for changing goals"
+    ],
+    "commonMistakes": [
+      "Forgetting :Play()",
+      "Goal property typos → 'property is not a member' error",
+      "Non-tweenable property types in the goal"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Create and play",
+      "code": "local TweenService = game:GetService(\"TweenService\")\n\nlocal info = TweenInfo.new(\n    0.5,                                -- duration\n    Enum.EasingStyle.Quad,\n    Enum.EasingDirection.Out\n)\n\nlocal tween = TweenService:Create(part, info, {\n    Transparency = 1,\n    Size = part.Size * 2,\n})\n\ntween:Play()\ntween.Completed:Wait()   -- yields until done (inside a coroutine/Event)"
+    }
+  ],
+  "related": ["tween-play", "tween-service", "tween-info", "tweening"],
+  "added": "2026-10-04"
+}

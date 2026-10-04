@@ -1,0 +1,63 @@
+{
+  "id": "wait-for-child",
+  "title": "WaitForChild()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Yields until a child with the given name exists (or a timeout passes). The standard cure for 'replication hasn't arrived yet' nil errors, especially on the client.",
+  "keywords": ["wait for replication", "child not found yet", "nil because not replicated", "waitforchild timeout", "loading order"],
+  "tags": ["instance", "replication", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Instance:WaitForChild(childName: string, timeLimit: number?) --> Instance",
+    "parameters": [
+      { "name": "childName", "type": "string", "description": "Name of the child to wait for." },
+      { "name": "timeLimit", "type": "number?", "description": "Max seconds to wait. Without it, waits forever (and warns after ~5s). With it, returns nil on timeout." }
+    ],
+    "returns": "The child instance — or nil if the time limit expired.",
+    "details": [
+      {
+        "heading": "Yields",
+        "body": "If the child isn't there yet, the calling thread pauses until it appears. Instant return when it already exists."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "'Hold the line until it shows up.' Clients start running scripts before every replicated object arrives; WaitForChild bridges that gap.",
+    "whyItExists": "Replication is asynchronous — the number one source of 'attempt to index nil' on clients is reaching for content that's still in transit.",
+    "whenToUse": [
+      "Client startup: remotes, modules, GUI templates in ReplicatedStorage",
+      "Waiting on character parts right after CharacterAdded (edge cases)",
+      "Any child that SHOULD exist but might not exist YET"
+    ],
+    "whenNotToUse": [
+      "When absence is a normal outcome — FindFirstChild + nil check instead",
+      "In RenderStepped or tight loops (it yields)",
+      "With no timeout on optional content — a misspelled name hangs forever (you'll get warnings after ~5s)"
+    ],
+    "tips": [
+      "Client rule of thumb: WaitForChild for replicated content; FindFirstChild for may-not-exist content",
+      "Always check the nil result when using a timeout",
+      "Chain waits for nested paths: RS:WaitForChild(\"Remotes\"):WaitForChild(\"Buy\")"
+    ],
+    "commonMistakes": [
+      "WaitForChild(\"MispelledName\") with no timeout → script hangs silently",
+      "Using it server-side for content the server already owns — unnecessary",
+      "Calling it every frame — wait ONCE at startup and cache the reference"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Safe client startup",
+      "code": "-- LocalScript\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\n\nlocal remotes = ReplicatedStorage:WaitForChild(\"Remotes\", 10)\nif not remotes then\n    error(\"Remotes folder never replicated — check server setup\")\nend\n\nlocal buyEvent = remotes:WaitForChild(\"Buy\", 5)\nif buyEvent then\n    print(\"Ready to shop\")\nend",
+      "whyItWorks": "Timeouts convert 'hang forever' into 'nil you can handle' — and the error message tells you exactly what's missing."
+    }
+  ],
+  "related": ["find-first-child", "waitforchild-vs-findfirstchild", "instance", "replication", "replicated-storage", "replication-timing"],
+  "added": "2026-10-04"
+}

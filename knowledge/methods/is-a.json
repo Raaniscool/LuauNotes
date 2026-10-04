@@ -1,0 +1,51 @@
+{
+  "id": "is-a",
+  "title": "IsA()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Class check with inheritance: part:IsA(\"BasePart\") is true for Part, MeshPart, WedgePart… Prefer it over ClassName comparisons whenever you mean 'is this kind of thing'.",
+  "keywords": ["class check", "inheritance check", "ClassName", "instance type check", "BasePart check"],
+  "tags": ["instance", "types", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Instance:IsA(className: string) --> boolean",
+    "details": [
+      {
+        "heading": "IsA vs ClassName",
+        "body": "`inst.ClassName == \"Part\"` is exact-only. `inst:IsA(\"Part\")` asks 'is this a Part or a subclass of Part?'. Everything IsA(\"Instance\")."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "'Are you this kind of thing, or a more specific version of it?'",
+    "whyItExists": "Roblox classes form inheritance trees; gameplay usually cares about families (any BasePart), not exact species.",
+    "whenToUse": [
+      "Filtering in loops: `if child:IsA(\"BasePart\") then`",
+      "Character checks: `model:FindFirstChildOfClass(\"Humanoid\")` + IsA(\"Model\")",
+      "GUI element dispatch: IsA(\"TextButton\") vs IsA(\"GuiButton\")"
+    ],
+    "whenNotToUse": ["When you genuinely need the exact class — ClassName =="],
+    "tips": [
+      "IsA(\"BasePart\") covers all physical parts — the most useful family check",
+      "Everything IsA(\"Instance\") — useful as a generic validity test"
+    ],
+    "commonMistakes": [
+      "ClassName == \"Part\" missing MeshParts/Wedges unintentionally",
+      "IsA on nil — guard first (`inst and inst:IsA(...)`)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Family filtering",
+      "code": "local parts = {}\nfor _, child in workspace.Map:GetChildren() do\n    if child:IsA(\"BasePart\") then          -- Part, MeshPart, WedgePart…\n        table.insert(parts, child)\n    elseif child:IsA(\"Model\") then\n        print(\"Found sub-model:\", child.Name)\n    end\nend"
+    }
+  ],
+  "related": ["instance", "typeof-function", "find-first-child", "get-children"],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,60 @@
+{
+  "id": "invoke-server",
+  "title": "RemoteFunction:InvokeServer()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Client asks the server a question and YIELDS until answered: returns whatever the server's OnServerInvoke returns. Use sparingly — it blocks your thread for a network round trip.",
+  "keywords": ["ask server", "request response", "get data from server", "yielding call", "wait for answer"],
+  "tags": ["remotes", "networking", "client-server"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/RemoteFunction",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "RemoteFunction:InvokeServer(...args: any) --> ...any",
+    "parameters": [
+      { "name": "...args", "type": "serializable values", "description": "Sent to the server; OnServerInvoke receives them after the automatic Player parameter." }
+    ],
+    "returns": "Whatever the server's OnServerInvoke handler returns (serialized back). Errors if no handler is assigned; propagate handler errors to the caller.",
+    "details": [
+      {
+        "heading": "Yields",
+        "body": "The calling thread pauses until the server responds. Never call in RenderStepped or other framerate-critical code."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A function call that happens to cross the network: ask, wait, get the answer.",
+    "whyItExists": "Sometimes you truly need data back — prices, permissions, generated content — and waiting is acceptable.",
+    "whenToUse": [
+      "On-demand data fetches where the client waits anyway (opening the shop menu)",
+      "One-off lookups, not streams"
+    ],
+    "whenNotToUse": [
+      "Every frame, every input, or in any hot loop",
+      "Push notifications — that's FireClient territory",
+      "When the answer doesn't need to be immediate — event-driven updates are cheaper"
+    ],
+    "tips": [
+      "pcall it: handlers can error or be unassigned",
+      "Cache results that rarely change",
+      "Server handler signature: function(player, ...args) — same player-first rule as OnServerEvent"
+    ],
+    "commonMistakes": [
+      "Invoking before the server assigned OnServerInvoke → error",
+      "Invokes inside RenderStepped → framerate collapse",
+      "Chaining: server invokes the invoking client back inside the handler → deadlock"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Fetch shop prices on menu open",
+      "code": "-- Server:\nlocal rf = game.ReplicatedStorage.Remotes.GetShop\nrf.OnServerInvoke = function(player)\n    return { Sword = 250, Potion = 50 }   -- could vary per player\nend\n\n-- Client:\nlocal rf = game.ReplicatedStorage:WaitForChild(\"Remotes\"):WaitForChild(\"GetShop\")\n\nlocal ok, prices = pcall(function()\n    return rf:InvokeServer()\nend)\nif ok and prices then\n    for item, price in prices do\n        print(item, price)\n    end\nend"
+    }
+  ],
+  "related": ["remote-function", "on-server-invoke", "invoke-client", "fire-server", "yielding"],
+  "added": "2026-10-04"
+}

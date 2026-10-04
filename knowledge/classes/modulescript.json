@@ -1,0 +1,82 @@
+{
+  "id": "modulescript",
+  "title": "ModuleScript",
+  "category": "classes",
+  "type": "class",
+  "summary": "A reusable code container that returns a value when loaded with require(). The backbone of organized Roblox projects: shared utilities, singletons, classes, and config all live in modules.",
+  "keywords": ["module", "require", "reusable code", "return a table", "library script", "shared code"],
+  "tags": ["modulescripts", "modules", "essential", "architecture"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ModuleScript",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "Source", "type": "string", "description": "The module's Luau code, editable via Studio or the API (server only for protected contexts)." },
+      { "name": "LinkedSource", "type": "Content", "description": "Optional asset reference to shared module code." }
+    ],
+    "details": [
+      {
+        "heading": "Execution model",
+        "body": "A ModuleScript's code runs exactly once per runtime (once on the server, once on the client if both require it) — the first time it is required. The returned value is cached; later requires return the cached value instantly without re-running the code."
+      },
+      {
+        "heading": "Return value",
+        "body": "Whatever the top-level `return` produces is what require() gives back. With no return, require() yields `true`. A module can return a table, function, number — anything."
+      },
+      {
+        "heading": "Where they can live",
+        "body": "Anywhere, but placement controls access: ReplicatedStorage/ReplicatedFirst are visible to both sides; ServerStorage/ServerScriptService are server-only; StarterPlayer/StarterGui areas are client-reachable."
+      },
+      {
+        "heading": "Circular requires",
+        "body": "If module A requires B and B requires A (directly or transitively), Luau errors rather than deadlocking."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A script whose job is to be *loaded*, not to run on its own. It holds reusable code — and hands it to whoever asks via require().",
+    "whyItExists": "Copy-pasting the same helper across ten Scripts is how projects die. ModuleScripts give code one home, one name, and many users.",
+    "whenToUse": [
+      "Shared helpers both client and server need (ReplicatedStorage)",
+      "Singletons: one state object every script on a side shares",
+      "Classes, factories, and service wrappers",
+      "Large config/data tables"
+    ],
+    "whenNotToUse": [
+      "As a replacement for Scripts/LocalScripts — modules don't run until required",
+      "For one-shot game logic that belongs in a Script",
+      "For server secrets in a client-visible location — anything clients can require, exploiters can read"
+    ],
+    "mentalModel": "```text\nModuleScript\n     ↓\nrequire()\n     ↓\nmodule runs / loads        (once per runtime)\n     ↓\nreturn value\n     ↓\nyour variable receives it  (same value every time)\n```",
+    "tips": [
+      "Standard skeleton: `local M = {}` … functions … `return M`",
+      "require(WaitForChild(\"ModuleName\")) on the client — replication timing matters",
+      "Modules are the unit of architecture: name them after their one responsibility",
+      "Keep requires acyclic and one-directional (features → utilities, never the reverse)"
+    ],
+    "commonMistakes": [
+      "Forgetting `return` — require() then gives `true`, and `true.DoThing()` errors 'attempt to index boolean'",
+      "Expecting the module to re-run per require — it's cached",
+      "Confusing the ModuleScript Instance (the object in the tree) with the value it returns",
+      "Client requiring a module in ServerStorage — impossible; it isn't replicated",
+      "Doing slow initialization in the module body — it blocks every first requirer"
+    ]
+  },
+  "examples": [
+    {
+      "title": "The classic module + require",
+      "code": "-- == ReplicatedStorage/Greeter (ModuleScript) ==\nlocal Greeter = {}\n\nfunction Greeter.hello(name)\n    return \"Hello, \" .. name .. \"!\"\nend\n\nreturn Greeter\n\n-- == Any Script or LocalScript ==\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal Greeter = require(ReplicatedStorage:WaitForChild(\"Greeter\"))\n\nprint(Greeter.hello(\"Raanis\"))   --> Hello, Raanis!",
+      "whyItWorks": "require() runs the module once and returns its table. Every script that requires Greeter gets the same table — one definition, many users."
+    },
+    {
+      "title": "Module as shared config",
+      "code": "-- == ReplicatedStorage/GameConfig (ModuleScript) ==\nreturn {\n    RoundLength = 120,\n    MaxPlayers = 12,\n    CoinValue = 5,\n}\n\n-- Server Script:\nlocal config = require(game.ReplicatedStorage.GameConfig)\nprint(config.RoundLength)   --> 120\n-- Client sees the same numbers — single source of truth."
+    }
+  ],
+  "related": ["require", "modules", "script", "localscript", "return", "module-return-mistakes", "metatables"],
+  "added": "2026-10-04"
+}

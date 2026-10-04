@@ -1,0 +1,69 @@
+{
+  "id": "error-handling",
+  "title": "Error Handling",
+  "category": "luau",
+  "type": "overview",
+  "summary": "How Luau fails: error() raises, pcall/xpcall catch without killing the thread, assert() guards assumptions. Roblox scripts that error stop at the error line.",
+  "keywords": ["error", "raise", "catch errors", "runtime error", "assert", "pcall"],
+  "tags": ["errors", "robustness", "intermediate"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/builtins",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      { "name": "error", "signature": "error(message: any, level?: number)", "description": "Raises an error, stopping the current thread unless caught. message can be any value (strings are friendliest for readers)." },
+      { "name": "pcall", "signature": "pcall(f, ...) --> success: boolean, result | error", "description": "Protected call: runs f in protected mode. Returns true + results, or false + error message. Never throws." },
+      { "name": "xpcall", "signature": "xpcall(f, handler, ...) --> boolean, ...", "description": "Like pcall, but passes errors through handler (commonly debug.traceback) for richer messages." },
+      { "name": "assert", "signature": "assert(v, message?) --> v", "description": "Errors with message if v is falsy; otherwise returns v — usable inline: `local part = assert(workspace:FindFirstChild(\"Spawn\"))`." }
+    ],
+    "details": [
+      {
+        "heading": "Roblox specifics",
+        "body": "An uncaught error in a Script/LocalScript halts that script at the offending line (the rest of the script doesn't run). Event callback errors don't disconnect the connection but abort that callback invocation. Errors print to the Output window with a stack trace."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The set of tools for saying 'this cannot continue' (error/assert) and for surviving other code saying it (pcall/xpcall).",
+    "whyItExists": "Games hit the unexpected constantly: missing objects, bad remote arguments, flaky HTTP. Structured failure beats silent wrongness.",
+    "whenToUse": [
+      "pcall around anything external: DataStore calls, HttpService, MarketplaceService",
+      "assert for invariants: `assert(player.Character, \"no character\")`",
+      "error() for programmer mistakes: bad arguments to your own functions",
+      "Retries: wrap pcall in a loop with backoff for service calls"
+    ],
+    "whenNotToUse": [
+      "Don't pcall-and-ignore errors blindly — at least log them",
+      "Don't use error() for normal control flow (use return values)",
+      "Don't wrap your entire script in one giant pcall — narrow the scope to the risky call"
+    ],
+    "mentalModel": "```text\nlocal ok, err = pcall(function()\n    risky()\nend)\n\nif not ok then\n    warn(\"risky failed:\", err)   -- you survive\nend\n```\npcall is a safety net: whatever falls into it comes out as a value instead of crashing you.",
+    "tips": [
+      "The canonical retry pattern for DataStores is pcall + loop (see the datastore pattern)",
+      "xpcall with debug.traceback gives you the call stack in the message",
+      "Studio's Output window is where all of this reports — keep it open while testing"
+    ],
+    "commonMistakes": [
+      "`local success, err = pcall(risky())` — that calls risky NOW; pass the function: `pcall(risky)`",
+      "Continuing as if success were true after pcall returned false",
+      "Raising errors with tables/objects as messages — unprintable in Output"
+    ]
+  },
+  "examples": [
+    {
+      "title": "pcall + retry (the DataStore idiom)",
+      "code": "local DataStoreService = game:GetService(\"DataStoreService\")\nlocal store = DataStoreService:GetDataStore(\"PlayerData\")\n\nlocal function loadWithRetry(key, attempts)\n    for i = 1, attempts do\n        local ok, result = pcall(function()\n            return store:GetAsync(key)\n        end)\n        if ok then\n            return result\n        end\n        warn(`Attempt {i} failed: {result}`)\n        task.wait(1)\n    end\n    error(`Failed to load {key} after {attempts} attempts`)\nend"
+    },
+    {
+      "title": "assert for invariants",
+      "code": "local function setupRound()\n    local arena = assert(workspace:FindFirstChild(\"Arena\"), \"Arena missing from workspace!\")\n    local spawns = assert(arena:FindFirstChild(\"Spawns\"), \"No Spawns folder in Arena\")\n    print(\"Round ready:\", #spawns:GetChildren(), \"spawns\")\nend",
+      "whyItWorks": "assert either hands you the found instance or halts with a clear message — no nil-chasing later."
+    }
+  ],
+  "related": ["pcall", "assert", "datastore-save-load", "debugging-workflow", "output-window"],
+  "added": "2026-10-04"
+}

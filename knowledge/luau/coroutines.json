@@ -1,0 +1,69 @@
+{
+  "id": "coroutines",
+  "title": "Coroutines",
+  "category": "luau",
+  "type": "library",
+  "summary": "Independently pausable/resumable threads of execution (not parallel OS threads). In Roblox you usually want the task library instead — task.spawn/task.delay are coroutine-based and engine-integrated.",
+  "keywords": ["coroutine.create", "coroutine.resume", "coroutine.yield", "pausable function", "thread"],
+  "tags": ["concurrency", "coroutines", "intermediate"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/notes",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      { "name": "coroutine.create", "signature": "coroutine.create(f) --> thread", "description": "Creates a new coroutine thread wrapping f, without starting it." },
+      { "name": "coroutine.resume", "signature": "coroutine.resume(co, ...) --> boolean, ...", "description": "Starts or continues the coroutine, passing values to its yield points. First return is success; on failure the second is the error message." },
+      { "name": "coroutine.yield", "signature": "coroutine.yield(...) --> ...", "description": "Pauses the current coroutine, sending values back to the resumer." },
+      { "name": "coroutine.wrap", "signature": "coroutine.wrap(f) --> function", "description": "Returns a function that resumes a new coroutine on each call. Unlike resume, errors propagate directly." },
+      { "name": "coroutine.status", "signature": "coroutine.status(co) --> string", "description": "'running', 'suspended', 'normal', or 'dead'." },
+      { "name": "coroutine.isyieldable", "signature": "coroutine.isyieldable() --> boolean", "description": "Whether the current context can yield." },
+      { "name": "coroutine.close", "signature": "coroutine.close(co) --> boolean, string?", "description": "Luau addition. Closes a suspended coroutine, releasing it." }
+    ],
+    "details": [
+      {
+        "heading": "Cooperative, not parallel",
+        "body": "Coroutines run one at a time on the same core. They only switch at explicit yield/resume points (or engine yields like task.wait). They are for structuring control flow, not speed."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A coroutine is a function that can pause in the middle and be resumed later, keeping all its local state alive. Picture putting a bookmark in a function and coming back to it.",
+    "whyItExists": "Roblox's entire script model is built on them: every event callback, every task.wait, every 'parallel-looking' behavior in a single-threaded engine is coroutine plumbing.",
+    "whenToUse": [
+      "Understanding what the engine does under the hood (scripts, delays, waits)",
+      "Custom state machines that pause and resume",
+      "Producers/consumers of sequences"
+    ],
+    "whenNotToUse": [
+      "For day-to-day Roblox work, prefer `task.spawn`, `task.delay`, `task.defer` — they schedule onto the engine properly and report errors to Output",
+      "Never use raw coroutines for 'multithreading' — there is no parallelism here"
+    ],
+    "mentalModel": "```text\nco = coroutine.create(function()\n    print(\"A\")\n    coroutine.yield()      -- bookmark here\n    print(\"B\")\nend)\n\ncoroutine.resume(co)   --> prints A, pauses\ncoroutine.resume(co)   --> prints B, finishes\n```",
+    "tips": [
+      "Prefer the task library in Roblox — it's coroutines plus engine scheduling",
+      "`coroutine.wrap` hides the success flag; use resume when you need error info"
+    ],
+    "commonMistakes": [
+      "Assuming coroutines run simultaneously — they interleave only at yield points",
+      "Resuming a dead coroutine (returns false, 'cannot resume dead coroutine')",
+      "Using bare coroutine.create where task.spawn would integrate with the frame loop and error reporting"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Pause and resume",
+      "code": "local co = coroutine.create(function(name)\n    print(\"start\", name)\n    local extra = coroutine.yield()     -- pause; receive value on resume\n    print(\"resumed with\", extra)\nend)\n\ncoroutine.resume(co, \"worker\")   --> start worker\ncoroutine.resume(co, 42)         --> resumed with 42"
+    },
+    {
+      "title": "Prefer the task library in Roblox",
+      "code": "-- Instead of hand-rolled coroutines:\ntask.spawn(function()\n    print(\"runs on its own thread\")\nend)\n\ntask.delay(2, function()\n    print(\"two seconds later\")\nend)",
+      "whyItWorks": "task.spawn/task.delay create threads the engine schedules and tracks — with errors reported to Output — which is what you almost always wanted from coroutines."
+    }
+  ],
+  "related": ["task-library", "yielding", "functions"],
+  "added": "2026-10-04"
+}

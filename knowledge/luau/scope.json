@@ -1,0 +1,67 @@
+{
+  "id": "scope",
+  "title": "Scope",
+  "category": "luau",
+  "type": "concept",
+  "summary": "Where a name is visible and alive. Locals live from their declaration to the end of their block; inner blocks see outer locals, but never the other way around.",
+  "keywords": ["visibility", "block", "lifetime", "shadowing", "out of scope"],
+  "tags": ["basics", "scope", "variables"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "What is a block",
+        "body": "A chunk is the body of a function, `if`/`elseif`/`else` branch, `for`/`while`/`repeat` loop, or an explicit `do ... end`. Each `end`/`until` closes a scope."
+      },
+      {
+        "heading": "Lookup rule",
+        "body": "When Luau sees a name, it searches from the innermost block outward. The first matching local wins. If none is found, the name is treated as a global (`_G` lookup)."
+      },
+      {
+        "heading": "Shadowing",
+        "body": "Declaring a local with the same name as an outer local hides the outer one inside the new block. Legal, but a frequent source of bugs."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Scope is the 'territory' where a variable exists. Declare a local inside a function, and the rest of the script cannot see it. Understanding scope answers 'why is this nil here?'.",
+    "whyItExists": "Scope keeps names from colliding, lets you reuse names like `i` in ten different loops, and makes code localizable: to understand a block you only look at that block.",
+    "whenToUse": [
+      "Declare variables in the *narrowest* scope that works — inside the loop if only the loop uses them",
+      "Read outward when confused: where was this name declared?"
+    ],
+    "whenNotToUse": [
+      "Don't declare everything at script top 'to be safe' — it widens lifetimes and hides intent"
+    ],
+    "mentalModel": "```text\nlocal a = 1          -- script scope\nif true then\n    local b = 2      -- if-block scope\n    print(a, b)      --> 1 2   (inner sees outer)\nend\nprint(a)             --> 1\nprint(b)             --> nil   (outer can't see inner)\n```\nScopes nest like boxes. A variable lives in the box it was declared in — visible inside, invisible outside.",
+    "tips": [
+      "If a value is nil 'for no reason', 90% of the time it's a scope issue — the variable was declared in a block that already ended",
+      "Loop variables (`for i = ...`) exist only inside the loop",
+      "Functions close over the locals they can see — see closures"
+    ],
+    "commonMistakes": [
+      "Declaring inside an `if`, expecting to use it after the `end`",
+      "Shadowing: `local coins = coins + 1` reads the *new* (nil) local, not the outer one",
+      "Naming a local `script`, `wait`, or another builtin and wondering why the builtin stopped working"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Seeing scope boundaries",
+      "code": "local count = 0\n\nfor i = 1, 3 do\n    local doubled = i * 2      -- fresh each iteration\n    count = count + doubled\nend\n\nprint(count)      --> 12\nprint(doubled)    --> nil  — its scope ended with the loop\nprint(i)          --> nil  — loop variable is gone too"
+    },
+    {
+      "title": "The shadowing trap",
+      "code": "local coins = 10\n\ndo\n    local coins = coins + 5   -- BUG: new local, reads itself (nil)\n    print(coins)              --> nil + 5 = error!\nend",
+      "commonMistake": "Within its own initializer, the new `coins` is already in scope but unassigned. Don't redeclare with the same name."
+    }
+  ],
+  "related": ["local-variables", "closures", "scope-mistakes", "functions"],
+  "added": "2026-10-04"
+}

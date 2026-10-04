@@ -1,0 +1,90 @@
+{
+  "id": "unreliable-remote-event",
+  "title": "UnreliableRemoteEvent",
+  "category": "classes",
+  "type": "class",
+  "summary": "The lightweight sibling of RemoteEvent: identical API (FireServer/FireClient/FireAllClients, OnServerEvent/OnClientEvent) but messages are NOT guaranteed to arrive or to arrive in order — in exchange for lower overhead. Ideal for frequent, replaceable state updates.",
+  "keywords": ["unreliable remote", "unreliable", "packet loss", "out of order", "position updates", "telemetry", "fire and forget unreliable", "reliability", "ordering"],
+  "tags": ["remotes", "networking", "client-server", "performance"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/UnreliableRemoteEvent",
+    "lastVerified": "2026-10-04",
+    "notes": "Introduced in 2022. Behavior summary checked against the class reference and Roblox networking guidance."
+  },
+  "reference": {
+    "methods": [
+      { "name": "FireServer", "signature": "UnreliableRemoteEvent:FireServer(...: any)", "description": "Client only. Sends an unreliable message to the server. Same argument rules as RemoteEvent." },
+      { "name": "FireClient", "signature": "UnreliableRemoteEvent:FireClient(player: Player, ...: any)", "description": "Server only. Sends an unreliable message to one player." },
+      { "name": "FireAllClients", "signature": "UnreliableRemoteEvent:FireAllClients(...: any)", "description": "Server only. Broadcasts an unreliable message to all players." }
+    ],
+    "events": [
+      { "name": "OnServerEvent", "signature": "UnreliableRemoteEvent.OnServerEvent:Connect(function(player: Player, ...: any) end)", "description": "Server only. Fires for each message that DOES arrive from a client. The Player is always the first parameter, exactly like RemoteEvent." },
+      { "name": "OnClientEvent", "signature": "UnreliableRemoteEvent.OnClientEvent:Connect(function(...: any) end)", "description": "Client only. Fires for each message that DOES arrive from the server." }
+    ],
+    "details": [
+      {
+        "heading": "Reliability behavior",
+        "body": "Unlike RemoteEvent, messages are sent without retransmission: **a message may be dropped entirely under network load**. There is no delivery confirmation. Roblox throttles unreliable sends, so bursts beyond what the network can carry are dropped rather than queued."
+      },
+      {
+        "heading": "Ordering behavior",
+        "body": "No ordering guarantee: message 3 can arrive before message 2 (or message 2 may never come). Consumers must treat each message as standalone — typically by using timestamps/sequence numbers or simply by always applying the newest data."
+      },
+      {
+        "heading": "Argument rules",
+        "body": "Same serialization rules and limits as RemoteEvent (tables deep-copied, no functions/threads, size limits apply)."
+      },
+      {
+        "heading": "Cost",
+        "body": "Cheaper than reliable remotes because the engine skips retransmission bookkeeping and buffering — the whole point is to avoid spending bandwidth/CPU on data that will be stale in a frame anyway."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A RemoteEvent that trades delivery guarantees for efficiency. Same API, same usage pattern — but the network is allowed to drop messages when it's congested, and it won't preserve order.",
+    "whyItExists": "Reliable, ordered delivery has a cost: retransmissions and buffering. For data that's refreshed constantly (a position sent 20 times a second), losing one update doesn't matter — the next one replaces it. Paying the reliability tax there is pure waste.",
+    "whenToUse": [
+      "High-frequency state snapshots: custom character/camera positions, aiming data, cosmetic trails",
+      "Telemetry and metrics (ping samples, FPS reports) where losing a sample is harmless",
+      "Rapidly-changing indicators: typing status, live minimap pings, health-over-head updates",
+      "Any case where NEW data fully replaces OLD data"
+    ],
+    "whenNotToUse": [
+      "One-shot important events: purchases, chat messages, damage, 'player pressed jump' — anything where a lost message changes gameplay",
+      "Ordered sequences that must not be rearranged (level progression, story beats)",
+      "Anything where the receiver needs to ACK or respond — use RemoteFunction",
+      "As a 'faster RemoteEvent' for everything — dropping important messages creates mysterious bugs"
+    ],
+    "mentalModel": "```text\nRemoteEvent           = certified mail     (tracked, ordered, resends if lost)\nUnreliableRemoteEvent = tossing notes      (fast; wind may take some; order varies)\n\nSend 1 → 2 → 3\nReliable:    arrives 1, 2, 3        (all, in order)\nUnreliable:  maybe 1, 3, 2 — or just 3\n```\nDesign consumers around 'latest message wins'.",
+    "tips": [
+      "Send the FULL current state each time, not deltas — receivers can always recover from a dropped message",
+      "Throttle your send rate (e.g. coalesce to once per Heartbeat) instead of firing per input",
+      "Include a timestamp or counter if the receiver needs to discard stale messages",
+      "Test with simulated bad network conditions before shipping an unreliable-heavy design"
+    ],
+    "commonMistakes": [
+      "Using it for critical one-time events and seeing them 'randomly' not happen",
+      "Sending deltas ('x += 5') — a dropped message permanently desyncs the value",
+      "Assuming order: applying message 2 after message 3 corrupts sequences",
+      "Expecting the API to warn you about drops — silence is the only signal"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Throttled position telemetry (the right way)",
+      "description": "Send full snapshots at a capped rate from Heartbeat, not per physics step.",
+      "code": "-- == LocalScript ==\nlocal RunService = game:GetService(\"RunService\")\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal posRemote = ReplicatedStorage:WaitForChild(\"CustomPosition\")\n\nlocal player = game.Players.LocalPlayer\nlocal lastSent = 0\n\nRunService.Heartbeat:Connect(function()\n    local now = os.clock()\n    if now - lastSent < 0.1 then return end   -- ~10 updates/second max\n    lastSent = now\n\n    local root = player.Character and player.Character:FindFirstChild(\"HumanoidRootPart\")\n    if not root then return end\n\n    -- FULL state + timestamp: dropped messages never corrupt anything\n    posRemote:FireServer(root.Position, now)\nend)\n\n-- == Script (server) ==\nposRemote.OnServerEvent:Connect(function(player, position, timestamp)\n    if typeof(position) ~= \"Vector3\" or typeof(timestamp) ~= \"number\" then return end\n    player:SetAttribute(\"ReportedPosition\", position)\n    -- (a real anti-cheat would sanity-check distance from server truth)\nend)",
+      "whyItWorks": "Every message is a complete, timestamped snapshot. If the network drops half of them, the receiver simply applies the newest one that arrives — no gaps, no drift.",
+      "commonMistake": "Sending `root.Position` 60+ times a second unthrottled. Unreliable sends are throttled anyway; coalescing keeps bandwidth sane."
+    },
+    {
+      "title": "Why NOT: a one-shot event over unreliable",
+      "code": "-- ❌ BAD: critical event on an unreliable remote\nchatRemote:FireServer(\"Hello everyone!\")   -- may simply never arrive\n\n-- ✅ GOOD: reliable RemoteEvent for chat, damage, purchases\nchatRemote:FireServer(\"Hello everyone!\")    -- RemoteEvent: guaranteed delivery",
+      "commonMistake": "Players report 'my chat messages sometimes don't send'. Cause: an UnreliableRemoteEvent carrying one-shot events."
+    }
+  ],
+  "related": ["remote-event", "remote-function", "fire-server", "on-server-event", "remote-parameter-rules", "client-vs-server", "heartbeat", "serialization"],
+  "added": "2026-10-04"
+}

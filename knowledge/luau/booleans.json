@@ -1,0 +1,60 @@
+{
+  "id": "booleans",
+  "title": "Booleans",
+  "category": "luau",
+  "type": "concept",
+  "summary": "The two truth values `true` and `false`. They drive every `if`, every loop condition, and every logical check.",
+  "keywords": ["true", "false", "boolean value", "truth value"],
+  "tags": ["basics", "types", "booleans"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "What produces booleans",
+        "body": "Comparisons (`==`, `~=`, `<`, `>`), logical operators (`and`, `or`, `not`), and many Roblox checks like `player:IsA(\"Player\")` or `CollectionService:HasTag(inst, \"tag\")`."
+      },
+      {
+        "heading": "Truthiness",
+        "body": "In conditions, everything is truthy except `nil` and `false`. So `if 0 then` runs, `if \"\" then` runs, `if {} then` runs."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A boolean is a value that is either `true` or `false` — a yes/no switch. Booleans are what conditions are made of: `if isDoorOpen then` asks 'is this true?'.",
+    "whyItExists": "Programs make decisions. Booleans are the smallest unit of decision: on/off, yes/no, pass/fail.",
+    "whenToUse": [
+      "Flags that track state: `local hasKey = false` … `hasKey = true`",
+      "Loop and branch conditions",
+      "Returning success/failure from functions"
+    ],
+    "whenNotToUse": [
+      "Don't compare with `== true` / `== false` when you can use the value directly: `if hasKey then` reads better than `if hasKey == true then`",
+      "Don't use numbers as booleans (`1`/`0`); unlike C, Luau's `0` is truthy"
+    ],
+    "mentalModel": "```text\nlocal isGameOver = false\n\nif isGameOver then\n    print(\"Stop!\")     -- skipped: false\nend\n\nisGameOver = true\n\nif isGameOver then\n    print(\"Stop!\")     -- now runs\nend\n```",
+    "tips": [
+      "Name boolean variables like questions: `isOpen`, `hasPermission`, `canJump`",
+      "`not` flips: `not true == false`",
+      "BoolValue objects in Roblox wrap a boolean in `.Value` — don't confuse the two (see gotchas)"
+    ],
+    "commonMistakes": [
+      "Writing `if x = true then` (assignment instead of comparison)",
+      "Expecting `0` or `\"\"` to be falsy — they aren't in Luau",
+      "Testing a BoolValue Instance directly instead of its `.Value` property"
+    ]
+  },
+  "examples": [
+    {
+      "title": "A boolean flag controlling behavior",
+      "code": "local doorOpen = false\n\nlocal function openDoor()\n    doorOpen = true\nend\n\nlocal function tryWalkThrough()\n    if doorOpen then\n        print(\"You walk through.\")\n    else\n        print(\"Bonk. The door is closed.\")\n    end\nend\n\ntryWalkThrough()   --> Bonk.\nopenDoor()\ntryWalkThrough()   --> You walk through."
+    }
+  ],
+  "related": ["truthiness", "comparisons", "logical-operators", "boolvalue-vs-boolean", "if-statements"],
+  "added": "2026-10-04"
+}

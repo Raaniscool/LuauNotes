@@ -1,0 +1,68 @@
+{
+  "id": "if-statements",
+  "title": "If / ElseIf / Else",
+  "category": "luau",
+  "type": "keyword",
+  "summary": "Conditional branching: run code only when a condition is truthy. Only `nil` and `false` fail the test — 0, \"\" and {} all pass. Luau also has if-expressions.",
+  "keywords": ["conditional", "branching", "if then", "else if", "ternary"],
+  "tags": ["basics", "control-flow", "conditions"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "if condition then\n    -- runs when condition is truthy\nelseif other then\n    -- second chance\nelse\n    -- fallback\nend",
+      "-- Luau if-expression (value form):\nlocal label = if rich then \"💰\" else \"💸\"\nlocal x = if a then 1 elseif b then 2 else 3"
+    ],
+    "details": [
+      {
+        "heading": "Truthiness rule",
+        "body": "The condition passes for ANY value except `nil` and `false`. So `if 0 then` runs its body, and so does `if \"\" then`."
+      },
+      {
+        "heading": "No switch statement",
+        "body": "Luau has no switch/case. Use elseif chains or a dispatch table (`handlers[key]()`)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The decision-maker. 'If the player has a key, open the door; otherwise, show a message.'",
+    "whyItExists": "Almost every behavior depends on conditions — state, permissions, phase of the game.",
+    "whenToUse": [
+      "Guard clauses at the top of functions: `if not player then return end`",
+      "Branching game logic",
+      "If-expressions for picking one of two values inline"
+    ],
+    "whenNotToUse": [
+      "Deeply nested ifs (pyramid of doom) — prefer early returns or extracting functions",
+      "Long elseif chains over many discrete values — a dispatch table is cleaner"
+    ],
+    "mentalModel": "```text\nif doorOpen then        -- is this truthy?\n    walkThrough()\nelseif hasKey then      -- else, check this\n    unlockDoor()\nelse                    -- otherwise\n    knock()\nend\n```\nExactly ONE branch runs — the first true one, or else.",
+    "tips": [
+      "Prefer positive condition names; `if not dead` reads worse than `if alive`",
+      "Guard-clause style (return early) keeps the main path at one indent level",
+      "`if a and b or c` as a ternary breaks when b is falsy — see logical operators"
+    ],
+    "commonMistakes": [
+      "Writing `else if` (with a space) instead of `elseif` — that opens a nested if and demands an extra `end`",
+      "Using `=` instead of `==` in the condition",
+      "Expecting `if 0 then` to skip — 0 is truthy in Luau"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Guards + if-expression",
+      "code": "local function openDoor(player)\n    if not player or not player.Character then\n        return   -- guard: bail out early\n    end\n\n    local hasKey = player:FindFirstChild(\"Key\") ~= nil\n\n    if hasKey then\n        print(\"Door opens!\")\n    else\n        print(\"Locked. Find the key.\")\n    end\n\n    -- if-expression picks a value:\n    local message = if hasKey then \"Welcome!\" else \"Locked.\"\n    print(message)\nend"
+    },
+    {
+      "title": "Dispatch table beats elseif chains",
+      "code": "-- Instead of:\n--   if cmd == \"heal\" then ... elseif cmd == \"kick\" then ... elseif ...\n\nlocal commands = {\n    heal = function(p) print(\"heal\", p) end,\n    kick = function(p) print(\"kick\", p) end,\n    tp   = function(p) print(\"tp\", p) end,\n}\n\nlocal function handle(cmd, player)\n    local fn = commands[cmd]\n    if fn then\n        fn(player)\n    else\n        warn(\"Unknown command:\", cmd)\n    end\nend"
+    }
+  ],
+  "related": ["comparisons", "logical-operators", "truthiness", "booleans"],
+  "added": "2026-10-04"
+}

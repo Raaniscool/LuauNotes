@@ -1,0 +1,59 @@
+{
+  "id": "pcall",
+  "title": "pcall()",
+  "category": "luau",
+  "type": "function",
+  "summary": "Protected call: runs a function and catches any error it raises, returning (success, resultOrError) instead of crashing your script. Essential around DataStores, HTTP, and anything that can fail.",
+  "keywords": ["protected call", "catch error", "try catch", "safe call"],
+  "tags": ["errors", "robustness", "functions"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/builtins",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "pcall(f: (...any) -> ...any, ...) --> (success: boolean, ...any)",
+    "returns": "`true` followed by the function's return values on success; `false` followed by the error message on failure.",
+    "details": [
+      {
+        "heading": "xpcall variant",
+        "body": "`xpcall(f, handler, ...)` pipes the error through `handler` — use `debug.traceback` to get a full stack trace in the error string."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Luau's answer to try/catch. Wrap risky code in pcall: if it errors, you get `false` and the message; if not, `true` and the results. Your script lives on.",
+    "whyItExists": "Some Roblox operations fail for reasons beyond your control — DataStore throttling, network hiccups, missing HTTP permissions. pcall turns crashes into values you can react to (retry, fallback, log).",
+    "whenToUse": [
+      "Every DataStore Get/Set/Update call",
+      "Every HttpService request",
+      "require() of modules that might not exist (dynamic loading)",
+      "Running player-provided or untrusted logic"
+    ],
+    "whenNotToUse": [
+      "Around code that 'shouldn't' fail — fix the bug instead of swallowing it",
+      "With `pcall(functionReturningCall())` — wrap the function, not its result"
+    ],
+    "mentalModel": "```text\nlocal ok, err = pcall(function()\n    somethingRisky()\nend)\n\nok  == true   --> results flow, no crash\nok  == false  --> err holds the message; you decide what now\n```",
+    "tips": [
+      "Idiom: `local ok, data = pcall(store.GetAsync, store, key)` — pass function + args directly, no wrapper needed",
+      "Combine with a retry loop for remote services",
+      "Always branch on the success flag — ignoring `false` hides real problems"
+    ],
+    "commonMistakes": [
+      "`pcall(store:GetAsync(key))` — invokes GetAsync outside protection; write `pcall(function() return store:GetAsync(key) end)` or the method-call form",
+      "Forgetting that on failure the second return is the ERROR, not the result",
+      "Empty catch: `pcall(fn)` with no check — silent failure is worse than a crash"
+    ]
+  },
+  "examples": [
+    {
+      "title": "The two correct forms",
+      "code": "-- Form 1: wrapper function (clearest)\nlocal ok, err = pcall(function()\n    error(\"boom\")\nend)\nprint(ok, err)   --> false  ...boom...\n\n-- Form 2: function + arguments\nlocal DataStoreService = game:GetService(\"DataStoreService\")\nlocal store = DataStoreService:GetDataStore(\"Data\")\n\nlocal ok2, data = pcall(function()\n    return store:GetAsync(\"player_123\")\nend)\nif ok2 then\n    print(\"Loaded:\", data)\nelse\n    warn(\"Load failed:\", data)   -- data holds the error message here\nend"
+    }
+  ],
+  "related": ["error-handling", "assert", "datastore-save-load", "http-service"],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,72 @@
+{
+  "id": "type-checking",
+  "title": "Type Checking",
+  "category": "luau",
+  "type": "concept",
+  "summary": "Luau's optional static type system: annotate variables, parameters, and returns (`local x: number`) and the analyzer catches mismatches before you run. The backbone of large Roblox codebases.",
+  "keywords": ["type annotations", "strict mode", "type errors", "static types", "typed luau"],
+  "tags": ["types", "intermediate", "type-checking"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/typecheck",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "--!strict            -- mode comment at top of file",
+      "local health: number = 100",
+      "local function add(a: number, b: number): number\n    return a + b\nend",
+      "type PlayerData = { coins: number, level: number }",
+      "local inventory: { string } = {\"sword\", \"potion\"}"
+    ],
+    "details": [
+      {
+        "heading": "Analysis modes",
+        "body": "Per-script header comments: `--!strict` (full inference, errors on mismatch), `--!nonstrict`/`--!native` variants. Roblox Studio's Script Analysis shows the diagnostics; Luau-LSP in external editors powers autocomplete and inline errors."
+      },
+      {
+        "heading": "Core syntax",
+        "body": "Annotations after `:` on locals, function params/returns, and table fields. `type Name = ...` declares aliases; `export type` makes them importable via `import type`. Built-ins: `number`, `string`, `boolean`, `nil`, `any`, `unknown`, `never`, unions `A | B`, intersections `A & B`, optional `T?`, arrays `{T}`, maps `{ [K]: V }`, functions `(number) -> string`."
+      },
+      {
+        "heading": "Casts and assertions",
+        "body": "`x :: T` asserts a type (unchecked at runtime — the analyzer trusts you)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A spell-checker for your code's assumptions. You state what kind of value each thing should be; Luau's analyzer checks every use without running the game.",
+    "whyItExists": "As projects grow, 'wait, was this a Player or a Character?' bugs multiply. Types push those errors left — into the editor, before play-testing.",
+    "whenToUse": [
+      "New code: annotate function parameters and returns at minimum",
+      "Data shapes: `type SaveData = {...}` for DataStore payloads",
+      "Modules' public APIs — types are documentation the compiler enforces"
+    ],
+    "whenNotToUse": [
+      "Don't fight the system with `any` sprinkled everywhere to silence errors — fix the types or use targeted casts with comments",
+      "Legacy scripts: migrate gradually rather than boiling the ocean"
+    ],
+    "mentalModel": "```text\n--!strict\n\nlocal function heal(target: Humanoid, amount: number)\n    target.Health += amount\nend\n\nheal(\"hi\", 5)    -- ✗ type error caught in the editor,\n                 --   before the game ever runs\n```",
+    "tips": [
+      "Start modules with `--!strict` for the strongest checking",
+      "Define types for your data early — they ripple through autocomplete everywhere",
+      "`typeof(x)` in type positions infers from a value; handy for Instance subclasses"
+    ],
+    "commonMistakes": [
+      "Thinking annotations change runtime behavior — they don't; they're erased before execution",
+      "Confusing `type` (type declaration) with the `type()` value function",
+      "Using `::` casts to bypass real type errors instead of modeling the types correctly"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Typed save data",
+      "code": "--!strict\n\nexport type SaveData = {\n    coins: number,\n    level: number,\n    inventory: { string },\n}\n\nlocal function loadDefault(): SaveData\n    return {\n        coins = 0,\n        level = 1,\n        inventory = {},\n    }\nend\n\nlocal data: SaveData = loadDefault()\ndata.coins += 10\n-- data.coinss += 1   -- ✗ typo caught by the type checker",
+      "whyItWorks": "The SaveData alias describes the exact shape; any deviation — typos, missing fields, wrong types — becomes an editor error."
+    }
+  ],
+  "related": ["generics", "data-types", "typeof-function", "metatables", "functions"],
+  "added": "2026-10-04"
+}

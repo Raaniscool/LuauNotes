@@ -1,0 +1,62 @@
+{
+  "id": "bindable-event",
+  "title": "BindableEvent",
+  "category": "classes",
+  "type": "class",
+  "summary": "Same-side messaging between scripts: Fire() and .Event let Scripts talk to Scripts (or LocalScripts to LocalScripts). It does NOT cross the client/server boundary — use RemoteEvent for that.",
+  "keywords": ["bindable", "script to script", "Fire", "same side communication", "Event"],
+  "tags": ["events", "communication", "architecture"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/BindableEvent",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      { "name": "Fire", "signature": "BindableEvent:Fire(...: any)", "description": "Fires the event to all connections on THIS side (no network involved)." }
+    ],
+    "events": [
+      { "name": "Event", "signature": "BindableEvent.Event:Connect(function(...) end)", "description": "Receives whatever Fire sent. Note: the event member is literally named Event." }
+    ],
+    "details": [
+      {
+        "heading": "Tables are deep-copied",
+        "body": "Arguments pass through serialization even on the same machine: tables arrive as deep copies with metatables stripped. Mutations on the receiver never affect the sender's table."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A private intercom for scripts that run in the same world — no network, no player parameter. 'Hey other server script, the round just ended.'",
+    "whyItExists": "Decoupling: systems can broadcast facts ('GamePhaseChanged') without knowing who's listening.",
+    "whenToUse": [
+      "Broadcasting game-phase changes between server modules/scripts",
+      "Loose coupling between independent systems on the same side",
+      "When a ModuleScript-based Signal implementation isn't available in your project"
+    ],
+    "whenNotToUse": [
+      "Client ↔ server — BindableEvent never crosses that line; use RemoteEvent",
+      "Simple function calls between your own modules — just call the function; bindables add indirection",
+      "Performance-sensitive per-frame signals (table copying costs; prefer direct calls or a custom Signal)"
+    ],
+    "mentalModel": "```text\nScript A:  bindable:Fire(\"RoundEnd\", scores)\n                              │ (same machine, same runtime)\nScript B:  bindable.Event:Connect(function(msg, scores) ... end)\n```\nLike RemoteEvent, minus the network, minus the player parameter.",
+    "tips": [
+      "In modern codebases many teams use a custom Signal module or a simple callbacks table instead — fewer surprises with table copying",
+      "Keep BindableEvents where both scripts can reach them (ServerScriptService for server-side ones)"
+    ],
+    "commonMistakes": [
+      "Trying to use BindableEvent for client/server messaging — it silently stays on one side",
+      "Expecting the receiver to see the SAME table you fired — it's a copy, metatables gone",
+      "Confusing BindableEvent.Event with RemoteEvent.OnServerEvent naming"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Round system broadcasting phases",
+      "code": "-- == ServerScriptService/Signals/RoundEvents (BindableEvent) ==\n\n-- RoundManager Script:\nlocal roundEvents = script.Parent.Parent.Signals.RoundEvents\nroundEvents:Fire(\"PhaseChanged\", \"Intermission\", 15)\n\n-- Some other Script that cares:\nlocal roundEvents = game:GetService(\"ServerScriptService\").Signals.RoundEvents\nroundEvents.Event:Connect(function(message, phase, duration)\n    if message == \"PhaseChanged\" then\n        print(\"New phase:\", phase, \"for\", duration, \"seconds\")\n    end\nend)"
+    }
+  ],
+  "related": ["bindable-function", "remote-event", "client-vs-server", "event-connections"],
+  "added": "2026-10-04"
+}

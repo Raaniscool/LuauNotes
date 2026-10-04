@@ -1,0 +1,68 @@
+{
+  "id": "data-types",
+  "title": "Data Types",
+  "category": "luau",
+  "type": "overview",
+  "summary": "The kinds of values Luau can store: nil, boolean, number, string, table, function, thread, plus Roblox types like Instance, Vector3, CFrame, and Enum.",
+  "keywords": ["typeof", "type()", "what type", "primitive types", "value types"],
+  "tags": ["basics", "types", "overview"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/types",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "typeof(value) --> string",
+    "details": [
+      {
+        "heading": "Core Luau types",
+        "body": "`nil`, `boolean`, `number`, `string`, `table`, `function`, `thread` (coroutines). `typeof()` returns these names as strings."
+      },
+      {
+        "heading": "Roblox adds many more",
+        "body": "`typeof()` also recognizes engine types: `\"Instance\"`, `\"Vector3\"`, `\"Vector2\"`, `\"CFrame\"`, `\"Color3\"`, `\"UDim2\"`, `\"Enum\"`, `\"EnumItem\"`, `\"TweenInfo\"`, `\"RaycastResult\"`, `\"DateTime\"`, and more. The plain Lua `type()` function reports most of these as `\"userdata\"` — prefer `typeof()`."
+      },
+      {
+        "heading": "Numbers",
+        "body": "Luau numbers are double-precision floats by default. Integer division `//` and bitwise operators exist, but there is no separate integer runtime type in the default mode."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Every value in Luau has a type that determines what you can do with it: you can add numbers, concatenate strings, index tables, call functions. Unlike many languages, variables don't have types — *values* do, and a variable can hold any type at any time.",
+    "whyItExists": "Types define behavior. `\"5\" + 5` is an error while `5 + 5` is 10; knowing types tells you which operations are legal and which will error.",
+    "whenToUse": [
+      "Use `typeof(value)` to check what you're dealing with before operating on it",
+      "Use type checking annotations (`local x: number = 5`) to catch type bugs before running"
+    ],
+    "whenNotToUse": [
+      "Don't over-check types defensively — if your code controls the value, trust it. Check at boundaries (remote arguments, user input) instead"
+    ],
+    "mentalModel": "| Type      | Example                          | typeof() says |\n|-----------|----------------------------------|---------------|\n| nil       | `nil`                            | \"nil\"         |\n| boolean   | `true`, `false`                  | \"boolean\"     |\n| number    | `42`, `3.5`                      | \"number\"      |\n| string    | `\"hello\"`                        | \"string\"      |\n| table     | `{}`, `{1,2}`, `{coins = 5}`     | \"table\"       |\n| function  | `print`, `function() end`        | \"function\"    |\n| thread    | `coroutine.create(f)`            | \"thread\"      |\n| Roblox    | `Instance.new(\"Part\")`           | \"Instance\"    |",
+    "tips": [
+      "`typeof(x)` is Roblox-friendly; `type(x)` is the classic Lua version — both exist, but `typeof` gives nicer answers for engine values",
+      "`nil` is the type of 'no value'. A variable that is nil effectively doesn't hold anything",
+      "Tables are the one container type — arrays, dictionaries, objects, and modules are all tables"
+    ],
+    "commonMistakes": [
+      "Doing math on strings: `\"10\" + 5` happens to work (auto-coercion) but `\"10 apples\" + 5` errors — convert with `tonumber()` first",
+      "Comparing different types: `5 == \"5\"` is `false`",
+      "Expecting `type(game.Workspace)` to say \"Workspace\" — it says \"userdata\"; use `typeof()` or `:IsA()` for Instances"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Inspecting types with typeof()",
+      "code": "print(typeof(nil))                    --> nil\nprint(typeof(true))                   --> boolean\nprint(typeof(42))                     --> number\nprint(typeof(\"hi\"))                   --> string\nprint(typeof({}))                     --> table\nprint(typeof(print))                  --> function\nprint(typeof(workspace) )             --> Instance\nprint(typeof(Vector3.new(0,0,0)))     --> Vector3\nprint(typeof(Enum.HumanoidRig))       --> Enum",
+      "whyItWorks": "`typeof()` returns a string naming the value's type, including Roblox engine types."
+    },
+    {
+      "title": "Guarding with a type check",
+      "code": "local function double(value)\n    if typeof(value) ~= \"number\" then\n        warn(\"double() expected a number, got \" .. typeof(value))\n        return nil\n    end\n    return value * 2\nend\n\nprint(double(21))     --> 42\nprint(double(\"hi\"))   --> nil (with a warning)"
+    }
+  ],
+  "related": ["nil", "booleans", "numbers", "strings", "tables", "type-checking", "truthiness"],
+  "added": "2026-10-04"
+}

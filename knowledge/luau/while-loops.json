@@ -1,0 +1,64 @@
+{
+  "id": "while-loops",
+  "title": "While Loops",
+  "category": "luau",
+  "type": "keyword",
+  "summary": "`while condition do ... end` repeats a block as long as the condition is true. Check happens before each iteration — zero iterations if the condition starts false.",
+  "keywords": ["loop", "repeat while", "infinite loop", "run every frame"],
+  "tags": ["basics", "loops", "control-flow"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "while condition do\n    -- runs while condition is truthy\nend"
+    ],
+    "details": [
+      {
+        "heading": "Yielding inside",
+        "body": "If the body calls something that yields (like `task.wait()`), the loop pauses there and resumes later. A while loop with no wait and an always-true condition locks up its thread."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A loop that keeps repeating while a condition stays true. 'While the door is closed, keep knocking.'",
+    "whyItExists": "Some work is 'keep doing this until something changes' — waiting for players, ticking timers, polling state.",
+    "whenToUse": [
+      "Waiting for a condition: `while not target do task.wait() ... end`",
+      "Game loops driven by state: `while roundActive do ... task.wait(1) end`",
+      "When you don't know the iteration count up front"
+    ],
+    "whenNotToUse": [
+      "For counting a known number of times — use a numeric `for`",
+      "For walking arrays — use `for i, v in array` / `ipairs`",
+      "Almost never without a `task.wait()`/yield somewhere in the body"
+    ],
+    "mentalModel": "```text\nwhile condition do\n    body\nend\n\n-- is exactly:\nif condition then\n    body\n    if condition then\n        body\n        ...     -- repeats until condition is false/nil\n    end\nend\n```",
+    "tips": [
+      "In Roblox, always include `task.wait()` in loops that run over time — it yields to the engine and prevents freezing",
+      "Prefer RunService.Heartbeat/Stepped connections over `while true do task.wait()` for per-frame logic",
+      "The condition is re-evaluated every iteration — changing a variable inside the loop controls when it stops"
+    ],
+    "commonMistakes": [
+      "`while true do` with no wait = infinite loop that hangs the script thread",
+      "Condition checks a stale variable that never changes inside the loop",
+      "Expecting the body to run at least once — if the condition is false at the start, it never runs (use repeat-until for that)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Waiting for something to exist",
+      "code": "-- Poll until the part appears (see also: WaitForChild)\nlocal part\nwhile not part do\n    part = workspace:FindFirstChild(\"TreasureChest\")\n    task.wait(0.2)\nend\nprint(\"Found it:\", part.Name)"
+    },
+    {
+      "title": "A round timer",
+      "code": "local timeLeft = 30\nlocal roundActive = true\n\nwhile roundActive and timeLeft > 0 do\n    print(`Time left: {timeLeft}`)\n    timeLeft -= 1\n    task.wait(1)\nend\n\nprint(if timeLeft <= 0 then \"Round over!\" else \"Round ended early\")"
+    }
+  ],
+  "related": ["repeat-loops", "numeric-for-loops", "task-library", "heartbeat", "break-continue"],
+  "added": "2026-10-04"
+}

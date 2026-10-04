@@ -1,0 +1,74 @@
+{
+  "id": "dictionaries",
+  "title": "Dictionaries",
+  "category": "luau",
+  "type": "concept",
+  "summary": "Tables keyed by names (strings) instead of numbers: instant lookup by key. Settings, inventories, caches, and 'sets' are all dictionaries.",
+  "keywords": ["map", "key value pairs", "hash table", "lookup table", "set"],
+  "tags": ["basics", "tables", "dictionaries"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/tables",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "local stats = { health = 100, mana = 40 }",
+      "stats.health            --> 100   (dot sugar for string keys)",
+      "stats[\"health\"]         --> 100   (same thing)",
+      "stats.armor = 25        -- add a key",
+      "stats.mana = nil        -- delete a key"
+    ],
+    "details": [
+      {
+        "heading": "Dot vs bracket",
+        "body": "`t.key` works only for keys that are valid identifiers (letters/digits/underscore, not starting with a digit, not a reserved word). Keys with spaces or special characters need brackets: `t[\"max health\"]`."
+      },
+      {
+        "heading": "No order, no length",
+        "body": "`pairs` order is unspecified, and `#t` does not count dictionary entries. Keep a separate counter or an array if you need order/count."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A dictionary maps names to values: 'health' → 100, 'sword' → true. You ask for a key and get the value instantly, without searching through a list.",
+    "whyItExists": "Named lookup is everywhere: configuration, player stats, caches, permission flags. Dictionaries make those O(1).",
+    "whenToUse": [
+      "Named data bundles: `local playerData = { coins = 0, level = 1 }`",
+      "Sets: `local banned = { [userId] = true }` then `if banned[id] then`",
+      "Caches: remember expensive computations by key",
+      "Dispatch tables: `handlers[commandName](player, args)` instead of if/elseif chains"
+    ],
+    "whenNotToUse": [
+      "When you need order (leaderboard positions, turn order) — use an array, or array + dictionary combo",
+      "When keys are sequential integers anyway — that's just an array"
+    ],
+    "mentalModel": "```text\nstats = {\n    health = 100,\n    mana   = 40,\n    armor  = 25,\n}\n\n\"What's health?\" --> stats.health --> 100\n```\nA dictionary is a row of labeled drawers. You don't open them one by one — you go straight to the label.",
+    "tips": [
+      "The set pattern `t[value] = true` gives near-instant membership tests — much faster than scanning an array with `table.find`",
+      "Use `pairs` (or plain `for k, v in t` in Luau) to walk all entries",
+      "`next(t) == nil` tests whether a dictionary is empty"
+    ],
+    "commonMistakes": [
+      "Expecting `pairs` to return entries in the order they were added",
+      "Using `#dict` and getting 0",
+      "Key typos creating a second key: `statis.health` vs `stats.health`"
+    ]
+  },
+  "examples": [
+    {
+      "title": "The set pattern: instant membership checks",
+      "code": "local vip = {\n    [1234] = true,\n    [9876] = true,\n}\n\nlocal function isVip(userId)\n    return vip[userId] == true\nend\n\nprint(isVip(1236))   --> false\nprint(isVip(9876))   --> true",
+      "whyItWorks": "Keys are looked up directly — no loop needed. This scales to millions of entries just as fast."
+    },
+    {
+      "title": "Command dispatch table",
+      "code": "local handlers = {\n    heal = function(player) print(\"Healing \" .. player.Name) end,\n    kick = function(player) print(\"Kicking \" .. player.Name) end,\n}\n\nlocal function runCommand(player, command)\n    local fn = handlers[command]\n    if fn then\n        fn(player)\n    else\n        warn(\"Unknown command:\", command)\n    end\nend",
+      "whyItWorks": "The dictionary replaces a growing if/elseif chain. Adding a command = adding one line."
+    }
+  ],
+  "related": ["tables", "arrays", "pairs", "table-operations"],
+  "added": "2026-10-04"
+}

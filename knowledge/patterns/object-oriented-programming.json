@@ -1,0 +1,67 @@
+{
+  "id": "object-oriented-programming",
+  "title": "Object-Oriented Pattern (Luau Classes)",
+  "category": "patterns",
+  "type": "pattern",
+  "summary": "Build classes with metatables: a class table with __index pointing at itself, a .new() constructor returning setmetatable'd instances, and methods defined with colon syntax.",
+  "keywords": ["class", "oop", "self", "constructor", "new()", "inheritance", "objects in luau"],
+  "tags": ["oop", "metatables", "architecture", "intermediate"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/tables#metatables",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "local Class = {}\nClass.__index = Class\n\nfunction Class.new(...)\n    return setmetatable({ ...fields... }, Class)\nend\n\nfunction Class:method()\n    -- self is the instance\nend"
+    ],
+    "details": [
+      {
+        "heading": "How method lookup works",
+        "body": "instance:method() → look up 'method' on instance → miss → __index redirects to Class → found. Instance fields shadow class fields; class fields act as shared defaults."
+      },
+      {
+        "heading": "Single inheritance",
+        "body": "Set the subclass's metatable `__index` to the superclass (or to a table whose __index chains up). Luau type checking understands this with `typeof()` annotations."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Luau has no built-in class keyword, but metatables give you the standard pattern: a class table acts as both namespace and method store, and instances are tables wired to fall back to it.",
+    "whyItExists": "Games model *things* — enemies, pets, vehicles, inventory slots. Classes let each thing carry its own data while sharing behavior code.",
+    "whenToUse": [
+      "Many similar objects with their own state: enemies, projectiles, pets",
+      "Wrapping an Instance with behavior: `Enemy.new(model)`",
+      "State machines and controllers that own update loops"
+    ],
+    "whenNotToUse": [
+      "One-off scripts — a module of functions is simpler",
+      "Data-only records — a plain table is enough",
+      "Don't build deep inheritance trees; prefer composition (objects holding other objects)"
+    ],
+    "mentalModel": "```text\nClass (methods live here)\n  ↑ __index fallback\nInstance (fields live here: health, position, ...)\n\nobj:method()\n   → obj.method? no\n   → Class.method? yes → call with self = obj\n```",
+    "tips": [
+      "Keep constructors the only place that creates instances",
+      "Use type annotations: `export type Enemy = typeof(setmetatable({} :: EnemyFields, Enemy))`",
+      "A :Destroy() method cleaning up connections/instances mirrors Roblox's own API style"
+    ],
+    "commonMistakes": [
+      "Forgetting `Class.__index = Class` — methods become nil",
+      "Calling `Class.method(obj)` mixed with `obj:method()` inconsistently — pick colon style",
+      "Storing per-instance state on the CLASS table — all instances then share it",
+      "Forgetting cleanup: instances holding event connections leak"
+    ]
+  },
+  "examples": [
+    {
+      "title": "A complete Enemy class",
+      "code": "local Enemy = {}\nEnemy.__index = Enemy\n\nfunction Enemy.new(model)\n    local self = setmetatable({}, Enemy)\n    self.model = model\n    self.health = 100\n    self.connection = model.PrimaryPart.Touched:Connect(function(hit)\n        self:onTouched(hit)\n    end)\n    return self\nend\n\nfunction Enemy:onTouched(hit)\n    local humanoid = hit.Parent and hit.Parent:FindFirstChildOfClass(\"Humanoid\")\n    if humanoid then\n        humanoid:TakeDamage(10)\n    end\nend\n\nfunction Enemy:takeDamage(amount)\n    self.health -= amount\n    if self.health <= 0 then\n        self:destroy()\n    end\nend\n\nfunction Enemy:destroy()\n    if self.connection then self.connection:Disconnect() end\n    self.model:Destroy()\nend\n\nreturn Enemy\n\n-- Usage (server Script):\n-- local Enemy = require(script.Parent.Enemy)\n-- local goblin = Enemy.new(workspace.Goblin)",
+      "whyItWorks": "Each Enemy instance owns its model, health, and touch connection. Behavior (onTouched, takeDamage) lives once on the class.",
+      "commonMistake": "Skipping destroy() leaks the Touched connection forever — always pair constructors with cleanup."
+    }
+  ],
+  "related": ["metatables", "modules", "tables", "type-checking", "event-cleanup"],
+  "added": "2026-10-04"
+}

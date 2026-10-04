@@ -1,0 +1,59 @@
+{
+  "id": "pairs",
+  "title": "pairs()",
+  "category": "luau",
+  "type": "function",
+  "summary": "Iterates every key/value pair in a table — array part and dictionary part — in no particular order. The workhorse for walking dictionaries.",
+  "keywords": ["iterate dictionary", "for k v in pairs", "all entries"],
+  "tags": ["iteration", "dictionaries", "tables", "functions"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/builtins",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "pairs(t) --> iterator",
+    "details": [
+      {
+        "heading": "Order is unspecified",
+        "body": "The traversal order depends on internal hashing and can differ between runs. Never build gameplay on pairs order — sort a copy if you need order."
+      },
+      {
+        "heading": "Includes everything",
+        "body": "Unlike ipairs, pairs sees string keys, numeric keys, and mixed keys alike. In Luau, `for k, v in t` directly behaves like pairs for tables with a dictionary part."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The 'show me everything in this table' iterator — keys and values, any shape, any order.",
+    "whyItExists": "Dictionaries have no numeric sequence to walk; pairs visits whatever exists.",
+    "whenToUse": [
+      "Walking settings/config dictionaries",
+      "Counting or transforming all entries",
+      "Debug-printing a table's contents"
+    ],
+    "whenNotToUse": [
+      "When you need a guaranteed order — collect keys, `table.sort`, then iterate",
+      "When the table is an array and you want indices in order — use direct iteration/ipairs"
+    ],
+    "tips": [
+      "In Luau, `for k, v in t` works on any table and picks ipairs-style or pairs-style automatically",
+      "`next(t) == nil` is a fast emptiness check"
+    ],
+    "commonMistakes": [
+      "Expecting insertion order back — pairs gives none",
+      "Modifying the table while iterating it (adding keys is technically allowed for *existing* keys' values, but adding/removing keys mid-walk is undefined behavior)",
+      "Confusing pairs with 'sorted' output in tests and shipping order-dependent logic"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Ordered walk when you need it",
+      "code": "local inventory = { sword = 1, potion = 5, shield = 2 }\n\n-- Unordered (fine for totals):\nlocal total = 0\nfor _, count in inventory do\n    total += count\nend\nprint(\"Total items:\", total)   --> 8\n\n-- Ordered (when display matters):\nlocal keys = {}\nfor key in pairs(inventory) do table.insert(keys, key) end\ntable.sort(keys)\nfor _, key in keys do\n    print(key, inventory[key])\nend"
+    }
+  ],
+  "related": ["ipairs", "generic-for-loops", "dictionaries", "tables"],
+  "added": "2026-10-04"
+}

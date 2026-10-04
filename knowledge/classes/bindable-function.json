@@ -1,0 +1,58 @@
+{
+  "id": "bindable-function",
+  "title": "BindableFunction",
+  "category": "classes",
+  "type": "class",
+  "summary": "Same-side request/response: Invoke() calls another script's OnInvoke and returns its result — like RemoteFunction without the network. Rarely needed; direct function calls usually win.",
+  "keywords": ["bindable function", "Invoke", "OnInvoke", "same side request"],
+  "tags": ["events", "communication", "architecture"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/BindableFunction",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      { "name": "Invoke", "signature": "BindableFunction:Invoke(...: any) --> ...any", "description": "Calls the OnInvoke handler assigned on this side and returns its result." }
+    ],
+    "properties": [
+      { "name": "OnInvoke", "type": "function", "description": "Assigned handler: `bindable.OnInvoke = function(...) return value end`. Must be set before Invoke is called." }
+    ],
+    "details": [
+      {
+        "heading": "Same serialization caveat as BindableEvent",
+        "body": "Arguments and return values pass by deep copy; metatables are stripped."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A function call routed through an Instance so another script can implement it. 'Whoever owns this, answer me.'",
+    "whyItExists": "Historically: plugins and loosely-coupled systems that couldn't hold direct references to each other.",
+    "whenToUse": [
+      "Occasionally in plugin architectures or editor tooling",
+      "When scripts truly can't share module references and you need a reply"
+    ],
+    "whenNotToUse": [
+      "Almost always prefer requiring a module and calling its function directly — simpler, typed, faster, no copy semantics",
+      "Never for client/server — it doesn't cross the boundary"
+    ],
+    "mentalModel": "```text\nScript A:  local result = bindable:Invoke(10)\nScript B:  bindable.OnInvoke = function(x) return x * 2 end\n           -- result is 20\n```",
+    "tips": [
+      "If you reach for BindableFunction, ask first: 'can this be a ModuleScript function?' — usually yes"
+    ],
+    "commonMistakes": [
+      "Invoking before OnInvoke is assigned — errors",
+      "Expecting tables to pass by reference — they're copied"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Minimal usage",
+      "code": "-- Provider Script:\nlocal bindable = script.Parent.SomeBindableFunction\nbindable.OnInvoke = function(a, b)\n    return a + b\nend\n\n-- Consumer Script:\nlocal bindable = game.ServerScriptService.SomeBindableFunction\nprint(bindable:Invoke(20, 22))   --> 42"
+    }
+  ],
+  "related": ["bindable-event", "remote-function", "modules", "require"],
+  "added": "2026-10-04"
+}

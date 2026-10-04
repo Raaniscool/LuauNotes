@@ -1,0 +1,58 @@
+{
+  "id": "string-formatting",
+  "title": "string.format()",
+  "category": "luau",
+  "type": "function",
+  "summary": "Builds formatted strings from templates: %d integers, %s strings, %f/%.2f floats. Great for timers, prices, and any number-heavy UI text.",
+  "keywords": ["format string", "string.format", "%d", "%s", "template text", "interpolation alternative"],
+  "tags": ["strings", "formatting", "ui"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/strings",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "string.format(fmt: string, ...) --> string",
+    "details": [
+      {
+        "heading": "Common specifiers",
+        "body": "`%d` integer · `%s` string · `%f` float · `%.2f` two decimals · `%q` quoted/escaped string · `%x` hex · `%%` literal percent. Width/padding: `%5d` right-align, `%02d` zero-pad."
+      },
+      {
+        "heading": "Alternatives",
+        "body": "Luau interpolated strings `` `Value: {x}` `` cover most cases; string.format wins for numeric formatting (padding, decimals)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A template filler: describe the shape of your text once, drop values into the slots.",
+    "whyItExists": "Concatenating `\"0\" .. minutes` by hand for zero-padding gets old instantly.",
+    "whenToUse": [
+      "Timers: `%02d:%02d`",
+      "Prices/percentages: `%.1f%%`",
+      "Aligned columns of numbers"
+    ],
+    "whenNotToUse": [
+      "Simple text assembly — interpolated strings are cleaner",
+      "In extremely hot loops with trivial content"
+    ],
+    "tips": [
+      "`%02d` = two digits, zero-padded — the timer workhorse",
+      "Escape literal percents with `%%`"
+    ],
+    "commonMistakes": [
+      "Wrong specifier type: `%d` with a string argument errors",
+      "Forgetting to escape `%` in literal text"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Timers and prices",
+      "code": "local seconds = 125\nprint(string.format(\"%02d:%02d\", seconds // 60, seconds % 60))  --> 02:05\n\nlocal price = 19.5\nprint(string.format(\"Price: $%.2f\", price))   --> Price: $19.50\n\nlocal ratio = 0.337\nprint(string.format(\"%.1f%% complete\", ratio * 100))  --> 33.7% complete"
+    }
+  ],
+  "related": ["strings", "string-operations", "numbers"],
+  "added": "2026-10-04"
+}

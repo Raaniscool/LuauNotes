@@ -1,0 +1,55 @@
+{
+  "id": "local-functions",
+  "title": "Local Functions",
+  "category": "luau",
+  "type": "keyword",
+  "summary": "`local function name()` declares a function scoped to its block — faster to call and invisible outside. The default way to write helper functions in Roblox scripts.",
+  "keywords": ["local function", "helper function", "scoped function"],
+  "tags": ["functions", "scope", "local"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/functions",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "local function heal(character, amount)\n    character.Humanoid.Health += amount\nend"
+    ],
+    "details": [
+      {
+        "heading": "Recursion needs forward declaration",
+        "body": "`local function f()` cannot call itself during its own definition. For recursion, declare first: `local f; f = function(...) ... f(...) ... end`."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A function declared with `local`. It exists only from the declaration to the end of its block — other scripts, and code above the declaration, can't see it.",
+    "whyItExists": "Same benefits as local variables: no global pollution, typo safety, and faster calls (register access instead of `_G` lookup).",
+    "whenToUse": [
+      "For essentially every function you define in a script",
+      "Helpers used by one module: keep them local, export only the API"
+    ],
+    "whenNotToUse": [
+      "There's almost no reason to write bare `function name()` in Roblox code — linters flag it"
+    ],
+    "mentalModel": "```text\nlocal function helper()   -- lives only in this script\nend\n\nhelper()                  -- fine\n```\nElsewhere: `helper` would be nil.",
+    "tips": [
+      "Declare helpers near the top of the script, main logic below — reads like a table of contents",
+      "In modules, local functions are your private implementation; the returned table is the public API"
+    ],
+    "commonMistakes": [
+      "Calling a local function above its declaration — it's nil there",
+      "Writing `local function f()` then trying to reassign `f` — that's fine, but `local function` declares a fresh local; don't confuse it with updating an existing one"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Private helper in a module",
+      "code": "local CoinSpawner = {}\n\n-- private: only this module can see it\nlocal function randomPosition()\n    return Vector3.new(math.random(-50, 50), 10, math.random(-50, 50))\nend\n\n-- public: exported in the returned table\nfunction CoinSpawner.spawn(count)\n    for i = 1, count do\n        local coin = Instance.new(\"Part\")\n        coin.Name = \"Coin\"\n        coin.Position = randomPosition()\n        coin.Parent = workspace\n    end\nend\n\nreturn CoinSpawner"
+    }
+  ],
+  "related": ["functions", "anonymous-functions", "scope", "modules", "recursion"],
+  "added": "2026-10-04"
+}

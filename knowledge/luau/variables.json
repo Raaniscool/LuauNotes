@@ -1,0 +1,70 @@
+{
+  "id": "variables",
+  "title": "Variables",
+  "category": "luau",
+  "type": "concept",
+  "summary": "Named containers that store values. In Luau you almost always create them with `local` — bare assignments create globals, which is usually a mistake.",
+  "keywords": ["assignment", "store a value", "global variable", "naming variables"],
+  "tags": ["basics", "variables", "assignment"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "local name = value      -- preferred: local variable",
+      "name = value            -- global variable (avoid)"
+    ],
+    "details": [
+      {
+        "heading": "Naming rules",
+        "body": "Names must start with a letter or underscore, then contain letters, digits, or underscores. Names are case-sensitive (`Score` and `score` are different). Reserved words like `local`, `function`, `end`, `if`, `true`, `nil` cannot be used as names."
+      },
+      {
+        "heading": "Globals",
+        "body": "Assigning to a name that was never declared `local` writes to the global environment `_G`. This is legal but slow, typo-prone (a misspelled name silently creates a new global instead of erroring), and forbidden by most Roblox linters (Luau-LSP, Selene)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A variable is a name that refers to a value, so you can store something once and use it many times. Think of it as a labeled box: `local coins = 50` labels a box with the number 50, and every time you write `coins` Luau hands you whatever is in that box right now.",
+    "whyItExists": "Without variables you would have to recompute and retype every value constantly, and you could not track state that changes over time (health, coins, whether a door is open).",
+    "whenToUse": [
+      "Whenever you need to remember a value for later: `local playerName = player.Name`",
+      "To give a meaningful name to a long expression: `local spawnPoint = workspace.SpawnLocation.Position`",
+      "To hold state that changes: `local score = 0` … `score = score + 10`"
+    ],
+    "whenNotToUse": [
+      "Don't create globals by forgetting `local` — always write `local` unless you have a specific reason not to",
+      "Don't create a variable you only use once if the expression is already clear — `print(player.Name)` needs no intermediate variable"
+    ],
+    "mentalModel": "```text\nlocal coins = 50        -- label \"coins\" now points to 50\ncoins = coins + 10      -- read 50, add 10, point \"coins\" at 60\nprint(coins)            --> 60\n```\nA variable is a *label on a value*, not the value itself. Reassigning moves the label.",
+    "tips": [
+      "Use descriptive camelCase names: `playerHealth`, not `ph` or `x`",
+      "Declare variables as close to where they're used as possible",
+      "Multiple assignment works: `local a, b = 1, 2`"
+    ],
+    "commonMistakes": [
+      "Forgetting `local`, which creates a global: `score = 0` instead of `local score = 0`",
+      "Misspelling a name and silently creating a second variable: `playerScore` vs `playerScor`",
+      "Confusing `=` (assignment) with `==` (comparison). `if x = 5` is a syntax error"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Creating and updating a variable",
+      "code": "local coins = 50\nprint(coins)        --> 50\n\ncoins = coins + 25  -- update it\nprint(coins)        --> 75",
+      "whyItWorks": "`local coins = 50` creates the variable. `coins = coins + 25` reads the current value (50), adds 25, and reassigns the name to the new value (75)."
+    },
+    {
+      "title": "Variables hold any type of value",
+      "code": "local playerName = \"Raanis\"      -- string\nlocal health = 100                -- number\nlocal isAlive = true              -- boolean\nlocal inventory = {}              -- table\nlocal target = nil                -- explicitly \"nothing\"\n\nprint(playerName, health, isAlive)",
+      "whyItWorks": "A variable can hold any Luau value. Unlike some languages, Luau variables are not locked to one type — but in Roblox code it is still good habit to keep each variable's type consistent."
+    }
+  ],
+  "related": ["local-variables", "data-types", "scope", "nil", "comparisons"],
+  "added": "2026-10-04"
+}

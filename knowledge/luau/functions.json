@@ -1,0 +1,72 @@
+{
+  "id": "functions",
+  "title": "Functions",
+  "category": "luau",
+  "type": "concept",
+  "summary": "Reusable blocks of code with a name, parameters, and optional return values. Functions are values in Luau — you can store them in variables, tables, and pass them around.",
+  "keywords": ["define function", "call function", "arguments", "return value", "function declaration"],
+  "tags": ["basics", "functions"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/functions",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "-- named (global) function\nfunction greet(name)\n    return \"Hello, \" .. name\nend\n\n-- local function (preferred)\nlocal function add(a, b)\n    return a + b\nend\n\n-- function as a value\nlocal multiply = function(a, b) return a * b end"
+    ],
+    "details": [
+      {
+        "heading": "Parameters and arguments",
+        "body": "Missing arguments arrive as nil; extra arguments are ignored. A trailing `...` (varargs) captures any number of extra arguments."
+      },
+      {
+        "heading": "Return values",
+        "body": "A function can return any number of values: `return a, b`. With no return (or bare `return`), calls produce nil. Returns only matter as the *last* expression in some contexts — `(f())` keeps just the first value."
+      },
+      {
+        "heading": "Method-call sugar",
+        "body": "`obj:method(args)` is exactly `obj.method(obj, args)` — the object is passed as implicit first parameter `self`. That's how Roblox APIs like `event:Connect(fn)` work."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A function is a named recipe: give it ingredients (arguments), it runs the steps, and optionally hands something back (return values). Define once, call as many times as you like.",
+    "whyItExists": "Without functions you'd copy-paste the same code everywhere. Functions give logic a name, a single home, and a contract.",
+    "whenToUse": [
+      "Any code you write (or might use) twice",
+      "Event callbacks: `part.Touched:Connect(onTouched)`",
+      "To name a chunk of logic so readers see intent: `giveReward(player)` instead of 12 inlined lines"
+    ],
+    "whenNotToUse": [
+      "Don't wrap a single obvious line just to look busy — though a *named* line is still often worth it for readability"
+    ],
+    "mentalModel": "```text\nlocal function add(a, b)   -- the recipe\n    return a + b\nend\n\nlocal result = add(2, 3)   -- the call\n-- a=2, b=3 inside; result is now 5\n```\nCalling a function is handing over inputs and (maybe) receiving outputs.",
+    "tips": [
+      "Prefer `local function` — same reasons as local variables",
+      "Return early for guards: `if not player then return end` keeps nesting shallow",
+      "Functions are values: you can put them in tables (command handlers) or return them from functions (factories)"
+    ],
+    "commonMistakes": [
+      "Calling before defining: `local function` must be declared before use",
+      "Forgetting `return`, so the caller gets nil",
+      "Confusing `print(f())` with `print(f)` — the second prints the function itself, not its result",
+      "Forgetting `self` when writing `obj:method()` vs `obj.method()`"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Defining and calling",
+      "code": "local function applyDamage(target, amount)\n    if not target or not target:FindFirstChild(\"Humanoid\") then\n        return false   -- guard: no humanoid, no damage\n    end\n    target.Humanoid:TakeDamage(amount)\n    return true\nend\n\nlocal ok = applyDamage(character, 25)\nif ok then print(\"Hit!\") end",
+      "whyItWorks": "The guard clause exits early when the target is invalid, keeping the happy path un-nested."
+    },
+    {
+      "title": "Multiple return values",
+      "code": "local function splitName(fullName)\n    local first, last = fullName:match(\"^(%S+)%s+(%S+)$\")\n    return first, last\nend\n\nlocal first, last = splitName(\"Ada Lovelace\")\nprint(first, last)   --> Ada  Lovelace"
+    }
+  ],
+  "related": ["local-functions", "anonymous-functions", "return", "closures", "scope", "recursion"],
+  "added": "2026-10-04"
+}

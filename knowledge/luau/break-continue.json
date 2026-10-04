@@ -1,0 +1,61 @@
+{
+  "id": "break-continue",
+  "title": "break & continue",
+  "category": "luau",
+  "type": "keyword",
+  "summary": "Loop control: `break` exits the loop immediately; `continue` (Luau) skips the rest of the current iteration and jumps to the next one.",
+  "keywords": ["exit loop", "skip iteration", "stop looping", "continue statement"],
+  "tags": ["basics", "loops", "control-flow"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "for i = 1, 10 do\n    if i > 5 then break end        -- stop entirely\n    if i % 2 == 0 then continue end -- skip this iteration\n    print(i)                        -- prints 1, 3, 5\nend"
+    ],
+    "details": [
+      {
+        "heading": "continue is Luau-only",
+        "body": "Classic Lua 5.1 has no `continue` — you'll see older code emulate it with `repeat ... until true` + break. In Luau just use `continue`."
+      },
+      {
+        "heading": "Innermost loop only",
+        "body": "Both statements affect only the loop they're directly inside. In nested loops, use flags or restructure if you need to break two levels."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "`break` is the emergency exit; `continue` is 'skip ahead to the next round'. Together they let loops stop early or filter work.",
+    "whyItExists": "Searching: stop when found. Filtering: ignore cases you don't care about without nesting everything in an if.",
+    "whenToUse": [
+      "`break` after finding what you searched for",
+      "`continue` to invert guard conditions: `if dead then continue end`",
+      "Bailing out of expensive loops when the goal is already met"
+    ],
+    "whenNotToUse": [
+      "Don't sprinkle breaks everywhere 'to be safe' — it makes loop flow unreadable",
+      "Don't use break/continue to compensate for a wrong loop condition; fix the condition"
+    ],
+    "mentalModel": "```text\nfor _, player in Players:GetPlayers() do\n    if player.Team ~= myTeam then continue end  -- skip others\n    if player.Name == target then\n        found = player\n        break                                   -- stop searching\n    end\nend\n```\ncontinue = 'next, please'. break = 'we're done here'.",
+    "tips": [
+      "`continue` must be the last statement of its block (like return) — wrap logic accordingly",
+      "A loop that always breaks on iteration one is really an `if` in disguise"
+    ],
+    "commonMistakes": [
+      "Placing `continue` mid-block with code after it — parse error; restructure with if/else",
+      "Expecting break to exit nested loops — it exits only the innermost"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Find the first matching part",
+      "code": "local found = nil\nfor _, child in workspace:GetChildren() do\n    if not child:IsA(\"BasePart\") then continue end\n    if child.Name == \"GoldenCoin\" then\n        found = child\n        break   -- no need to keep scanning\n    end\nend\nprint(found and `Found at {found.Position}` or \"Not found\")"
+    }
+  ],
+  "related": ["while-loops", "numeric-for-loops", "generic-for-loops", "if-statements"],
+  "added": "2026-10-04"
+}

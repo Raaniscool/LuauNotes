@@ -1,0 +1,71 @@
+{
+  "id": "numeric-for-loops",
+  "title": "Numeric For Loops",
+  "category": "luau",
+  "type": "keyword",
+  "summary": "`for i = start, finish, step do ... end` counts from start to finish (inclusive) with an optional step. The loop variable is local and read-only.",
+  "keywords": ["count loop", "for i", "iterate n times", "loop range"],
+  "tags": ["basics", "loops", "control-flow"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "for i = 1, 10 do          -- i: 1,2,...,10 (step defaults to 1)",
+      "for i = 10, 1, -1 do      -- countdown: 10,9,...,1",
+      "for i = 0, 1, 0.25 do     -- fractional steps work"
+    ],
+    "details": [
+      {
+        "heading": "Bounds are evaluated once",
+        "body": "start, finish and step are computed once before the loop begins. Changing related variables inside the loop does not change the endpoint."
+      },
+      {
+        "heading": "The loop variable is read-only",
+        "body": "Assigning to `i` inside the body is an error in Luau. If you need a moving counter, use a separate local."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The counting loop. 'Do this N times', 'count down from 10', 'hit every third index'.",
+    "whyItExists": "Counting is the most common loop shape; a dedicated syntax keeps it short and off-by-error-free.",
+    "whenToUse": [
+      "Repeating something exactly N times",
+      "Countdowns (round timers displayed every second)",
+      "Stepping through indices with a custom step",
+      "Backwards array removal: `for i = #t, 1, -1 do`"
+    ],
+    "whenNotToUse": [
+      "For iterating over a table's elements — use generic for (`for i, v in t`); it survives length changes and reads better",
+      "When the endpoint changes during the loop — numeric for locks bounds at start"
+    ],
+    "mentalModel": "```text\nfor i = 1, 3 do\n    print(i)\nend\n--> 1\n--> 2\n--> 3     (finish is INCLUSIVE)\n\nfor i = 1, 0 do   -- start already past finish\nend               --> runs zero times\n```",
+    "tips": [
+      "Inclusive upper bound trips people up: `for i = 1, #list` visits exactly #list elements — perfect for arrays",
+      "Negative step needs start > finish or the loop never runs",
+      "The loop variable is fresh each iteration — safe to close over in callbacks? No! It's shared per-iteration; capture with `local j = i` if needed (Luau: loop vars are per-iteration, so closures actually get their own copy — this is a Luau improvement over Lua 5.1)"
+    ],
+    "commonMistakes": [
+      "Expecting the finish to be exclusive (like Python's range) — it's inclusive",
+      "Trying to reassign `i` inside the body — that's an error",
+      "Writing `for i = #t, 1` without `-1` and getting zero iterations"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Countdown + backwards removal",
+      "code": "-- Classic countdown\nfor t = 5, 1, -1 do\n    print(t)\n    task.wait(1)\nend\nprint(\"GO!\")\n\n-- Safe removal while iterating (backwards!)\nlocal items = {\"keep\", \"drop\", \"keep\", \"drop\"}\nfor i = #items, 1, -1 do\n    if items[i] == \"drop\" then\n        table.remove(items, i)\n    end\nend",
+      "whyItWorks": "Walking backwards means removing item i never shifts the items you still need to visit (1..i-1)."
+    },
+    {
+      "title": "Spawning a grid of parts",
+      "code": "for x = -2, 2 do\n    for z = -2, 2 do\n        local part = Instance.new(\"Part\")\n        part.Size = Vector3.new(1, 1, 1)\n        part.Position = Vector3.new(x * 4, 0.5, z * 4)\n        part.Parent = workspace\n    end\nend\n-- 25 parts in a 5x5 grid"
+    }
+  ],
+  "related": ["generic-for-loops", "while-loops", "arrays", "break-continue"],
+  "added": "2026-10-04"
+}

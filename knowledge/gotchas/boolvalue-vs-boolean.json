@@ -1,0 +1,41 @@
+{
+  "id": "boolvalue-vs-boolean",
+  "title": "BoolValue ≠ boolean",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "BoolValue is an INSTANCE whose .Value is a boolean. Truthiness bites here: `if boolValue then` is ALWAYS truthy (it's an object!) — you must check boolValue.Value.",
+  "keywords": ["boolvalue always true", "instance truthiness", "check value of boolvalue", "boolean vs boolvalue"],
+  "tags": ["gotchas", "values", "truthiness"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/BoolValue",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "A double trap: wrapper objects plus Luau truthiness (only nil/false are falsy). A BoolValue is neither — it's an object, so it's truthy even when its Value is false.",
+    "whyItExists": "Same reason all value objects exist: putting plain data in the tree. The confusion is the price.",
+    "symptoms": [
+      "if flag then runs even when flag.Value == false",
+      "Conditions that 'ignore' your false settings"
+    ],
+    "fix": "Always compare the .Value: if flag.Value then. Same discipline as forgetting-dot-value.",
+    "tips": [
+      "Modern alternative: instance attributes (flag:GetAttribute(\"IsOpen\")) return real booleans",
+      "BoolValue.Changed passes the new boolean — handy for reactive systems"
+    ],
+    "commonMistakes": [
+      "Passing BoolValue objects where booleans are expected",
+      "not boolValue — still truthy object logic"
+    ]
+  },
+  "examples": [
+    {
+      "title": "The trap",
+      "code": "local isOpen = Instance.new(\"BoolValue\")\nisOpen.Value = false\n\nif isOpen then\n    print(\"This runs! isOpen is an object — truthy\")\nend\n\nif isOpen.Value then\n    print(\"This correctly does NOT run\")\nelse\n    print(\"False checked properly\")\nend"
+    }
+  ],
+  "related": ["value-base-value", "truthiness", "forgetting-dot-value", "attributes"],
+  "added": "2026-10-04"
+}

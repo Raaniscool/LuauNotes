@@ -1,0 +1,43 @@
+{
+  "id": "invoke-server-yields",
+  "title": "InvokeServer Yields (and can hang)",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "InvokeServer pauses the calling thread until the server's OnServerInvoke returns. If that handler errors, yields forever, or is unset, your client thread is stuck — often silently. Wrap in pcall, set expectations.",
+  "keywords": ["invoke hangs", "frozen client", "remote yield", "pcall invoke", "blocked thread"],
+  "tags": ["gotchas", "remotes", "timing"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/RemoteFunction",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Asking a question and waiting for the answer — with no built-in timeout. The waiting IS the feature; the danger is waiting forever.",
+    "whyItExists": "Request/response needs synchronization; yielding is the simplest correct implementation.",
+    "symptoms": [
+      "UI never appears after an InvokeServer line",
+      "'Works after touching something' — a later event resumed unrelated threads while yours stayed parked",
+      "No error at all — just nothing happening afterwards"
+    ],
+    "fix": "pcall the invoke; keep OnServerInvoke handlers fast, non-yielding, and error-free; prefer events when you don't truly need the answer immediately.",
+    "tips": [
+      "Server handlers that yield (WaitForChild forever etc.) park every caller",
+      "Never InvokeClient — same hang risk plus exploiters control the reply"
+    ],
+    "commonMistakes": [
+      "OnServerInvoke set in a script that errored earlier → unset → instant return of nil? Actually unset InvokeServer errors; debug the server script first",
+      "Invoking in loops thinking it's cheap — each is a round trip",
+      "No fallback path when invoke fails"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Defensive invoke",
+      "code": "-- ❌ Silent hang risk:\n-- local data = remote:InvokeServer()\n-- setupUI(data)   ← never runs if invoke hangs\n\n-- ✅ Guarded:\nlocal ok, data = pcall(function()\n    return remote:InvokeServer()\nend)\n\nif ok and data then\n    setupUI(data)\nelse\n    warn(\"Data fetch failed — using defaults\")\n    setupUI(getDefaultData())\nend"
+    }
+  ],
+  "related": ["invoke-server", "remote-function", "yielding", "request-response"],
+  "added": "2026-10-04"
+}

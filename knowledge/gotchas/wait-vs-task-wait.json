@@ -1,0 +1,42 @@
+{
+  "id": "wait-vs-task-wait",
+  "title": "wait() vs task.wait()",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "Legacy wait() rounds up to ~1/30s steps, caps at 10 minutes, and returns three values. task.wait() is precise, has no cap, and returns elapsed time. New code should always use task.wait.",
+  "keywords": ["old wait", "deprecated wait", "imprecise delay", "wait inaccurate", "task.wait better"],
+  "tags": ["gotchas", "timing", "modernization"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/libraries/task",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Two generations of the same idea. The old one is quantized to the frame scheduler's coarsest step and behaves oddly; the new one honors your number.",
+    "whyItExists": "wait() predates the task scheduler rework; keeping it avoids breaking ancient games, but it shouldn't ship in new ones.",
+    "symptoms": [
+      "wait(0.1) actually waiting ~0.03–0.09 or longer",
+      "Timing-sensitive sequences drifting",
+      "Old tutorials everywhere using bare wait()"
+    ],
+    "fix": "Replace wait(x) with task.wait(x); replace wait() with task.wait() (yields a single frame); replace spawn/delay with task.spawn/task.delay.",
+    "tips": [
+      "task.wait returns ELAPSED time — usually more useful than the legacy triple",
+      "task library functions also come in pairs: task.spawn/task.delay/task.defer"
+    ],
+    "commonMistakes": [
+      "Copying tutorial code with wait()/spawn()/delay() verbatim",
+      "Assuming wait() precision for rhythm/cooldown mechanics"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Side by side",
+      "code": "-- ❌ legacy:\nwait(0.5)                    -- may sleep coarser than 0.5\nlocal s = spawn(function() end)\n\n-- ✅ modern:\ntask.wait(0.5)               -- honors 0.5s\nlocal elapsed = task.wait(1) -- returns actual elapsed\nlocal thread = task.spawn(function() end)"
+    }
+  ],
+  "related": ["task-library", "yielding", "script-library"],
+  "added": "2026-10-04"
+}

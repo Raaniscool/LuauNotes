@@ -1,0 +1,43 @@
+{
+  "id": "module-return-mistakes",
+  "title": "ModuleScript Return Mistakes",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "ModuleScripts must return EXACTLY ONE value, at the end. Returning nothing gives nil, returning from inside a function returns nothing, and early returns kill the module. require() then hands you nil or errors.",
+  "keywords": ["module returns nil", "require nil", "module not returning", "module return rule"],
+  "tags": ["gotchas", "modules", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ModuleScript",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "The module contract: run once, hand back one table (usually), forever. Breaking any part of it silently degrades require() results.",
+    "whyItExists": "require caches the returned value as the module's identity; no return = no identity = nil.",
+    "symptoms": [
+      "require(mod) → nil, then 'attempt to index nil' errors",
+      "Module 'works' in one script but nils in another (different require order revealing a yield bug)",
+      "Return buried inside an if/function that never runs"
+    ],
+    "fix": "One top-level `return Module` as the module's final act; keep setup before it; keep returns out of nested functions.",
+    "tips": [
+      "Template: local Module = {} … return Module",
+      "If init must yield, document it and require from threads you can afford to pause"
+    ],
+    "commonMistakes": [
+      "Returning from inside an init function instead of module scope",
+      "Two returns (only the first counts; the second is dead code)",
+      "Returning a fresh table per call — impossible via require, but people write helpers that do"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Broken vs fixed",
+      "code": "-- ❌ Returns nil:\nlocal M = {}\nfunction M.init()\n    return M          -- return inside function ≠ module return!\nend\n\n-- ✅\nlocal M = {}\nfunction M.init() end\nreturn M              -- top level, exactly one value"
+    }
+  ],
+  "related": ["modulescript", "require", "object-oriented-programming"],
+  "added": "2026-10-04"
+}

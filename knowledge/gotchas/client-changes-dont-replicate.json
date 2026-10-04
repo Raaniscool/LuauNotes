@@ -1,0 +1,42 @@
+{
+  "id": "client-changes-dont-replicate",
+  "title": "Client Changes Don't Reach the Server",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "When a LocalScript modifies instances or leaderstats, only THAT client sees it. Other players — and the server — keep the old state. Gameplay mutations must flow through the server.",
+  "keywords": ["changes only for me", "other players don't see", "client side only", "stats not replicating", "single player sees change"],
+  "tags": ["gotchas", "networking", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/production/security",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Your client lives in a private mirror world. Edits there are real — to you alone.",
+    "whyItExists": "If client edits replicated, every exploiter would own the game. Authority flows one way: server → clients.",
+    "symptoms": [
+      "'It works on my screen' but teammates see nothing",
+      "leaderstats updated by LocalScript — scoreboard unchanged for others",
+      "Parts created client-side vanish/revert for everyone else"
+    ],
+    "fix": "Send the INTENT via RemoteEvent; let a server Script validate and make the change. Client-side visuals (your camera, your UI) are the exception, not gameplay.",
+    "tips": [
+      "Test with TWO clients (Studio → Test → Clients: 2) to catch this early",
+      "Prediction: apply locally for feel, reconcile with server truth"
+    ],
+    "commonMistakes": [
+      "Currency/shop changes in LocalScripts — exploitable AND invisible to others",
+      "Assuming 'server showed it to me' means 'server will show my edits to others'"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Intent, not edit",
+      "code": "-- ❌ LocalScript (only you see it):\n-- player.leaderstats.Coins.Value += 100\n\n-- ✅ LocalScript sends intent:\nlocal remote = game.ReplicatedStorage.Remotes.AddCoins\nremote:FireServer(100)\n\n-- ✅ Server Script validates + applies for everyone:\nremote.OnServerEvent:Connect(function(player, amount)\n    if typeof(amount) ~= \"number\" or amount <= 0 then return end\n    -- …validate the source (earned it?) then:\n    player.leaderstats.Coins.Value += math.floor(amount)\nend)"
+    }
+  ],
+  "related": ["client-vs-server", "replication", "never-trust-the-client", "fire-server", "server-validation"],
+  "added": "2026-10-04"
+}

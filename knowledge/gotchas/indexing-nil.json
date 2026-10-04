@@ -1,0 +1,44 @@
+{
+  "id": "indexing-nil",
+  "title": "'attempt to index nil'",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "The most common runtime error: you wrote a.b.c but somewhere in the chain a value was nil. FindFirstChild returns nil instead of erroring — so chains silently break. Guard each hop.",
+  "keywords": ["index nil error", "attempt to index", "nil chain", "FindFirstChild nil", "broken path"],
+  "tags": ["gotchas", "errors", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Dot-walking into emptiness: one link of the path is nil, and indexing nil explodes with this message.",
+    "whyItExists": "Roblox lookups are forgiving (FindFirstChild → nil) so MISSING isn't fatal — but USING the nil is.",
+    "symptoms": [
+      "'attempt to index nil with 'Position'' (or any member name)",
+      "Code that works in Studio, fails on live servers (replication timing!)",
+      "Works the second time — first run raced the object's creation"
+    ],
+    "fix": "Guard hops (local x = parent:FindFirstChild(\"X\") if x then…), WaitForChild for async arrivals, assert() with a message during development.",
+    "tips": [
+      "Read the error's MEMBER name — it tells you which hop was nil",
+      "Add timeouts to WaitForChild to avoid infinite yields",
+      "And-then chains: local a = b and b:FindFirstChild(\"c\")"
+    ],
+    "commonMistakes": [
+      "Dot-indexing names that might not exist yet",
+      "Caching nil at startup and using it forever",
+      "Blaming 'Roblox' instead of the missing hop"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Guarded traversal",
+      "code": "-- ❌ Explodes if Map or Spawn is missing:\n-- local p = workspace.Map.Spawn.Position\n\n-- ✅ Guard each hop:\nlocal map = workspace:FindFirstChild(\"Map\")\nlocal spawn = map and map:FindFirstChild(\"Spawn\")\nif spawn then\n    print(\"Spawn at\", spawn.Position)\nelse\n    warn(\"Map.Spawn missing — check hierarchy\")\nend\n\n-- ✅ Async arrival:\nlocal ok, part = pcall(function()\n    return workspace:WaitForChild(\"Map\", 5):WaitForChild(\"Spawn\", 5)\nend)\nif not ok then warn(\"Spawn never appeared\") end"
+    }
+  ],
+  "related": ["find-first-child", "wait-for-child", "wrong-object-paths", "replication-timing", "nil"],
+  "added": "2026-10-04"
+}

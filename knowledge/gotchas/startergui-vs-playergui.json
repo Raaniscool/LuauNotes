@@ -1,0 +1,42 @@
+{
+  "id": "startergui-vs-playergui",
+  "title": "StarterGui vs PlayerGui (GUI not showing)",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "StarterGui is a TEMPLATE folder — clients copy its contents into each Player.PlayerGui at spawn. Code that toggles/reads GUIs must target PlayerGui (the live copy). Edits to StarterGui at runtime don't show.",
+  "keywords": ["gui not showing", "gui not updating", "startergui copy", "playergui live", "ui invisible bug"],
+  "tags": ["gotchas", "gui", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/StarterGui",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Blueprint vs building: StarterGui stores the blueprint; PlayerGui holds the building the player actually sees.",
+    "whyItExists": "Each player needs their own UI state (health, inventory); copying from a shared template at spawn gives fresh per-player state.",
+    "symptoms": [
+      "Setting Visible=true on a StarterGui frame — nothing happens on screen",
+      "Finding GUI children in StarterGui but the UI stays hidden",
+      "Changes 'work' in Studio's Start but not live clients (or vice versa)"
+    ],
+    "fix": "From LocalScripts use player:WaitForChild(\"PlayerGui\"); design in StarterGui, interact with PlayerGui. Remember ResetOnSpawn re-copies some GUIs.",
+    "tips": [
+      "In a LocalScript: local player = game:GetService(\"Players\").LocalPlayer",
+      "ScreenGui.ResetOnSpawn=false keeps runtime changes across respawns"
+    ],
+    "commonMistakes": [
+      "Server scripts trying to modify StarterGui expecting live results",
+      "Caching the StarterGui instance and wondering why UI state resets"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Right target",
+      "code": "-- ❌ Blueprint editing (invisible to everyone):\n-- game.StarterGui.Menu.Visible = true\n\n-- ✅ Live copy:\nlocal Players = game:GetService(\"Players\")\nlocal player = Players.LocalPlayer\nlocal playerGui = player:WaitForChild(\"PlayerGui\")\nlocal menu = playerGui:WaitForChild(\"Menu\")\nmenu.Enabled = true"
+    }
+  ],
+  "related": ["starter-gui", "player-gui", "screengui", "screen-gui-reset-on-spawn", "gui-hierarchy-requirements"],
+  "added": "2026-10-04"
+}

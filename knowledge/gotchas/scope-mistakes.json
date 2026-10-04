@@ -1,0 +1,43 @@
+{
+  "id": "scope-mistakes",
+  "title": "Scope & local Mistakes",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "Declaring locals inside blocks makes them invisible outside; forgetting `local` creates globals; shadowing re-declares a name and the old value silently survives elsewhere. Most 'variable not updating' bugs are scope bugs.",
+  "keywords": ["variable lost", "scope bug", "shadowing", "local missing", "global accidentally"],
+  "tags": ["gotchas", "scope", "basics"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Where a name lives decides who sees it — and whether updates hit the variable you think they hit.",
+    "whyItExists": "Lexical scope keeps big programs sane; the sharp edges show when declarations and uses land in different blocks.",
+    "symptoms": [
+      "Counter 'resets' — you re-declared it inside a loop/function",
+      "Two counters: one updated, one read (shadowing)",
+      "Strict mode complaining about globals from missing `local`"
+    ],
+    "fix": "Declare at the WIDEST scope that needs it; always write `local`; rename when shadowing by accident; enable strict mode.",
+    "tips": [
+      "Hoist state up: local score = 0 BEFORE the loop that updates it",
+      "Luau's --!strict helps catch scope slips at edit time"
+    ],
+    "commonMistakes": [
+      "local x = 0 inside a function called repeatedly → always 0",
+      "if blocks creating throwaway locals you expected to persist",
+      "Shadowing a parameter with a same-named local inside"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Reset vs hoisted",
+      "code": "-- ❌ Resets every call:\nlocal function onHit()\n    local hits = 0        -- fresh zero every time\n    hits += 1\n    print(hits)           -- always 1\nend\n\n-- ✅ Hoisted:\nlocal hits = 0\nlocal function onHitSafe()\n    hits += 1\n    print(hits)           -- 1, 2, 3…\nend\n\n-- Shadowing trap:\nlocal mode = \"walk\"\ndo\n    local mode = \"run\"    -- NEW variable, dies with the block\n    print(mode)           --> run\nend\nprint(mode)               --> walk (unchanged!)"
+    }
+  ],
+  "related": ["variables", "scope", "functions", "block-scope"],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,53 @@
+{
+  "id": "folder",
+  "title": "Folder",
+  "category": "classes",
+  "type": "class",
+  "summary": "A bare organizational container with no behavior — the 'plain box' for grouping anything: remotes, effects, config objects, workspace clutter.",
+  "keywords": ["container", "organization", "group objects", "empty container"],
+  "tags": ["classes", "containers", "organization"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Folder",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "No extras",
+        "body": "Folder adds nothing beyond Instance basics (Name, Parent, children). No physics, no rendering, no special events — that's the point."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A drawer label. It exists purely to hold other things together under one name.",
+    "whyItExists": "Hierarchy hygiene: 'Remotes', 'Effects', 'Zombies' — named groups keep the Explorer sane and lookups short.",
+    "whenToUse": [
+      "Grouping runtime-spawned objects (workspace.Effects)",
+      "Organizing remotes/modules under named folders",
+      "Holding leaderstats (a Folder named 'leaderstats' on the Player is the leaderboard convention)"
+    ],
+    "whenNotToUse": [
+      "When you need model-like behavior (pivot, bounding box) — use Model",
+      "For GUI layout — Frames are the GUI containers"
+    ],
+    "tips": [
+      "The leaderstats convention is literally just a Folder — name it exactly 'leaderstats'",
+      "Folders replicate like anything else — great for organizing ReplicatedStorage"
+    ],
+    "commonMistakes": [
+      "Confusing Folder with Model when you actually need physics grouping",
+      "Deep folder nesting making paths brittle — balance organization with path length"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Effects container pattern",
+      "code": "local effects = Instance.new(\"Folder\")\neffects.Name = \"Effects\"\neffects.Parent = workspace\n\nlocal function spawnExplosion(position)\n    local part = Instance.new(\"Part\")\n    part.Anchored = true\n    part.CanCollide = false\n    part.Position = position\n    part.Parent = effects   -- all effects live in one tidy place\n    game:GetService(\"Debris\"):AddItem(part, 2)\nend"
+    }
+  ],
+  "related": ["model", "instance", "leaderstats", "replicated-storage"],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,80 @@
+{
+  "id": "humanoid",
+  "title": "Humanoid",
+  "category": "classes",
+  "type": "class",
+  "summary": "The 'alive' component of characters: health, movement (WalkSpeed, JumpPower), states (running, swimming), Died event, and character controls like MoveTo and TakeDamage. Present in every player character.",
+  "keywords": ["health", "died", "WalkSpeed", "JumpPower", "MoveTo", "TakeDamage", "character controller", "states", "healthbar"],
+  "tags": ["classes", "characters", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Humanoid",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "Health / MaxHealth", "type": "number", "description": "Current/maximum health. Health <= 0 kills the character (Died fires)." },
+      { "name": "WalkSpeed", "type": "number", "description": "Movement speed in studs/second (default 16)." },
+      { "name": "JumpPower / JumpHeight / UseJumpPower", "type": "number / number / boolean", "description": "Jump strength — either power or height mode." },
+      { "name": "MoveDirection", "type": "Vector3", "description": "Direction the character is currently trying to move (read-only-ish)." },
+      { "name": "AutoRotate", "type": "boolean", "description": "Whether the character turns to face movement direction." },
+      { "name": "DisplayDistanceType", "type": "Enum.HumanoidDisplayDistanceType", "description": "Controls the overhead name/health display." },
+      { "name": "RigType", "type": "Enum.HumanoidRigType", "description": "R6 or R15." }
+    ],
+    "events": [
+      { "name": "Died", "signature": "Humanoid.Died:Connect(function() end)", "description": "Fires when health reaches 0. THE standard death hook — but it fires once and the Humanoid is then dead." },
+      { "name": "HealthChanged", "signature": "Humanoid.HealthChanged:Connect(function(health: number) end)", "description": "Fires on every health change — great for health bars." },
+      { "name": "StateChanged", "signature": "Humanoid.StateChanged:Connect(function(old: Enum.HumanoidStateType, new: Enum.HumanoidStateType) end)", "description": "Movement/state transitions: Running, Jumping, Swimming, Climbing, Dead…" },
+      { "name": "Touched", "signature": "Humanoid.Touched", "description": "Legacy; prefer part Touched events." }
+    ],
+    "methods": [
+      { "name": "TakeDamage", "signature": "Humanoid:TakeDamage(amount: number)", "description": "Applies damage respecting ForceField invulnerability." },
+      { "name": "MoveTo", "signature": "Humanoid:MoveTo(location: Vector3, part: BasePart?)", "description": "NPC walking: instructs the character to walk toward a point. Fires MoveToFinished when it arrives (or gives up)." },
+      { "name": "Jump", "signature": "(write Jump = true)", "description": "Setting the Jump property to true makes the character jump." },
+      { "name": "LoadAnimation", "signature": "Humanoid:LoadAnimation(animation: Animation) --> AnimationTrack", "description": "Legacy path; prefer Animator:LoadAnimation via the Animator object." },
+      { "name": "GetState", "signature": "Humanoid:GetState() --> Enum.HumanoidStateType", "description": "Current state (Running, Jumping, Dead…)." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The brain-and-vitals object inside every character model: it's what makes a pile of parts a living, walking, damageable character.",
+    "whyItExists": "Characters share enormous behavior — health, walking, jumping, dying. Humanoid packages all of it once.",
+    "whenToUse": [
+      "Damage: TakeDamage or Health math on the server (authoritative!)",
+      "Death detection: Died event",
+      "Health bars: HealthChanged",
+      "NPC movement: MoveTo + MoveToFinished",
+      "Gameplay modifiers: changing WalkSpeed/JumpPower"
+    ],
+    "whenNotToUse": [
+      "Client-authoritative damage — clients must request, servers must decide",
+      "Non-character objects — they don't need a Humanoid"
+    ],
+    "mentalModel": "```text\nCharacter (Model)\n ├─ Humanoid          ← health, movement, death\n ├─ HumanoidRootPart  ← the anchor part\n ├─ Animator          ← animation playback\n └─ body parts…\n\nNo Humanoid → not a character.\nHealth 0 → Died → respawn handling.\n```",
+    "tips": [
+      "Characters respawn: reconnect Died each time via CharacterAdded, not once per player",
+      "Find the humanoid with character:FindFirstChildOfClass(\"Humanoid\") — name lookups can fail",
+      "ForceField (spawn protection) blocks TakeDamage — check before expecting damage",
+      "NPC pathing: pair MoveTo with PathfindingService for obstacles"
+    ],
+    "commonMistakes": [
+      "Applying damage from a LocalScript and trusting it — exploiters will heal themselves",
+      "Expecting Died to fire again after respawn — new character = new Humanoid",
+      "Setting Health on the client — it replicates poorly and isn't authoritative",
+      "Forgetting MoveTo can fail/time out — always listen to MoveToFinished"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Server-side damage + death handling",
+      "code": "local Players = game:GetService(\"Players\")\n\nlocal function setupCharacter(player, character)\n    local humanoid = character:WaitForChild(\"Humanoid\")\n\n    humanoid.Died:Connect(function()\n        print(player.Name .. \" died\")\n        -- leaderstats, kill feed, respawn logic, etc.\n    end)\n\n    humanoid.HealthChanged:Connect(function(health)\n        -- e.g. replicate to a custom health bar\n    end)\nend\n\nPlayers.PlayerAdded:Connect(function(player)\n    player.CharacterAdded:Connect(function(character)\n        setupCharacter(player, character)\n    end)\nend)"
+    },
+    {
+      "title": "Simple NPC patrol with MoveTo",
+      "code": "local npc = workspace.NPC\nlocal humanoid = npc:WaitForChild(\"Humanoid\")\nlocal waypoints = workspace.PatrolPoints:GetChildren()\nlocal i = 1\n\nwhile humanoid.Health > 0 do\n    local target = waypoints[i]\n    humanoid:MoveTo(target.Position)\n    humanoid.MoveToFinished:Wait()   -- wait until arrived/timeout\n    i = i % #waypoints + 1\nend"
+    }
+  ],
+  "related": ["humanoid-died", "player", "character-added", "animator", "animation", "part", "client-vs-server", "humanoid-health"],
+  "added": "2026-10-04"
+}

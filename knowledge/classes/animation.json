@@ -1,0 +1,51 @@
+{
+  "id": "animation",
+  "title": "Animation",
+  "category": "classes",
+  "type": "class",
+  "summary": "A reference object pointing to an animation asset by AnimationId. You don't play it directly — Animator:LoadAnimation turns it into an AnimationTrack you control.",
+  "keywords": ["AnimationId", "animation asset", "animation reference", "emotes"],
+  "tags": ["classes", "animation"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Animation",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "AnimationId", "type": "Content", "description": "The asset: \"rbxassetid://507770239\". Must be owned/usable by your experience." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The 'cassette tape' of animation: an Instance that names which animation to load. Playback lives on AnimationTrack.",
+    "whyItExists": "Animations are assets; Roblox needs an Instance to reference and configure them (and to place in StarterPlayer defaults).",
+    "whenToUse": [
+      "Creating Animation instances to load via Animator",
+      "Configuring default animations (the Animate script uses these)",
+      "Emotes and ability animations stored as assets"
+    ],
+    "whenNotToUse": [
+      "Expecting to Play() an Animation — that's AnimationTrack",
+      "Non-character animation — tween parts or use Motor6D transforms instead"
+    ],
+    "mentalModel": "```text\nAnimation (the asset pointer)\n      │ Animator:LoadAnimation(animation)\n      ▼\nAnimationTrack (the player)\n      │ :Play(), :Stop(), .Stopped\n      ▼\nMotor6D transforms animate → character moves\n```",
+    "tips": [
+      "Upload animations via the Animation Editor; note the asset id",
+      "Ownership rules: animations must be created/owned by the experience or its creator"
+    ],
+    "commonMistakes": [
+      "Loading an animation whose asset isn't usable in your experience → load error",
+      "Confusing Animation (asset) with AnimationTrack (playback)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "From asset to playing track",
+      "code": "local animation = Instance.new(\"Animation\")\nanimation.AnimationId = \"rbxassetid://507770239\"\n\nlocal animator = character:WaitForChild(\"Humanoid\"):WaitForChild(\"Animator\")\nlocal track = animator:LoadAnimation(animation)\ntrack.Looped = false\ntrack:Play()\n\ntrack.Stopped:Connect(function()\n    print(\"Animation finished\")\nend)"
+    }
+  ],
+  "related": ["animator", "humanoid", "motor6d"],
+  "added": "2026-10-04"
+}

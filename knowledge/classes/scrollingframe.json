@@ -1,0 +1,56 @@
+{
+  "id": "scrollingframe",
+  "title": "ScrollingFrame",
+  "category": "classes",
+  "type": "class",
+  "summary": "A Frame that scrolls: content larger than the visible area scrolls via CanvasSize. Modern setups use AutomaticCanvasSize plus UIListLayout/UIGridLayout so the canvas grows with content.",
+  "keywords": ["scroll", "list", "CanvasSize", "AutomaticCanvasSize", "scrollable gui", "UIListLayout"],
+  "tags": ["classes", "gui", "layout"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ScrollingFrame",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "CanvasSize", "type": "UDim2", "description": "The scrollable area's total size. Must be bigger than the frame to scroll." },
+      { "name": "AutomaticCanvasSize", "type": "Enum.AutomaticSize", "description": "Auto-grows the canvas to fit content (X, Y, XY, or None) — the modern default choice." },
+      { "name": "CanvasPosition", "type": "Vector2", "description": "Current scroll position (writable to scroll programmatically)." },
+      { "name": "ScrollingDirection / ScrollBarThickness / VerticalScrollBarInset", "type": "Enum / number / Enum", "description": "Scroll axis, bar size, and inset behavior." },
+      { "name": "ScrollBarImageColor3 / ElasticBehavior", "type": "Color3 / Enum", "description": "Bar styling and overscroll elasticity." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The scrollable window: inventories, chat logs, shop lists — anything taller than the screen.",
+    "whyItExists": "Screens are finite; content isn't. Scrolling frames bridge that.",
+    "whenToUse": [
+      "Inventories, leaderboards, shop item lists, chat",
+      "Any vertical list of dynamic children (with UIListLayout)"
+    ],
+    "whenNotToUse": [
+      "When content always fits — plain Frame",
+      "For paging UIs — consider pagination buttons instead"
+    ],
+    "mentalModel": "```text\nScrollingFrame (the window)\n   │ CanvasSize = total scrollable area\n   ▼\nUIListLayout + children\nAutomaticCanvasSize=Y → canvas auto-grows as items appear\n```",
+    "tips": [
+      "AutomaticCanvasSize = Y + UIListLayout = zero manual canvas math",
+      "Scroll to bottom: CanvasPosition = Vector2.new(0, CanvasSize.Y.Offset)",
+      "UIPadding inside makes edges breathe"
+    ],
+    "commonMistakes": [
+      "CanvasSize left at {0,0} → nothing scrolls",
+      "Manual CanvasSize forgotten while adding items dynamically",
+      "Children anchored absolutely AND list layout — pick one layout model"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Auto-growing list",
+      "code": "local list = script.Parent   -- ScrollingFrame\nlist.AutomaticCanvasSize = Enum.AutomaticSize.Y\n\nlocal layout = Instance.new(\"UIListLayout\")\nlayout.Padding = UDim.new(0, 6)\nlayout.SortOrder = Enum.SortOrder.LayoutOrder\nlayout.Parent = list\n\nlocal function addItem(text)\n    local label = Instance.new(\"TextLabel\")\n    label.Size = UDim2.new(1, -12, 0, 30)\n    label.BackgroundTransparency = 1\n    label.Text = text\n    label.TextXAlignment = Enum.TextXAlignment.Left\n    label.LayoutOrder = #list:GetChildren()\n    label.Parent = list\nend\n\nfor i = 1, 30 do addItem(\"Entry \" .. i) end"
+    }
+  ],
+  "related": ["frame", "udim2", "gui-hierarchy-requirements"],
+  "added": "2026-10-04"
+}

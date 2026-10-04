@@ -1,0 +1,75 @@
+{
+  "id": "sound",
+  "title": "Sound",
+  "category": "classes",
+  "type": "class",
+  "summary": "Plays audio: set SoundId, call Play(). Parented to a part = 3D positional audio (fades with distance); played via SoundService:PlayLocalSound = client-only UI audio. Supports loops, playback speed, and the Ended event.",
+  "keywords": ["audio", "play sound", "SoundId", "music", "Volume", "Looped", "TimePosition", "Ended", "3d audio"],
+  "tags": ["classes", "audio", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Sound",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "SoundId", "type": "Content", "description": "Asset reference: \"rbxassetid://123456\"." },
+      { "name": "Volume", "type": "number", "description": "0–10 loudness (default 0.5)." },
+      { "name": "PlaybackSpeed", "type": "number", "description": "1 = normal; 2 = double speed & pitch." },
+      { "name": "Looped", "type": "boolean", "description": "Repeat forever." },
+      { "name": "TimePosition / Length", "type": "number / number", "description": "Current position in seconds / total length (after load)." },
+      { "name": "IsLoaded / IsPlaying", "type": "boolean", "description": "Load/play state flags." },
+      { "name": "PlayOnRemove", "type": "boolean", "description": "Plays once when the Sound is destroyed/removed — fire-and-forget one-shots." },
+      { "name": "RollOffMode / EmitterSize / MaxDistance", "type": "Enum / Vector3 / number", "description": "3D falloff tuning for positional sounds." }
+    ],
+    "methods": [
+      { "name": "Play / Stop / Pause / Resume", "signature": "Sound:Play()", "description": "Playback control. Play with fade: Play() then tween Volume." },
+      { "name": "PlayAsync", "signature": "Sound:PlayAsync()", "description": "Yields until the sound starts playing (loaded)." }
+    ],
+    "events": [
+      { "name": "Ended", "signature": "Sound.Ended:Connect(function() end)", "description": "Fires when playback finishes (also per loop iteration for looped sounds)." },
+      { "name": "Loaded / Played / Paused / Stopped", "signature": "Sound.Loaded:Connect(function() end)", "description": "State change events." },
+      { "name": "MarkerReached", "signature": "Sound.MarkerReached:Connect(function(markerName: string) end)", "description": "Fires when audio markers (set in the audio editor) are passed." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The audio player object. Point it at an asset, press play, tune how it behaves in space.",
+    "whyItExists": "Games need footsteps, music, explosions — everywhere from whispers to world-wide tracks.",
+    "whenToUse": [
+      "World sounds: parent to a part (3D positional)",
+      "Music: parent to SoundService or use one non-positional Sound",
+      "One-shots: PlayOnRemove pattern for fire-and-forget effects",
+      "UI sounds: SoundService:PlayLocalSound on the client"
+    ],
+    "whenNotToUse": [
+      "Creating a new Sound instance every play — reuse one instance and re-Play",
+      "Expecting client-created sounds to be heard by others (they aren't by default)"
+    ],
+    "mentalModel": "```text\nSound parented to Part → heard in 3D, fades with distance\nSound via PlayLocalSound → only this client hears it\nMusic: Looped=true, parented high (SoundService)\n\nPlay() → IsPlaying → Ended fires\n```",
+    "tips": [
+      "Wait for IsLoaded (or use PlayAsync) before reading Length",
+      "Fade with TweenService on Volume",
+      "SoundGroups give you master volume sliders (music/sfx channels)"
+    ],
+    "commonMistakes": [
+      "Playing a sound before it's loaded → silent first play; use IsLoaded/PlayAsync",
+      "Spawning N Sound objects per shot — memory churn; reuse and re-Play",
+      "Changing SoundId without stopping — stop first for clean switches"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Positional explosion sound",
+      "code": "local function explosionSound(position)\n    local part = Instance.new(\"Part\")\n    part.Anchored = true\n    part.CanCollide = false\n    part.Transparency = 1\n    part.Size = Vector3.new(1, 1, 1)\n    part.Position = position\n\n    local sound = Instance.new(\"Sound\")\n    sound.SoundId = \"rbxassetid://266022905\"\n    sound.Volume = 2\n    sound.PlayOnRemove = true\n    sound.Parent = part\n    part.Parent = workspace\n\n    game:GetService(\"Debris\"):AddItem(part, 0.1)\n    -- Parenting + PlayOnRemove + immediate removal = clean one-shot\nend"
+    },
+    {
+      "title": "Looped music with fade-in",
+      "code": "local TweenService = game:GetService(\"TweenService\")\nlocal SoundService = game:GetService(\"SoundService\")\n\nlocal music = Instance.new(\"Sound\")\nmusic.SoundId = \"rbxassetid://1837849285\"\nmusic.Looped = true\nmusic.Volume = 0\nmusic.Parent = SoundService\nmusic:Play()\n\nTweenService:Create(music, TweenInfo.new(3), { Volume = 0.6 }):Play()"
+    }
+  ],
+  "examples_note": null,
+  "related": ["sound-service", "attachment", "debris", "tween-service"],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,70 @@
+{
+  "id": "player",
+  "title": "Player",
+  "category": "classes",
+  "type": "class",
+  "summary": "Represents a connected person (not their body!): identity (Name, UserId), their Character model, PlayerGui/Backpack containers, leaderstats, and events like CharacterAdded and Chatted.",
+  "keywords": ["player object", "UserId", "DisplayName", "Character", "leaderstats", "CharacterAdded", "Kick", "player vs character"],
+  "tags": ["classes", "players", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Player",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "Name", "type": "string", "description": "The immutable account username." },
+      { "name": "DisplayName", "type": "string", "description": "The chosen display name (can change, can duplicate — never use as a key)." },
+      { "name": "UserId", "type": "number", "description": "Unique, permanent account ID — the correct key for DataStores and ownership." },
+      { "name": "Character", "type": "Model?", "description": "Their current physical body in the world — nil before spawn and briefly during respawn. Respawns create NEW models." },
+      { "name": "Team / TeamColor", "type": "Team / BrickColor", "description": "Team membership when Teams are used." },
+      { "name": "PlayerGui / Backpack / PlayerScripts", "type": "Instance", "description": "Per-player containers: live GUIs, tools, client scripts." }
+    ],
+    "events": [
+      { "name": "CharacterAdded", "signature": "Player.CharacterAdded:Connect(function(character: Model) end)", "description": "Fires every time a new character spawns. The right place to wire per-character logic." },
+      { "name": "CharacterRemoving", "signature": "Player.CharacterRemoving:Connect(function(character: Model) end)", "description": "Fires just before the character is removed." },
+      { "name": "Chatted", "signature": "Player.Chatted:Connect(function(message: string) end)", "description": "Server-side: fires when the player sends a chat message." },
+      { "name": "Kicked", "signature": "Player.Kicked", "description": "Client-side: fires when this client gets kicked." }
+    ],
+    "methods": [
+      { "name": "Kick", "signature": "Player:Kick(reason: string?)", "description": "Server: disconnects the player with an optional message." },
+      { "name": "LoadCharacter", "signature": "Player:LoadCharacter()", "description": "Server: forces a respawn." },
+      { "name": "GetJoinData", "signature": "Player:GetJoinData() --> table", "description": "Info about how they joined (launch data, source place)." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The account-side half of a person in your game. The Player sticks around from join to leave; their Character is the physical body that dies and respawns repeatedly.",
+    "whyItExists": "Games need a stable identity object (who joined, who owns what, who to save data for) separate from the disposable physical avatar.",
+    "whenToUse": [
+      "Identity & persistence: UserId for DataStore keys",
+      "Character lifecycle: CharacterAdded for per-spawn setup",
+      "Containers: PlayerGui for runtime UI, Backpack for tools",
+      "Moderation: Kick; teams: Team property"
+    ],
+    "whenNotToUse": [
+      "As a physical object — physics happens on Character's parts",
+      "DisplayName as a unique key — it's not unique and can change"
+    ],
+    "mentalModel": "```text\nPlayer (identity, join→leave)\n ├─ UserId: 123456 (forever)\n ├─ Character → Model (dies, respawns, REPLACED)\n ├─ PlayerGui (live UI copies)\n ├─ Backpack (tools)\n └─ leaderstats (Folder → shows on leaderboard)\n```",
+    "tips": [
+      "Always handle Character possibly being nil: `local char = player.Character` can be nil between respawns",
+      "Wire CharacterAdded in PlayerAdded for complete lifecycle coverage",
+      "leaderstats: Folder named exactly 'leaderstats' with NumberValues inside = automatic leaderboard"
+    ],
+    "commonMistakes": [
+      "Holding a Character reference across respawns — it becomes a dead model; re-fetch on CharacterAdded",
+      "Using player.Name as a DataStore key — names can't be guaranteed stable across renames; UserId is forever",
+      "Reading Character immediately after PlayerAdded — it may not exist yet; use CharacterAdded or WaitForChild with care"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Full player lifecycle skeleton",
+      "code": "local Players = game:GetService(\"Players\")\n\nlocal function onCharacterAdded(player, character)\n    local humanoid = character:WaitForChild(\"Humanoid\")\n    humanoid.Died:Connect(function()\n        print(player.Name .. \" died; respawning soon\")\n    end)\nend\n\nlocal function onPlayerAdded(player)\n    print(player.Name .. \" (\" .. player.UserId .. \") joined\")\n\n    player.CharacterAdded:Connect(function(character)\n        onCharacterAdded(player, character)\n    end)\n    if player.Character then\n        onCharacterAdded(player, player.Character)\n    end\nend\n\nfor _, player in Players:GetPlayers() do\n    task.spawn(onPlayerAdded, player)\nend\nPlayers.PlayerAdded:Connect(onPlayerAdded)"
+    }
+  ],
+  "related": ["players", "player-added", "character-added", "humanoid", "leaderstats", "client-vs-server", "get-player-from-character", "datastore-save-load"],
+  "added": "2026-10-04"
+}

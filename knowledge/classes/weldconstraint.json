@@ -1,0 +1,64 @@
+{
+  "id": "weldconstraint",
+  "title": "WeldConstraint",
+  "category": "classes",
+  "type": "class",
+  "summary": "Rigidly joins two parts so they move as one assembly: set Part0 and Part1 and they stay locked together. The modern way to build multi-part structures that survive physics.",
+  "keywords": ["weld", "join parts", "stick together", "Part0 Part1", "assembly", "build structures"],
+  "tags": ["classes", "physics", "building"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/WeldConstraint",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "Part0 / Part1", "type": "BasePart", "description": "The two parts to join. Both must be set for the weld to act." },
+      { "name": "Enabled", "type": "boolean", "description": "Toggle the joint without destroying it." }
+    ],
+    "details": [
+      {
+        "heading": "What it locks",
+        "body": "The relative position and orientation of the two parts at the moment the weld is active. Move one, the other follows — they become one physics assembly."
+      },
+      {
+        "heading": "Anchoring note",
+        "body": "If either part is anchored, the weld holds the other in place relative to it. Fully anchored pairs don't need welds at all."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Super-glue between two parts. Once welded, they can't drift apart — the physics engine treats their relative pose as fixed.",
+    "whyItExists": "Stacked parts without welds fall apart the moment physics touches them. Welds make multi-part builds solid.",
+    "whenToUse": [
+      "Vehicles, furniture, multi-part props",
+      "Attaching accessories/models to moving bases",
+      "Anything that should move as one rigid body"
+    ],
+    "whenNotToUse": [
+      "Joints that should BEND or ROTATE — use Motor6D or HingeConstraint",
+      "Temporary alignment — just set CFrames"
+    ],
+    "mentalModel": "```text\nPart0 ──WeldConstraint── Part1\n        (relative pose frozen)\n\nMove Part0 → Part1 follows exactly.\nBreak the weld (Enabled=false) → they separate.\n```",
+    "tips": [
+      "Position parts correctly BEFORE enabling the weld — it locks the current offset",
+      "Weld chains: weld everything to a PrimaryPart-like root for predictable Model:PivotTo behavior",
+      "Studio's Weld tool automates multi-part welding"
+    ],
+    "commonMistakes": [
+      "Forgetting to weld and watching the build collapse at runtime",
+      "Welding parts that overlap physically → jitter; keep surfaces flush",
+      "Assuming welds replicate from the client — build/weld server-side or verify"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Welding a prop together",
+      "code": "local function weldModel(model)\n    local primary = model.PrimaryPart\n    assert(primary, \"Model needs a PrimaryPart\")\n    for _, descendant in model:GetDescendants() do\n        if descendant:IsA(\"BasePart\") and descendant ~= primary then\n            local weld = Instance.new(\"WeldConstraint\")\n            weld.Part0 = primary\n            weld.Part1 = descendant\n            weld.Parent = primary\n        end\n    end\nend\n\nweldModel(workspace.Car)\n-- Now PivotTo/physics moves the whole car as one."
+    }
+  ],
+  "related": ["motor6d", "attachment", "model", "moving-models", "part"],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,48 @@
+{
+  "id": "imagebutton",
+  "title": "ImageButton",
+  "category": "classes",
+  "type": "class",
+  "summary": "A clickable image: same image properties as ImageLabel plus button events (Activated, MouseButton1Click). Standard for icon buttons and custom UI controls.",
+  "keywords": ["clickable image", "icon button", "image interaction"],
+  "tags": ["classes", "gui", "input", "images"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ImageButton",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "events": [
+      { "name": "Activated", "signature": "ImageButton.Activated:Connect(function() end)", "description": "Cross-device activation — use this." },
+      { "name": "MouseButton1Click", "signature": "ImageButton.MouseButton1Click", "description": "Legacy mouse-only click." }
+    ],
+    "properties": [
+      { "name": "Image / HoverImage / PressedImage", "type": "Content", "description": "State images for idle/hover/pressed." },
+      { "name": "(inherits ImageLabel props)", "type": "—", "description": "ScaleType, ImageColor3, etc." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "ImageLabel + clickability. When the control IS the picture (inventory slots, emoji buttons, minimap icons).",
+    "whyItExists": "Buttons that look like their function are better UX than text labels for icons.",
+    "whenToUse": ["Icon toolbars", "Inventory slots", "Custom art buttons"],
+    "whenNotToUse": ["Text-first buttons — TextButton is simpler"],
+    "tips": [
+      "HoverImage/PressedImage give instant feedback without code",
+      "Keep touch targets ≥ ~44px"
+    ],
+    "commonMistakes": [
+      "MouseButton1Click on mobile-only games — use Activated",
+      "Tiny hit areas around big visuals (extend the button's Size beyond the art)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Slot button",
+      "code": "local slot = Instance.new(\"ImageButton\")\nslot.Size = UDim2.fromOffset(56, 56)\nslot.Image = \"rbxassetid://0\"   -- your icon id\nslot.BackgroundColor3 = Color3.fromRGB(40, 40, 50)\nslot.Parent = script.Parent\n\nslot.Activated:Connect(function()\n    print(\"Slot clicked\")\nend)"
+    }
+  ],
+  "related": ["imagelabel", "textbutton", "gui-toggle"],
+  "added": "2026-10-04"
+}

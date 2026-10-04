@@ -1,0 +1,58 @@
+{
+  "id": "click-detector",
+  "title": "ClickDetector",
+  "category": "classes",
+  "type": "class",
+  "summary": "Makes a part clickable: hovering shows a cursor, and MouseClick fires with the clicking Player. Parent it to any BasePart for simple click interactions.",
+  "keywords": ["clickable part", "MouseClick", "click interaction", "hover", "MaxActivationDistance"],
+  "tags": ["classes", "interaction", "input"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ClickDetector",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "MaxActivationDistance", "type": "number", "description": "How close (studs) a player must be to click (default 32)." },
+      { "name": "CursorIcon", "type": "Content", "description": "Cursor shown on hover." }
+    ],
+    "events": [
+      { "name": "MouseClick", "signature": "ClickDetector.MouseClick:Connect(function(playerWhoClicked: Player) end)", "description": "Fires server-AND-client side when a player within range clicks. Passes the Player who clicked." },
+      { "name": "MouseHoverEnter / MouseHoverLeave", "signature": "ClickDetector.MouseHoverEnter:Connect(function(playerWhoHovered: Player) end)", "description": "Hover tracking." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A 'you may click me' sign you attach to a part. Roblox handles distance checks, cursor display, and firing with the right Player.",
+    "whyItExists": "Click-to-interact is the simplest possible interaction; ClickDetector ships it whole.",
+    "whenToUse": [
+      "Shops (click a stall to open a menu)",
+      "Doors, levers, pickup items",
+      "Anything 'click the thing in the world'"
+    ],
+    "whenNotToUse": [
+      "Console/mobile-first designs where proximity + button feels better — consider ProximityPrompt",
+      "When you need hold-duration or custom prompts — ProximityPrompt again"
+    ],
+    "mentalModel": "```text\nPart + ClickDetector\n   player walks within MaxActivationDistance\n   → cursor appears\n   → click\n   → MouseClick(playerWhoClicked)\n```",
+    "tips": [
+      "MouseClick fires on the server too — do authoritative work in a Script",
+      "Debounce per-player if clicks can spam expensive actions",
+      "Combine with BillboardGui for labels above the clickable"
+    ],
+    "commonMistakes": [
+      "Parenting the ClickDetector to a Model — it must be on a BasePart",
+      "Handling clicks only in a LocalScript — exploiters can fire those themselves; server handler required for consequences",
+      "Expecting clicks from across the map — MaxActivationDistance limits range"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Clickable shop stall",
+      "code": "-- Script inside the Part\nlocal detector = Instance.new(\"ClickDetector\")\ndetector.MaxActivationDistance = 10\ndetector.Parent = script.Parent\n\nlocal cooldown = {}\n\ndetector.MouseClick:Connect(function(player)\n    local now = os.clock()\n    if cooldown[player.UserId] and now - cooldown[player.UserId] < 1 then\n        return\n    end\n    cooldown[player.UserId] = now\n    print(player.Name .. \" clicked the shop\")\n    -- open their shop GUI via RemoteEvent, give item, etc.\nend)"
+    }
+  ],
+  "related": ["click-detector-interaction", "proximity-prompt", "debounce", "part", "client-vs-server"],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,52 @@
+{
+  "id": "debounce",
+  "title": "Debounce",
+  "category": "patterns",
+  "type": "pattern",
+  "summary": "The 'busy flag' pattern: a boolean that blocks re-entry while an action is in progress. The classic fix for Touched firing 20 times per second and remotes being spammed.",
+  "keywords": ["busy flag", "re-entry guard", "touched fires multiple times", "single fire", "lock pattern"],
+  "tags": ["patterns", "events", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Community-established pattern; consistent with Roblox event documentation",
+    "sourceUrl": "https://create.roblox.com/docs/scripting/events",
+    "lastVerified": "2026-10-04",
+    "notes": "Pattern entry — educational content, no single API source."
+  },
+  "explanation": {
+    "whatItIs": "One boolean gate: 'is this running?' If yes, bail. If no, set it, do the work, clear it.",
+    "whyItExists": "Events fire far more often than you want reactions — physics contact happens every frame; multiple parts touch at once. Debounce collapses bursts into single actions.",
+    "whenToUse": [
+      "Touched handlers (damage pads, teleporters, pickups)",
+      "Button/remote spam protection (paired with server-side checks)",
+      "Any handler where re-triggering during execution is wrong"
+    ],
+    "whenNotToUse": [
+      "When EVERY event matters (input recording) — debounce drops events by design",
+      "As your only server-side defense — use real cooldowns + validation there"
+    ],
+    "mentalModel": "```text\nevent fires → busy? ─yes→ ignore\n                │no\n                ▼\n            busy = true\n            do the thing\n            busy = false   (after delay / when done)\n```",
+    "tips": [
+      "task.delay/task.wait to hold the gate closed for a cooldown window",
+      "Per-object debounce: a table keyed by the target when each actor needs its own gate",
+      "The sibling pattern is 'cooldown' — time-based rather than busy-based (see cooldown-pattern)"
+    ],
+    "commonMistakes": [
+      "Forgetting to clear the flag → permanent lockout",
+      "Debouncing only the client while the server stays spammable",
+      "Using debounce where you wanted Once (different intent)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Damage pad with debounce",
+      "code": "local pad = workspace.LavaPad\nlocal busy = false\n\npad.Touched:Connect(function(hit)\n    if busy then return end\n    local humanoid = hit.Parent:FindFirstChildOfClass(\"Humanoid\")\n    if not humanoid then return end\n\n    busy = true\n    humanoid:TakeDamage(25)\n    task.delay(1, function()\n        busy = false          -- reopen the gate after 1s\n    end)\nend)"
+    },
+    {
+      "title": "Per-player debounce table",
+      "code": "-- each player gets their own gate\nlocal lastUse = {}\nlocal COOLDOWN = 2\n\nlocal function tryUse(player)\n    local now = os.clock()\n    if lastUse[player] and now - lastUse[player] < COOLDOWN then\n        return false\n    end\n    lastUse[player] = now\n    return true\nend"
+    }
+  ],
+  "related": ["cooldown-pattern", "touched", "server-validation", "event-connections"],
+  "added": "2026-10-04"
+}

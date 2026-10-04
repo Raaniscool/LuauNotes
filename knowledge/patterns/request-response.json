@@ -1,0 +1,49 @@
+{
+  "id": "request-response",
+  "title": "Request-Response over Remotes",
+  "category": "patterns",
+  "type": "pattern",
+  "summary": "Getting data between client and server: fire-and-forget RemoteEvents for notifications, InvokeServer (RemoteFunction) for questions needing answers. Match the tool to the need — and always validate server-side.",
+  "keywords": ["client server communication", "ask server", "invoke pattern", "remote pattern", "get data from server"],
+  "tags": ["patterns", "networking", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/scripting/networking",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Two conversation styles: 'here's a fact' (Event, no reply expected) and 'please answer me' (Function, yields until reply). Most gameplay messaging is events; targeted data fetches are invokes.",
+    "whyItExists": "Clients can't touch server-only data (DataStores, ServerStorage, other players' secrets) — they must ASK through controlled channels.",
+    "whenToUse": [
+      "Client → Server actions: RemoteEvent FireServer (validated!)",
+      "Server → Client updates: FireClient/FireAllClients",
+      "Client questions the server: RemoteFunction InvokeServer (with timeout/error handling)",
+      "Server questions a client: almost never — InvokeClient is exploitable and fragile"
+    ],
+    "whenNotToUse": [
+      "Invokes in hot loops — each yields a round trip",
+      "Events for answers you MUST have before continuing — use a function or an event-with-correlation"
+    ],
+    "mentalModel": "```text\nEVENT:   client ──FireServer──▶ server ──(validates, acts)\n         server ──FireClient──▶ client     (no reply needed)\n\nFUNCTION: client ──InvokeServer──▶ server ──return──▶ client\n          (client YIELDS waiting — handle failure!)\n\nRule of thumb:\n  action/notification → Event\n  question/answer     → Function (sparingly)\n```",
+    "tips": [
+      "Wrap InvokeServer in pcall — server errors/yields can break the caller",
+      "Keep payloads small and serializable",
+      "Rate-limit invokes server-side just like events"
+    ],
+    "commonMistakes": [
+      "Using RemoteFunctions for one-way spam (wrong tool)",
+      "InvokeClient from server — exploitable + hangs if client is gone",
+      "No server validation on FireServer arguments"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Shop price query",
+      "code": "-- Server (Script):\nlocal rf = game:GetService(\"ReplicatedStorage\").Remotes.GetPrice\nlocal PRICES = { Potion = 50, Sword = 200 }\n\nrf.OnServerInvoke = function(player, itemName)\n    if typeof(itemName) ~= \"string\" then return nil end\n    return PRICES[itemName]      -- nil = unknown item\nend\n\n-- Client (LocalScript):\nlocal ok, price = pcall(function()\n    return rf:InvokeServer(\"Potion\")\nend)\nif ok and price then\n    print(`Potion costs {price}`)\nend"
+    }
+  ],
+  "related": ["remote-event", "remote-function", "fire-server", "invoke-server", "never-trust-the-client", "serialization"],
+  "added": "2026-10-04"
+}

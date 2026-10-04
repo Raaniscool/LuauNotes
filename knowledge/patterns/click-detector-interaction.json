@@ -1,0 +1,47 @@
+{
+  "id": "click-detector-interaction",
+  "title": "ClickDetector Interactions",
+  "category": "patterns",
+  "type": "pattern",
+  "summary": "The classic click-to-interact: ClickDetector inside a part gives MouseClick (server+client) and hover events. Great for simple clickable objects; ProximityPrompt is preferred for new work.",
+  "keywords": ["click part", "MouseClick", "clickable object", "hover cursor", "ClickDetector pattern"],
+  "tags": ["patterns", "interaction"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ClickDetector",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Click detection as a component: parent it to a BasePart, connect MouseClick, done.",
+    "whyItExists": "Predates ProximityPrompt; still the simplest 'click this thing' primitive and useful for cursor feedback.",
+    "whenToUse": [
+      "Clickable levers/signs where a mouse click is the natural verb",
+      "MouseHoverEnter/Leave for cursor/highlight feedback",
+      "Server-side MouseClick for authoritative reactions"
+    ],
+    "whenNotToUse": [
+      "As the primary interaction system for new games — prompts are more accessible (gamepad/touch)",
+      "For UI — use GuiButtons"
+    ],
+    "tips": [
+      "MaxActivationDistance controls click range",
+      "Pair with a Highlight or BillboardGui for affordance",
+      "Touch support: prompts handle it; ClickDetectors don't"
+    ],
+    "commonMistakes": [
+      "Handling clicks only client-side for gameplay effects",
+      "No debounce — double clicks double-fire",
+      "Expecting hover events on mobile (no cursor)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Clickable button part",
+      "code": "local button = workspace.BigRedButton\nlocal cd = Instance.new(\"ClickDetector\")\ncd.MaxActivationDistance = 32\ncd.Parent = button\n\ncd.MouseClick:Connect(function(player)\n    print(player.Name, \"pressed the button\")\n    -- authoritative effect here\nend)\n\ncd.MouseHoverEnter:Connect(function()\n    button.Color = Color3.fromRGB(255, 80, 80)\nend)\ncd.MouseHoverLeave:Connect(function()\n    button.Color = Color3.fromRGB(200, 40, 40)\nend)"
+    }
+  ],
+  "related": ["click-detector", "proximity-prompt-interaction", "debounce", "client-vs-server"],
+  "added": "2026-10-04"
+}

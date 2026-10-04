@@ -1,0 +1,48 @@
+{
+  "id": "cooldown-pattern",
+  "title": "Cooldowns",
+  "category": "patterns",
+  "type": "pattern",
+  "summary": "Time-gated actions: record when something last happened, reject attempts within the window. The backbone of ability systems, spam prevention, and rate limiting — best enforced server-side.",
+  "keywords": ["rate limit", "ability cooldown", "spam prevention", "last used", "timestamp check"],
+  "tags": ["patterns", "timing", "security", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Community-established pattern; consistent with Roblox security guidance",
+    "sourceUrl": "https://create.roblox.com/docs/production/security",
+    "lastVerified": "2026-10-04",
+    "notes": "Pattern entry — educational content."
+  },
+  "explanation": {
+    "whatItIs": "A timestamp bouncer: 'last time was X; window is N; come back later.'",
+    "whyItExists": "Abilities need pacing; servers need spam immunity; economies need purchase throttling. Time is the simplest fair constraint.",
+    "whenToUse": [
+      "Ability buttons: os.clock() stamps per player, checked on activation",
+      "Server-side rate limiting on EVERY remote",
+      "UI feedback: show remaining time (client-side mirror of the same stamps)"
+    ],
+    "whenNotToUse": [
+      "Where debounce suffices (blocking only re-entrancy, not pacing)",
+      "Client-only cooldowns as security — bypassable; mirror server truth"
+    ],
+    "mentalModel": "```text\nnow = os.clock()\nif now - lastUse < WINDOW then return \"too soon\"\nlastUse = now\n-- proceed\n```\nServer keeps the REAL stamps.\nClient shows the countdown.",
+    "tips": [
+      "os.clock() for gameplay timers (monotonic); os.time() is coarse seconds",
+      "Clean up stamps on PlayerRemoving to avoid table growth",
+      "Expose remaining = WINDOW - (now - lastUse) for radial UI"
+    ],
+    "commonMistakes": [
+      "Using tick()/Date-based math inconsistently — pick one clock",
+      "Trusting client-reported timestamps — always server stamps",
+      "Forgetting cooldown resets on respawn if that's the intended design"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Server-authoritative ability cooldown",
+      "code": "-- Server Script\nlocal lastCast = {}\nlocal COOLDOWN = 4\n\nremote.OnServerEvent:Connect(function(player)\n    local now = os.clock()\n    local last = lastCast[player]\n    if last and now - last < COOLDOWN then\n        return   -- too soon, ignore\n    end\n    lastCast[player] = now\n\n    castFireball(player)   -- the real work, server-side\nend)\n\nPlayers.PlayerRemoving:Connect(function(player)\n    lastCast[player] = nil\nend)"
+    }
+  ],
+  "related": ["debounce", "server-validation", "heartbeat", "remote-event", "never-trust-the-client"],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,48 @@
+{
+  "id": "gui-toggle",
+  "title": "GUI Toggles & State-Driven UI",
+  "category": "patterns",
+  "type": "pattern",
+  "summary": "Show/hide UI by flipping ONE source of truth (Visible or Enabled), not by remembering scattered changes. Button activates → state flips → UI reflects state. Optional tweens for polish.",
+  "keywords": ["show hide gui", "toggle menu", "ui state", "open close panel", "visible binding"],
+  "tags": ["patterns", "gui", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Community-established pattern; consistent with Roblox GUI documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/GuiObject",
+    "lastVerified": "2026-10-04",
+    "notes": "Pattern entry — educational content."
+  },
+  "explanation": {
+    "whatItIs": "State-driven UI discipline: a boolean (or enum) owns the truth; every visual derives from it.",
+    "whyItExists": "Ad-hoc show/hide code rots fast — menus open twice, buttons vanish, states desync. One flag, one render path.",
+    "whenToUse": [
+      "Menus, inventories, shops, settings screens",
+      "Toggle keybind (E/Tab) + button, both funneling into the same flip",
+      "Add a tween between states for feel (see tweening)"
+    ],
+    "whenNotToUse": [
+      "One-shot notifications — just show, wait, hide",
+      "Server-controlled UI state you can't mirror locally without remotes (then sync via events)"
+    ],
+    "mentalModel": "```text\nstate.open = false\n\nfunction render()\n    panel.Visible = state.open        ← only place UI reacts\nend\n\nfunction toggle()\n    state.open = not state.open\n    render()\nend\n\nButton.Activated → toggle()\nKeybind(E)       → toggle()\n```",
+    "tips": [
+      "ScreenGui.Enabled hides EVERYTHING under it — cheapest global toggle",
+      "Frame.Visible for subtrees; both work, pick a convention",
+      "Tween in/out but keep state instant — visuals catch up"
+    ],
+    "commonMistakes": [
+      "Two buttons each setting Visible directly — states diverge",
+      "Forgetting to reset UI on respawn (ResetOnSpawn interplay)",
+      "Input passthrough: open menus should often capture/block game input"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Toggle with tween and keybind",
+      "code": "local TweenService = game:GetService(\"TweenService\")\nlocal UserInputService = game:GetService(\"UserInputService\")\nlocal screen = script.Parent\nlocal panel = screen.ShopPanel\nlocal button = screen.ToggleButton\n\nlocal open = false\nlocal info = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)\n\nlocal function render()\n    local goal = { BackgroundTransparency = open and 0 or 1 }\n    TweenService:Create(panel, info, goal):Play()\n    for _, child in panel:GetDescendants() do\n        if child:IsA(\"GuiObject\") then\n            child.Visible = open or child.BackgroundTransparency < 1\n        end\n    end\nend\n\nlocal function toggle()\n    open = not open\n    render()\nend\n\nbutton.Activated:Connect(toggle)\nUserInputService.InputBegan:Connect(function(input, processed)\n    if processed then return end\n    if input.KeyCode == Enum.KeyCode.B then toggle() end\nend)\n\nrender()   -- initial state"
+    }
+  ],
+  "related": ["tweening", "screengui", "frame", "textbutton", "input-began", "screen-gui-reset-on-spawn"],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,49 @@
+{
+  "id": "tweening",
+  "title": "Tweening (animated transitions)",
+  "category": "patterns",
+  "type": "pattern",
+  "summary": "Smooth change over time without per-frame code: TweenService interpolates properties (position, size, color, transparency…) using TweenInfo recipes. Create → Play → (optionally) await Completed.",
+  "keywords": ["smooth animation", "fade", "slide gui", "TweenService pattern", "animated transition", "ease"],
+  "tags": ["patterns", "animation", "gui", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/TweenService",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Declarative animation: say WHERE you want to end up and HOW it should feel; the engine drives every frame in between.",
+    "whyItExists": "Hand-rolling lerps in Heartbeat is boilerplate-prone; tweens package interpolation + easing + events.",
+    "whenToUse": [
+      "UI motion: panels sliding in, bars filling, fading overlays",
+      "World motion: doors sliding, platforms moving, camera moves",
+      "Color/transparency transitions for feedback"
+    ],
+    "whenNotToUse": [
+      "Physics-driven movement — tweens fight the simulator",
+      "Per-frame interactive motion (camera follow) — use RenderStepped/Lerp",
+      "Humanoid body animation — use AnimationTracks"
+    ],
+    "mentalModel": "```text\ngoal = { Position = target, Transparency = 0 }\nrecipe = TweenInfo.new(0.5, Quad, Out)\ntween = TweenService:Create(object, recipe, goal)\ntween:Play()\ntween.Completed:Wait()   -- optional: sequence next steps\n```",
+    "tips": [
+      "Reuse Tween objects when repeating the same transition — just Play again",
+      "Cancel before starting a competing tween on the same properties",
+      "Completed fires with PlaybackState (Completed/Cancelled) — check it when chaining"
+    ],
+    "commonMistakes": [
+      "Tweening properties the object doesn't have (silent no-op… or error for typos on classes)",
+      "Anchored=false parts drifting under physics while tweened",
+      "GUI tweens racing player input — guard against double-triggers"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Menu slide-in",
+      "code": "local TweenService = game:GetService(\"TweenService\")\nlocal panel = script.Parent.ShopPanel   -- anchored off-screen left\n\nlocal hidden = UDim2.new(-0.4, 0, 0.5, 0)\nlocal shown  = UDim2.new(0.5, 0, 0.5, 0)\nlocal info = TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)\n\npanel.Position = hidden\nlocal slideIn  = TweenService:Create(panel, info, { Position = shown })\nlocal slideOut = TweenService:Create(panel, info, { Position = hidden })\n\nlocal open = false\nscript.Parent.ToggleButton.Activated:Connect(function()\n    open = not open\n    if open then slideIn:Play() else slideOut:Play() end\nend)"
+    }
+  ],
+  "related": ["tween-service", "tween-create", "tween-play", "tween-info", "gui-toggle"],
+  "added": "2026-10-04"
+}

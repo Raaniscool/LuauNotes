@@ -1,0 +1,90 @@
+{
+  "id": "invoke-client",
+  "title": "RemoteFunction:InvokeClient()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Server asks ONE client a question and yields for the answer. Risky: the client may be slow, broken, or malicious — always use the timeout parameter and never base security on the reply.",
+  "keywords": [
+    "server asks client",
+    "client response",
+    "timeout",
+    "client invoke"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server",
+    "advanced"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/RemoteFunction",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "RemoteFunction:InvokeClient(player: Player, timeoutSeconds: number?, ...args: any) --> ...any",
+    "parameters": [
+      {
+        "name": "player",
+        "type": "Player",
+        "description": "The client to ask."
+      },
+      {
+        "name": "timeoutSeconds",
+        "type": "number?",
+        "description": "Optional timeout — errors if the client doesn't answer in time. STRONGLY recommended."
+      },
+      {
+        "name": "...args",
+        "type": "serializable values",
+        "description": "Delivered to the client's OnClientInvoke."
+      }
+    ],
+    "returns": "Whatever the client's OnClientInvoke returns — never trust it for authoritative logic.",
+    "details": [
+      {
+        "heading": "Failure modes",
+        "body": "If the client has no OnClientInvoke set, errors, or never returns, the invoke errors/times out. pcall it."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The rare reverse question: server → client with an expected answer.",
+    "whyItExists": "Occasionally the server needs client-side knowledge (e.g., 'which slot did you select?' after a client menu) — but design hard to avoid needing it.",
+    "whenToUse": [
+      "Genuinely client-known facts needed synchronously, with a timeout",
+      "Legacy patterns; new designs usually invert the flow (client fires first)"
+    ],
+    "whenNotToUse": [
+      "Security decisions — clients lie",
+      "Anything frequent — the server yielding on clients serializes badly",
+      "If the client could initiate instead — invert the flow and use FireServer"
+    ],
+    "tips": [
+      "ALWAYS pass a timeout and pcall",
+      "Treat timeout/no-response as the safe default",
+      "Validate the reply like any client data"
+    ],
+    "commonMistakes": [
+      "No timeout → server threads hanging on unresponsive clients",
+      "Trusting the answer for purchases/damage",
+      "InvokeClient-ing inside OnServerInvoke for the same player → deadlock"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Asking with a timeout",
+      "code": "-- Client sets up the answerer:\nrf.OnClientInvoke = function(question)\n    if question == \"SelectedSlot\" then\n        return currentSlot\n    end\nend\n\n-- Server asks, safely:\nlocal ok, answer = pcall(function()\n    return rf:InvokeClient(player, 5, \"SelectedSlot\")\nend)\nlocal slot = (ok and typeof(answer) == \"number\") and answer or 1   -- safe default",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "remote-function",
+    "invoke-server",
+    "on-client-invoke",
+    "never-trust-the-client"
+  ],
+  "added": "2026-10-04"
+}

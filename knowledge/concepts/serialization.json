@@ -1,0 +1,69 @@
+{
+  "id": "serialization",
+  "title": "Serialization (what can travel)",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Data crossing boundaries — remotes, DataStores, HttpService JSON — must be serializable: tables of numbers/strings/booleans/other tables. Functions, threads, and most live objects can't cross; tables are COPIED, not shared.",
+  "keywords": [
+    "serializable",
+    "what can be sent",
+    "datastore limits",
+    "remote argument types",
+    "tables copied",
+    "json compatible"
+  ],
+  "tags": [
+    "concepts",
+    "networking",
+    "data",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/DataStoreService",
+    "lastVerified": "2026-10-04",
+    "notes": "Serialization rules summarized from remote and DataStore documentation."
+  },
+  "explanation": {
+    "whatItIs": "Data leaves your process in serialized form — flattened into bytes. Only certain shapes survive the trip; everything else errors or silently drops.",
+    "whyItExists": "Networks and databases speak bytes, not Luau objects. Serialization is the translation layer, with strict rules.",
+    "whenToUse": [
+      "Remote arguments: numbers, strings, booleans, tables, Instances (as references), datatypes like Vector3",
+      "DataStores: tables of primitives (no Instances, no NaN/inf, size caps)",
+      "JSON: same table-of-primitives shape; mixed array+dictionary keys can be lost — keep arrays arrays"
+    ],
+    "whenNotToUse": [
+      "Sending functions/threads/metatables — not possible",
+      "Expecting shared table identity across the wire — receivers get copies"
+    ],
+    "mentalModel": "```text\nWhat crosses the wire:\n  numbers, strings, booleans, nil-ish absence,\n  tables (deep-copied), Instances (as refs),\n  engine datatypes (Vector3, CFrame, Color3…)\n\nWhat doesn't:\n  functions, threads, metatables, non-serializable specials\n\nSender's table ≠ receiver's table. Copies. Always.\n```",
+    "tips": [
+      "For DataStores: keep keys consistent, version your schema, avoid NaN",
+      "Instances over remotes arrive as references — the receiver must be able to ACCESS them",
+      "Test JSON round-trips for mixed tables; prefer pure arrays or pure dictionaries per table"
+    ],
+    "commonMistakes": [
+      "Sending a function and getting a serialization error",
+      "Mutating a sent table on the receiver and expecting the sender to see it",
+      "Storing Instances in DataStores (store IDs/paths instead)",
+      "Huge payloads over remotes hitting size limits"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Safe save shape",
+      "code": "-- ✅ DataStore-friendly:\nlocal saveData = {\n    version = 2,\n    coins = 150,\n    inventory = { \"sword\", \"potion\" },       -- array of strings\n    settings = { music = true, volume = 0.8 }, -- dict of primitives\n}\n\n-- ❌ Not savable:\n-- { pet = workspace.Pets.Fluffy }      -- an Instance\n-- { fn = function() end }              -- a function\n-- { weird = 0/0 }                      -- NaN",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "remote-parameter-rules",
+    "datastore-service",
+    "http-service",
+    "fire-server",
+    "tables",
+    "table-references-vs-copies"
+  ],
+  "added": "2026-10-04"
+}

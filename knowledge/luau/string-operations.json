@@ -1,0 +1,140 @@
+{
+  "id": "string-operations",
+  "title": "String Operations (string library)",
+  "category": "luau",
+  "type": "library",
+  "summary": "The string library: searching (find/gmatch/gsub), cutting (sub), transforming (upper/lower/rep), formatting (format), and splitting (split) text.",
+  "keywords": [
+    "string.find",
+    "string.sub",
+    "string.gsub",
+    "string.split",
+    "string.format",
+    "manipulate text"
+  ],
+  "tags": [
+    "strings",
+    "library",
+    "text-processing"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/strings",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      {
+        "name": "string.len",
+        "signature": "string.len(s) --> number",
+        "description": "Length of the string in bytes. Same as `#s`."
+      },
+      {
+        "name": "string.sub",
+        "signature": "string.sub(s, i, j?) --> string",
+        "description": "Slice from index i to j (both inclusive, 1-based; negatives count from the end)."
+      },
+      {
+        "name": "string.find",
+        "signature": "string.find(s, pattern, init?, plain?) --> number?, number?, ...",
+        "description": "Find a pattern. Returns start and end indices, or nil. Pass `true` as 4th arg to treat pattern as plain text."
+      },
+      {
+        "name": "string.gmatch",
+        "signature": "string.gmatch(s, pattern) --> iterator",
+        "description": "Iterate all matches of a pattern — the workhorse for tokenizing."
+      },
+      {
+        "name": "string.gsub",
+        "signature": "string.gsub(s, pattern, repl, n?) --> string, number",
+        "description": "Replace all (or n) matches. repl can be a string, table, or function."
+      },
+      {
+        "name": "string.format",
+        "signature": "string.format(fmt, ...) --> string",
+        "description": "C-style formatting: %d int, %s string, %f float, %.2f two decimals, %q quoted."
+      },
+      {
+        "name": "string.split",
+        "signature": "string.split(s, sep?) --> {string}",
+        "description": "Luau addition. Split into an array on a separator (default whitespace). Empty string sep splits every character."
+      },
+      {
+        "name": "string.upper / lower",
+        "signature": "string.upper(s) --> string",
+        "description": "Case conversion."
+      },
+      {
+        "name": "string.rep",
+        "signature": "string.rep(s, n, sep?) --> string",
+        "description": "Repeat s n times, optionally with separator."
+      },
+      {
+        "name": "string.byte / char",
+        "signature": "string.byte(s, i?) / string.char(...) ",
+        "description": "Convert between characters and numeric codes."
+      }
+    ],
+    "details": [
+      {
+        "heading": "Pattern characters",
+        "body": "Patterns are Lua's lightweight regex: `%a` letters, `%d` digits, `%w` alphanumerics, `%s` whitespace, `.` any char, `+` one or more, `*` zero or more, `?` optional, `^`/`$` anchors, `%` escapes magic characters (e.g. `%(`, `%.`, `%%`)."
+      },
+      {
+        "heading": "Method-call sugar",
+        "body": "You can call these with colon syntax on any string: `s:upper()`, `s:find(\"x\")`, `s:split(\",\")`."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A toolbox of functions that inspect and transform text. Anything from 'does this chat message contain a banned word?' to 'parse this comma-separated list' is built from these.",
+    "whyItExists": "Raw string values are rarely exactly what you need — you need parts of them, cleaned versions, or formatted versions.",
+    "whenToUse": [
+      "`find` to test whether text contains something: `msg:find(\"help\")`",
+      "`split` to break input into pieces: command parsing",
+      "`gsub` for search-and-replace (also great for censoring)",
+      "`format` for assembling numbers and text into UI strings"
+    ],
+    "whenNotToUse": [
+      "Don't reach for patterns when `plain` matching or `split` suffices — patterns are powerful but cryptic",
+      "Don't use gsub where a simple `if s:find(...)` answers the question"
+    ],
+    "mentalModel": "```text\n\"hello world\"\n   :upper()          --> \"HELLO WORLD\"\n   :sub(1, 5)        --> \"hello\"\n   :find(\"world\")    --> 7  11\n   :gsub(\"o\", \"0\")   --> \"hell0 w0rld\", 2\n   :split(\" \")       --> {\"hello\", \"world\"}\n```",
+    "tips": [
+      "Always pass `true` to `find` when searching user text, so characters like `.` or `%` aren't treated as pattern magic",
+      "`for word in text:gmatch(\"%S+\") do` iterates words",
+      "`string.format(\"%02d:%02d\", m, s)` is the classic timer formatter"
+    ],
+    "commonMistakes": [
+      "Forgetting `find` returns two values (start AND end), so `if s:find(x) then` is correct but treating the result as a boolean-ish index confuses people",
+      "Pattern magic chars biting you: `\"100%\":find(\"%\")` errors unless escaped `%%` or plain=true",
+      "Indices in `sub`/`find` are 1-based and inclusive on both ends"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Parsing a simple command",
+      "code": "local input = \"give sword 3\"\nlocal parts = input:split(\" \")\n\nlocal command = parts[1]      --> \"give\"\nlocal item = parts[2]         --> \"sword\"\nlocal amount = tonumber(parts[3]) or 1\n\nprint(command, item, amount)  --> give  sword  3",
+      "whyItWorks": "`split(\" \")` turns the raw message into an array you can index. `tonumber` safely converts the amount with a fallback.",
+      "language": "lua"
+    },
+    {
+      "title": "Censoring words with gsub",
+      "code": "local banned = {\"noob\", \"lag\"}\n\nlocal function censor(text)\n    for _, word in banned do\n        text = text:gsub(word, string.rep(\"#\", #word))\n    end\n    return text\nend\n\nprint(censor(\"wow such noob lag\"))   --> wow such #### ###",
+      "language": "lua"
+    },
+    {
+      "title": "Safe plain search",
+      "code": "local message = \"Meet me at 50% power!\"\n-- plain=true so '%' is not treated as a pattern escape\nif message:find(\"50%\", 1, true) then\n    print(\"Found it\")\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "strings",
+    "string-formatting",
+    "tables"
+  ],
+  "added": "2026-10-04"
+}

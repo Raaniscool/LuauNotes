@@ -1,0 +1,66 @@
+{
+  "id": "object-lifetime",
+  "title": "Object Lifetime",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Instance lifecycle: create → configure → parent (enter world) → live → destroy (or unparent). Destroy cascades to children, locks Parent forever, but does NOT sever event connections or code references — those are leaks unless you clean them.",
+  "keywords": [
+    "destroy cleanup",
+    "memory leaks",
+    "object lifecycle",
+    "connections leak",
+    "unparent vs destroy"
+  ],
+  "tags": [
+    "concepts",
+    "memory",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Every instance has a life story, and each stage has rules — especially the end. Knowing when objects die (and what survives them) separates clean games from leaky ones.",
+    "whyItExists": "Games spawn and remove thousands of objects; predictable lifetime rules keep memory and events sane.",
+    "whenToUse": [
+      "Create→configure→parent: standard birth (see Instance.Parent)",
+      "Temporary objects: track every connection YOU add to them and Disconnect at death",
+      "Soft removal (Parent=nil) vs Destroy: reversibility is the difference",
+      "AncestryChanged to react to moves; ChildRemoved for death notices"
+    ],
+    "whenNotToUse": [
+      "Destroying to 'clean up' but leaving connections listening to the corpse"
+    ],
+    "mentalModel": "```text\nInstance.new ─▶ configure ─▶ .Parent = world ─▶ LIVE\n                                                  │\n                          ┌───────────────────────┘\n                          ▼\n               .Parent = nil   (parked, reusable)\n               :Destroy()      (gone + descendants)\n                                ├─ connections: STILL ALIVE*  ← leak!\n                                └─ references in code: STILL HELD\n\n*unless destroyed via the parent's destruction\n```",
+    "tips": [
+      "Own the connections you attach to short-lived objects; Disconnect in the cleanup path",
+      "Weak-ish discipline: one cleanup function per spawner",
+      "Check Memory/Performance views in Studio for growth over time"
+    ],
+    "commonMistakes": [
+      "Connect()-ing inside a loop to new parts without ever disconnecting — listener army",
+      "Holding tables of destroyed instances (prevents full GC)",
+      "Reusing Destroy()-ed objects later — locked Parent errors"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Clean spawn + despawn",
+      "code": "local function spawnMine(position, lifetime)\n    local mine = Instance.new(\"Part\")\n    mine.Size = Vector3.new(1, 1, 1)\n    mine.Anchored = true\n    mine.Position = position\n\n    local connections = {}\n    table.insert(connections, mine.Touched:Connect(function(hit)\n        -- boom\n    end))\n\n    mine.Parent = workspace\n\n    task.delay(lifetime, function()\n        for _, c in connections do c:Disconnect() end\n        mine:Destroy()\n    end)\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "destroy",
+    "instance-parent",
+    "clone",
+    "event-cleanup",
+    "part",
+    "object-lifetime"
+  ],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,64 @@
+{
+  "id": "localscript-location-limits",
+  "title": "Where LocalScripts Can Run",
+  "category": "patterns",
+  "type": "pattern",
+  "summary": "LocalScripts only run in client-owned containers: StarterPlayer/StarterPlayerScripts, StarterCharacterScripts, PlayerGui, PlayerScripts, Backpack/character tools, and ReplicatedFirst. Parked elsewhere (e.g. Workspace or ServerScriptService) they silently never run.",
+  "keywords": [
+    "localscript not running",
+    "where to put localscript",
+    "clientscript locations",
+    "silent never runs"
+  ],
+  "tags": [
+    "patterns",
+    "scripts",
+    "gotcha-adjacent",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/LocalScript",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "The placement contract: the engine copies client scripts from specific containers into the player's world at the right moment. Outside those containers, nothing happens — no error, just silence.",
+    "whyItExists": "Client code must enter each client's world at a defined lifecycle point; arbitrary placement would race with replication.",
+    "whenToUse": [
+      "StarterPlayerScripts: general client systems (runs once per client)",
+      "StarterCharacterScripts: per-respawn client logic (re-runs each spawn!)",
+      "PlayerGui/Backpack: scripts that live with the GUI/tool",
+      "ReplicatedFirst: earliest possible client execution"
+    ],
+    "whenNotToUse": [
+      "Dropping LocalScripts into Workspace or ServerStorage 'for organization' — they won't run"
+    ],
+    "tips": [
+      "Need code in a weird place? Put a LocalScript in a valid home that REQUIRES a ModuleScript parked anywhere",
+      "StarterCharacterScripts re-run per spawn — don't double-register connections there",
+      "Server Scripts likewise need their own valid homes (ServerScriptService, Workspace, tools…)"
+    ],
+    "commonMistakes": [
+      "LocalScript in ReplicatedStorage expecting it to run — it's only a storage spot; clients can require its modules but won't auto-run it",
+      "Confusing 'replicated to clients' with 'runs on clients'",
+      "Per-spawn duplication from StarterCharacterScripts without guards"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Correct homes",
+      "code": "-- ✅ Runs:\n-- StarterPlayer/StarterPlayerScripts/ClientMain.lua  (LocalScript)\n-- StarterGui/HUD/Controller  (LocalScript inside a ScreenGui)\n-- Backpack/Sword/Client  (LocalScript in a Tool)\n\n-- ❌ Never runs:\n-- Workspace/MyLocal  (LocalScript)\n-- ServerScriptService/ClientStuff  (wrong universe)\n-- ReplicatedStorage/AutoRun  (storage only)\n\n-- ✅ The escape hatch — valid home requires anywhere module:\n-- (StarterPlayerScripts) LocalScript:\nlocal MyModule = require(game.ReplicatedStorage.Shared.CoolModule)\nMyModule.start()",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "localscript",
+    "script",
+    "modulescript",
+    "client-vs-server",
+    "replicated-storage"
+  ],
+  "added": "2026-10-04"
+}

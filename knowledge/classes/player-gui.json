@@ -1,0 +1,93 @@
+{
+  "id": "player-gui",
+  "title": "PlayerGui",
+  "category": "classes",
+  "type": "class",
+  "summary": "Each player's LIVE GUI container: at spawn, StarterGui's contents are copied here, and this copy is what actually renders on screen. All runtime GUI changes happen here.",
+  "keywords": [
+    "live gui",
+    "gui on screen",
+    "where gui renders",
+    "player gui vs starter gui"
+  ],
+  "tags": [
+    "classes",
+    "gui",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/PlayerGui",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "ScreenOrientation",
+        "type": "Enum.ScreenOrientation",
+        "description": "Forced orientation on mobile."
+      },
+      {
+        "name": "GuiInset",
+        "type": "Vector2",
+        "description": "Safe-area insets (notches etc.)."
+      },
+      {
+        "name": "TopbarTransparency",
+        "type": "number",
+        "description": "Roblox topbar transparency."
+      }
+    ],
+    "details": [
+      {
+        "heading": "Location",
+        "body": "PlayerGui lives under each Player: `player:WaitForChild(\"PlayerGui\")`. Client: `game.Players.LocalPlayer:WaitForChild(\"PlayerGui\")`."
+      },
+      {
+        "heading": "Reset on spawn",
+        "body": "Depending on StarterGui.ResetPlayerGuiOnSpawn and each ScreenGui.ResetOnSpawn, contents may be cleared and re-copied from StarterGui at respawn."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The actual screen contents for one player — the live copy of whatever was templated in StarterGui, plus anything created at runtime.",
+    "whyItExists": "Every player needs independent GUI state; PlayerGui is each one's private canvas.",
+    "whenToUse": [
+      "Every runtime GUI change: find the ScreenGui HERE, not in StarterGui",
+      "Creating GUIs programmatically (from LocalScripts)",
+      "Checking what's on screen for a specific player"
+    ],
+    "whenNotToUse": [
+      "As a template store — design-time GUI belongs in StarterGui",
+      "From Scripts on the server without going through the right player object"
+    ],
+    "mentalModel": "```text\nStarterGui ──copy at spawn──▶ PlayerGui ──renders──▶ screen\n                               ▲\n                    runtime changes go HERE\n```",
+    "tips": [
+      "Client access: LocalPlayer:WaitForChild(\"PlayerGui\") — it may not exist in the first instants",
+      "ScreenGui.ResetOnSpawn = false keeps a GUI across deaths",
+      "Server updating everyone's GUI: RemoteEvent → each client edits its own PlayerGui"
+    ],
+    "commonMistakes": [
+      "Editing StarterGui at runtime (the #1 GUI bug — see gotcha)",
+      "Forgetting WaitForChild on PlayerGui from a fast-running LocalScript",
+      "Assuming a GUI you made survives respawn without ResetOnSpawn=false"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Runtime GUI, the right way",
+      "code": "-- LocalScript\nlocal Players = game:GetService(\"Players\")\nlocal playerGui = Players.LocalPlayer:WaitForChild(\"PlayerGui\")\n\nlocal gui = Instance.new(\"ScreenGui\")\ngui.Name = \"RuntimeHUD\"\ngui.ResetOnSpawn = false\n\nlocal label = Instance.new(\"TextLabel\")\nlabel.Size = UDim2.fromOffset(300, 50)\nlabel.Position = UDim2.fromScale(0.5, 0)\nlabel.Text = \"Hello from PlayerGui!\"\nlabel.Parent = gui\n\ngui.Parent = playerGui   -- appears immediately on screen",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "startergui-vs-playergui",
+    "starter-gui",
+    "screengui",
+    "gui-hierarchy-requirements",
+    "localscript"
+  ],
+  "added": "2026-10-04"
+}

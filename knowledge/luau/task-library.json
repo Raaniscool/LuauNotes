@@ -1,0 +1,113 @@
+{
+  "id": "task-library",
+  "title": "task Library",
+  "category": "luau",
+  "type": "library",
+  "summary": "The modern scheduler: task.wait, task.spawn, task.delay, task.defer — frame-aligned, precise, and the official replacement for wait/spawn/delay.",
+  "keywords": [
+    "task.wait",
+    "task.spawn",
+    "task.delay",
+    "task.defer",
+    "task.cancel",
+    "modern wait",
+    "scheduler"
+  ],
+  "tags": [
+    "concurrency",
+    "task-library",
+    "timing"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/libraries/task",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      {
+        "name": "task.wait",
+        "signature": "task.wait(seconds?: number) --> number",
+        "description": "Yields the current thread for at least `seconds` (default: until next frame step). Returns the actual time waited. Frame-aligned, unlike the legacy wait()."
+      },
+      {
+        "name": "task.spawn",
+        "signature": "task.spawn(fn: thread | function, ...) --> thread",
+        "description": "Starts a new thread immediately, resuming in the current frame. Passes extra args to fn."
+      },
+      {
+        "name": "task.delay",
+        "signature": "task.delay(seconds: number, fn: thread | function, ...) --> thread",
+        "description": "Schedules fn to resume after at least `seconds`. Precise, frame-aligned replacement for delay()."
+      },
+      {
+        "name": "task.defer",
+        "signature": "task.defer(fn: thread | function, ...) --> thread",
+        "description": "Resumes fn slightly later — after the current resumption cycle, before the next frame step. Great for decoupling work from events without a time delay."
+      },
+      {
+        "name": "task.cancel",
+        "signature": "task.cancel(thread)",
+        "description": "Cancels a delayed/deferred thread before it resumes. Keep the returned thread to cancel later."
+      },
+      {
+        "name": "task.synchronize / desynchronize",
+        "signature": "task.synchronize() / task.desynchronize()",
+        "description": "Switch the current thread between parallel-unsafe and parallel-safe phases (advanced, for the Actor parallel API)."
+      }
+    ],
+    "details": [
+      {
+        "heading": "Why it replaced wait/spawn/delay",
+        "body": "Legacy `wait()` was throttled to ~1/30s and drifted; `spawn()/delay()` ran on the same coarse scheduler and silently swallowed errors. task.* aligns with actual frame boundaries and reports errors to Output."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The official toolkit for 'do this now, soon, or later' in Roblox. Everything is scheduled against the engine's frames, so timings behave predictably.",
+    "whyItExists": "The legacy globals (wait, spawn, delay) were imprecise and error-prone; the task library fixed both and is the documented way forward.",
+    "whenToUse": [
+      "`task.wait(n)` anywhere you need a pause or a paced loop",
+      "`task.spawn` to run something concurrently right now",
+      "`task.delay(n, fn)` for cooldown callbacks and timed events",
+      "`task.defer` to break work out of an event callback without any time delay"
+    ],
+    "whenNotToUse": [
+      "Don't use legacy `wait()`, `spawn()`, `delay()` — they're deprecated in practice",
+      "Don't busy-wait with task.wait(0) in tight loops — use RunService events instead"
+    ],
+    "mentalModel": "```text\ntask.spawn(fn)    --> runs NOW (new thread)\ntask.defer(fn)    --> runs right after the current cycle\ntask.delay(1, fn) --> runs ~1s later\ntask.wait(1)      --> pauses THIS thread ~1s\n```\nAll four return/act on *threads* — the engine's scheduled units of work.",
+    "tips": [
+      "`task.wait()` with no args waits exactly one frame step — handy in render loops",
+      "Store delay threads to cancel them: `local t = task.delay(5, boom) ... task.cancel(t)`",
+      "Errors inside task.spawn/delay/defer print to Output — much easier to debug than old spawn()"
+    ],
+    "commonMistakes": [
+      "Using `wait()` and wondering why short waits snap to ~0.03s+",
+      "Calling `task.delay(1, doThing())` — that CALLS doThing now; pass the function: `task.delay(1, doThing)`",
+      "Expecting task.wait to resume at *exactly* n seconds — it resumes at the first frame step after n"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Cancellable delayed action",
+      "code": "local pending = task.delay(3, function()\n    print(\"3 seconds passed — boom!\")\nend)\n\n-- Player did something that should cancel it:\ntask.cancel(pending)\nprint(\"Defused.\")",
+      "language": "lua"
+    },
+    {
+      "title": "Spawn + defer in practice",
+      "code": "part.Touched:Connect(function(hit)\n    -- defer: don't do heavy work inside the event callback itself\n    task.defer(function()\n        print(\"Processing touch of\", hit.Name)\n    end)\nend)\n\ntask.spawn(function()\n    for i = 3, 1, -1 do\n        print(i)\n        task.wait(1)\n    end\n    print(\"GO\")\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "coroutines",
+    "yielding",
+    "wait-vs-task-wait",
+    "heartbeat",
+    "cooldown-pattern"
+  ],
+  "added": "2026-10-04"
+}

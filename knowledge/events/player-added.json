@@ -1,0 +1,67 @@
+{
+  "id": "player-added",
+  "title": "Players.PlayerAdded",
+  "category": "events",
+  "type": "event",
+  "summary": "Fires on the server whenever a player joins. The join-time hook: load data, create leaderstats, wire CharacterAdded. Remember to ALSO handle players who joined before your script ran.",
+  "keywords": [
+    "player joined",
+    "join event",
+    "on join",
+    "load data on join",
+    "setup player"
+  ],
+  "tags": [
+    "players",
+    "lifecycle",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Players",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Players.PlayerAdded:Connect(function(player: Player) end)"
+  },
+  "explanation": {
+    "whatItIs": "The front-door bell of your server: every arrival announces itself here.",
+    "whyItExists": "Per-player initialization — data loading, stats, welcome — needs one canonical trigger.",
+    "whenToUse": [
+      "Loading player data (DataStores, with retries)",
+      "Creating leaderstats",
+      "Subscribing to CharacterAdded for the session"
+    ],
+    "whenNotToUse": [
+      "As your ONLY join handling — also loop GetPlayers() at startup to cover early joiners"
+    ],
+    "tips": [
+      "Standard skeleton: for-loop GetPlayers() + task.spawn(setup) THEN connect PlayerAdded",
+      "Keep join work fast or spawn it — blocking here delays other handlers",
+      "Pair with PlayerRemoving for the save/load symmetry"
+    ],
+    "commonMistakes": [
+      "Connecting late and missing players who joined during server boot",
+      "Heavy synchronous DataStore work in the handler — use task.spawn per player",
+      "Forgetting error handling: one bad join shouldn't break the handler for the next player"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Race-proof join setup",
+      "code": "local Players = game:GetService(\"Players\")\n\nlocal function setupPlayer(player)\n    -- data loading, leaderstats, CharacterAdded wiring…\n    print(player.Name .. \" is set up\")\nend\n\n-- 1) Players already here:\nfor _, player in Players:GetPlayers() do\n    task.spawn(setupPlayer, player)\nend\n\n-- 2) Everyone from now on:\nPlayers.PlayerAdded:Connect(function(player)\n    task.spawn(setupPlayer, player)\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "players",
+    "player-removing",
+    "character-added",
+    "player",
+    "datastore-save-load",
+    "leaderstats"
+  ],
+  "added": "2026-10-04"
+}

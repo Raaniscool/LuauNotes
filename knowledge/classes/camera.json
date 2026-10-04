@@ -1,0 +1,127 @@
+{
+  "id": "camera",
+  "title": "Camera",
+  "category": "classes",
+  "type": "class",
+  "summary": "The player's viewpoint: workspace.CurrentCamera. Controlled via CFrame, CameraType (Custom default; Scriptable for full control), FieldOfView, and CameraSubject for following.",
+  "keywords": [
+    "CurrentCamera",
+    "camera control",
+    "CameraType",
+    "Scriptable",
+    "FieldOfView",
+    "cutscene",
+    "CameraSubject",
+    "first person",
+    "camera cframe"
+  ],
+  "tags": [
+    "classes",
+    "camera",
+    "visuals",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Camera",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "CFrame",
+        "type": "CFrame",
+        "description": "Camera position and orientation. Writing it moves the camera (fully effective when CameraType = Scriptable)."
+      },
+      {
+        "name": "CameraType",
+        "type": "Enum.CameraType",
+        "description": "Custom (default player camera), Scriptable (your code owns the CFrame), Follow, Track, Watch, Attach."
+      },
+      {
+        "name": "CameraSubject",
+        "type": "Instance",
+        "description": "What the default camera follows (usually the Humanoid)."
+      },
+      {
+        "name": "FieldOfView / FieldOfViewMode",
+        "type": "number / Enum",
+        "description": "FOV in degrees (default 70) and interpretation axis."
+      },
+      {
+        "name": "Focus",
+        "type": "CFrame",
+        "description": "Where the camera looks/renders with priority."
+      },
+      {
+        "name": "NearPlaneZ / FarPlaneZ",
+        "type": "number",
+        "description": "Clip planes (advanced)."
+      }
+    ],
+    "events": [
+      {
+        "name": "FirstPersonTransition",
+        "signature": "Camera.FirstPersonTransition:Connect(function(isEnteringFirstPerson: boolean) end)",
+        "description": "Fires on first-person enter/exit."
+      }
+    ],
+    "details": [
+      {
+        "heading": "Client domain",
+        "body": "Each client owns its camera. Server writes to CurrentCamera don't do what you'd expect — camera work belongs in LocalScripts."
+      },
+      {
+        "heading": "Scriptable workflow",
+        "body": "Set CameraType = Scriptable, drive CFrame each RenderStepped (or tween it), then restore CameraType = Custom to hand control back."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The window into your world. By default Roblox drives it (third-person orbit around the character); taking the wheel means Scriptable + CFrame math.",
+    "whyItExists": "Everything the player sees flows through one camera — cutscenes, scopes, screenshakes, custom views all hook in here.",
+    "whenToUse": [
+      "Cutscenes: Scriptable + tweened CFrames",
+      "Screen shake: small random offsets each RenderStepped",
+      "Zoom effects: FieldOfView changes (sprint FOV)",
+      "Spectate: CameraSubject = another player's humanoid"
+    ],
+    "whenNotToUse": [
+      "From server Scripts — camera is per-client",
+      "Fighting the default camera every frame when a CameraType would do"
+    ],
+    "mentalModel": "```text\nDefault: CameraType=Custom → Roblox orbits around CameraSubject\nCutscene: CameraType=Scriptable → you set CFrame every frame\nEnd: back to Custom → player regains control\n```",
+    "tips": [
+      "Drive camera updates in RenderStepped for smoothness",
+      "Tween CFrame for cinematic moves; interpolate with CFrame:Lerp for follows",
+      "Always restore CameraType when your effect ends"
+    ],
+    "commonMistakes": [
+      "Writing camera CFrame without Scriptable — default camera fights back",
+      "Server-side camera code (does nothing per-client)",
+      "Forgetting to restore FieldOfView/CameraType after effects"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Smooth cutscene pan",
+      "code": "-- LocalScript\nlocal camera = workspace.CurrentCamera\nlocal startCF = camera.CFrame\nlocal endCF = CFrame.new(0, 50, 0, 1, 0, 0, 0, -1, 0, 0, 0, -1)\n\ncamera.CameraType = Enum.CameraType.Scriptable\n\ntask.spawn(function()\n    local DURATION = 3\n    local t0 = os.clock()\n    while true do\n        local alpha = math.min(1, (os.clock() - t0) / DURATION)\n        camera.CFrame = startCF:Lerp(endCF, alpha)\n        if alpha >= 1 then break end\n        task.wait()   -- yields to next frame\n    end\n    camera.CameraType = Enum.CameraType.Custom   -- hand it back\nend)",
+      "language": "lua"
+    },
+    {
+      "title": "Simple screen shake",
+      "code": "-- LocalScript, e.g. on explosion\nlocal RunService = game:GetService(\"RunService\")\nlocal camera = workspace.CurrentCamera\nlocal trauma = 1\n\nlocal conn\nconn = RunService.RenderStepped:Connect(function()\n    trauma = math.max(0, trauma - 0.03)\n    if trauma == 0 then conn:Disconnect() return end\n    local shake = trauma * trauma * 1.5\n    camera.CFrame *= CFrame.new(\n        math.random(-100, 100) / 100 * shake,\n        math.random(-100, 100) / 100 * shake,\n        math.random(-100, 100) / 100 * shake\n    )\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "cframe",
+    "tween-service",
+    "render-stepped",
+    "workspace",
+    "lighting"
+  ],
+  "added": "2026-10-04"
+}

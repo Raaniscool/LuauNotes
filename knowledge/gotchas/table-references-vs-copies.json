@@ -1,0 +1,58 @@
+{
+  "id": "table-references-vs-copies",
+  "title": "Tables Are References, Not Copies",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "Assigning or passing a table shares the SAME table: `local b = a` makes two names for one table. Mutations through either name are visible everywhere. Copy explicitly when you need independence.",
+  "keywords": [
+    "table shared",
+    "aliasing",
+    "mutating original",
+    "shallow copy",
+    "table identity"
+  ],
+  "tags": [
+    "gotchas",
+    "tables",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/tables",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Tables are handles to shared storage, not the storage itself. Two variables can point at one table; changes 'through one door' appear 'in the other room'.",
+    "whyItExists": "Efficiency — big tables shouldn't duplicate on assignment; sharing is a feature until it's a bug.",
+    "symptoms": [
+      "Editing a 'copy' changes the original",
+      "Default-config tables mutating after first player tweaks them",
+      "Two players' inventories mysteriously linked"
+    ],
+    "fix": "Copy deliberately: shallow copy for flat tables ({table.unpack(t)} or a loop), deep copy function for nested ones. Or freeze shared constants.",
+    "tips": [
+      "table.freeze(DEFAULTS) makes accidental mutation error loudly",
+      "Immutability discipline: treat shared configs as read-only"
+    ],
+    "commonMistakes": [
+      "local defaults = masterConfig; defaults.hp = 50 — you just edited masterConfig",
+      "Shallow copy and assuming nested tables are independent"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Reference vs copy",
+      "code": "local stats = { hp = 100, mp = 50 }\n\nlocal alias = stats            -- same table!\nalias.hp = 1\nprint(stats.hp)                --> 1  (surprise if you expected 100)\n\n-- Shallow copy:\nlocal copy = table.clone(stats)\ncopy.hp = 200\nprint(stats.hp)                --> 1 (untouched by copy)\n\n-- Nested caveat:\nlocal deep = { pos = { x = 0, y = 0 } }\nlocal shallow = table.clone(deep)\nshallow.pos.x = 9\nprint(deep.pos.x)              --> 9  (nested table still shared!)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "tables",
+    "serialization",
+    "variables",
+    "functions"
+  ],
+  "added": "2026-10-04"
+}

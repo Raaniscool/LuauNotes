@@ -1,0 +1,66 @@
+{
+  "id": "remote-parameter-rules",
+  "title": "What Can Travel Through Remotes",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Remote arguments are serialized: numbers, strings, booleans, tables (copied!), Instances (as references the receiver must reach), and engine datatypes pass; functions, metatables, and threads don't. Size limits apply.",
+  "keywords": [
+    "remote arguments",
+    "what can fire",
+    "serialization rules remotes",
+    "invalid argument type",
+    "remote size limit"
+  ],
+  "tags": [
+    "concepts",
+    "networking",
+    "remotes",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/scripting/networking",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "The packing rules for the remote pipeline: flat data + tables + instance references in; impossible types rejected.",
+    "whyItExists": "The network moves bytes; serialization defines which Luau shapes become bytes — and copies instead of sharing.",
+    "whenToUse": [
+      "Primitives + tables for data payloads",
+      "Instance references when the receiver can reach the same object (replicated content)",
+      "Vector3/CFrame/Color3 etc. travel fine",
+      "IDs instead of objects when the object might not exist for the receiver"
+    ],
+    "whenNotToUse": [
+      "Functions/coroutines as arguments — error",
+      "Enormous payloads every frame — batch and throttle"
+    ],
+    "tips": [
+      "Receivers get COPIES of tables — mutations don't sync back",
+      "Instance args arrive as nil if the object isn't replicated to the receiver",
+      "Server always re-validates types — clients can send garbage"
+    ],
+    "commonMistakes": [
+      "Sending an unreplicated Instance to a client → nil",
+      "Assuming shared table state across the boundary",
+      "Exceeding size limits with giant serialized blobs"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Do and don't",
+      "code": "-- ✅ Fine:\nremote:FireServer(10, \"sword\", { level = 3 }, Vector3.new(0, 5, 0))\nremote:FireServer(workspace.ReplicatedModels.SwordTemplate)  -- replicated instance\n\n-- ❌ Errors:\n-- remote:FireServer(function() end)   -- functions can't serialize\n-- remote:FireServer(coroutine.running())  -- threads can't either\n\n-- ⚠️ Copies:\nlocal data = { coins = 5 }\nremote:FireServer(data)\ndata.coins = 999   -- receiver still saw 5",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "serialization",
+    "fire-server",
+    "on-server-event",
+    "remote-event",
+    "never-trust-the-client"
+  ],
+  "added": "2026-10-04"
+}

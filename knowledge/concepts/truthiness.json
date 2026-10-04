@@ -1,0 +1,65 @@
+{
+  "id": "truthiness",
+  "title": "Truthiness",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "In Luau conditions, only nil and false count as false. 0, \"\", and {} are all TRUTHY — a constant source of surprises for people coming from other languages.",
+  "keywords": [
+    "truthy",
+    "falsy",
+    "0 is true",
+    "empty string true",
+    "condition values",
+    "nil and false"
+  ],
+  "tags": [
+    "concepts",
+    "basics",
+    "conditions"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "The rule deciding what passes an `if`: everything passes except the two dedicated 'negative' values — nil and false.",
+    "whyItExists": "Lua chose minimalism: real booleans express falsehood; absence (nil) also fails. All data is presumed present-and-useful.",
+    "whenToUse": [
+      "`if value then` as an existence check (non-nil)",
+      "`x or default` patterns — remembering false ALSO falls through",
+      "Understanding why `if 0 then` runs"
+    ],
+    "whenNotToUse": [
+      "Expecting JS/C-style falsiness (0, \"\", empty → false) — it's not here"
+    ],
+    "mentalModel": "| Value       | Truthy? |\n|-------------|---------|\n| nil         | ✗       |\n| false       | ✗       |\n| 0           | ✓ (!)   |\n| \"\"          | ✓ (!)   |\n| {}          | ✓       |\n| anything else | ✓     |",
+    "tips": [
+      "Existence idiom: `if obj ~= nil then` == `if obj then`",
+      "Need 'value unless nil or false'? Use explicit comparisons",
+      "Boolean-ish flags: name them clearly; don't lean on truthiness for tri-state logic"
+    ],
+    "commonMistakes": [
+      "`if count then` when count can be 0 — 0 passes! Use `if count ~= nil then` or `> 0`",
+      "`x or default` replacing legitimate `false` values with the default",
+      "Porting JS habits: `if (!x)` thinking — use `not x`"
+    ]
+  },
+  "examples": [
+    {
+      "title": "The surprises, demonstrated",
+      "code": "if 0 then print(\"0 is truthy!\") end          -- prints\nif \"\" then print(\"empty string truthy!\") end  -- prints\nif {} then print(\"empty table truthy!\") end   -- prints\n\nif nil then else print(\"nil is falsy\") end    -- prints\nif false then else print(\"false is falsy\") end -- prints\n\n-- The or-default trap:\nlocal function greet(enabled)\n    local prefix = enabled or \"??\"   -- false → falls through to \"??\"!\n    print(prefix)\nend\ngreet(false)   --> \"??\"  (not what you wanted?)\n\n-- Explicit version:\nlocal function greetSafe(enabled)\n    local prefix = if enabled == nil then \"default\" else tostring(enabled)\n    print(prefix)\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "booleans",
+    "nil",
+    "if-statements",
+    "logical-operators",
+    "or-default"
+  ],
+  "added": "2026-10-04"
+}

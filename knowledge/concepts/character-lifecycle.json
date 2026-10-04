@@ -1,0 +1,67 @@
+{
+  "id": "character-lifecycle",
+  "title": "Character Lifecycle",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Players join once; CHARACTERS are repeatedly created and destroyed on each spawn/respawn. CharacterAdded/CharacterRemoving + respawns resetting state is the #1 source of 'it broke after I died' bugs.",
+  "keywords": [
+    "respawn",
+    "character recreated",
+    "CharacterAdded",
+    "state lost on death",
+    "spawn cycle"
+  ],
+  "tags": [
+    "concepts",
+    "players",
+    "lifecycle",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Player",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Player = the persistent account object. Character = a disposable body, rebuilt every spawn. Anything parented to or cached on the character dies with it.",
+    "whyItExists": "Death needs a clean slate: fresh body, fresh position, fresh health.",
+    "whenToUse": [
+      "CharacterAdded for per-life setup (tools, modifiers, GUI hooks)",
+      "Store persistent data on the PLAYER (or server tables), never the Character",
+      "Re-apply systems on every respawn — cached references go stale",
+      "Humanoid.Died for death handling; wait for the new Character after"
+    ],
+    "whenNotToUse": [
+      "Caching character parts at join time — they'll be replaced"
+    ],
+    "mentalModel": "```text\nPlayer joins ────────────────────────► (persists)\n  Character #1 ── dies ── X\n  Character #2 ── falls  ── X        ← new object each time\n  Character #3 ── alive\n\nRule: attach lasting state to the PLAYER,\n      attach life-scoped state to the CHARACTER (reapplied per spawn).\n```",
+    "tips": [
+      "player.Character can be nil between spawns — always guard",
+      "CharacterAppearanceLoaded for cosmetic-safe timing",
+      "Server tables keyed by Player are the robust 'session data' home"
+    ],
+    "commonMistakes": [
+      "Connections to a character's Humanoid never reconnected after respawn",
+      "Speed boosts applied once at join, lost at first death",
+      "Assuming player.Character exists in PlayerAdded (it may not yet)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Per-life setup that survives respawns",
+      "code": "Players.PlayerAdded:Connect(function(player)\n    -- Persistent/session stuff here:\n    setupLeaderstats(player)\n\n    -- Per-life stuff goes in CharacterAdded:\n    player.CharacterAdded:Connect(function(character)\n        local humanoid = character:WaitForChild(\"Humanoid\")\n        humanoid.WalkSpeed = 16 * getSpeedMultiplier(player)\n\n        humanoid.Died:Connect(function()\n            onPlayerDeath(player)\n        end)\n    end)\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "player",
+    "character-added",
+    "humanoid-died",
+    "humanoid",
+    "player-added",
+    "screen-gui-reset-on-spawn"
+  ],
+  "added": "2026-10-04"
+}

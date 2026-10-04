@@ -1,0 +1,75 @@
+{
+  "id": "comparisons",
+  "title": "Comparison Operators",
+  "category": "luau",
+  "type": "overview",
+  "summary": "==, ~=, <, >, <=, >= — compare values and produce booleans. Values of different types are never equal; tables compare by reference unless a metatable says otherwise.",
+  "keywords": [
+    "equals",
+    "not equals",
+    "greater than",
+    "compare values",
+    "equality"
+  ],
+  "tags": [
+    "basics",
+    "operators",
+    "conditions"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "The six operators",
+        "body": "`a == b` equal · `a ~= b` not equal · `a < b`, `a > b`, `a <= b`, `a >= b`. `< > <= >=` work on numbers and strings (lexicographic); comparing mixed types errors."
+      },
+      {
+        "heading": "Equality rules",
+        "body": "Different types are never equal: `5 == \"5\"` is false, `nil == false` is false. Numbers, strings, booleans compare by value. Tables, functions, and Instances compare by *reference* — two identical-looking tables are not `==` unless they're the same table."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Operators that answer questions: are these the same? which is bigger? The answer is always a boolean you can feed into `if`.",
+    "whyItExists": "Branching needs facts, and comparisons produce them.",
+    "whenToUse": [
+      "`==` / `~=` for exact matches (enum states, player identity)",
+      "`<, >, <=, >=` for ranges: `if health <= 0 then`"
+    ],
+    "whenNotToUse": [
+      "Don't `==` floats that came from math — compare with a tolerance: `math.abs(a - b) < 0.001`",
+      "Don't `==` two tables expecting structural equality — it's reference equality"
+    ],
+    "mentalModel": "```text\n5 == 5        --> true\n5 == \"5\"      --> false   (different types)\n\"cat\" < \"dog\" --> true    (alphabetical)\n{} == {}      --> false   (two different tables)\n\nlocal t = {}\nt == t        --> true    (same table)\n```",
+    "tips": [
+      "`~=` is 'not equal' — there is no `!=` in Luau",
+      "Comparing an Instance to a stored reference is the standard 'is this the same object?' check",
+      "For approximate numeric equality, write a helper: `local function near(a, b) return math.abs(a - b) < 1e-3 end`"
+    ],
+    "commonMistakes": [
+      "Using `=` (assignment) instead of `==` in conditions — syntax error",
+      "Expecting `\"5\" == 5` to be true",
+      "Comparing Vector3/CFrame with `==` works (value equality), but floats inside still suffer precision issues"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Everyday comparisons",
+      "code": "local health = 0\nprint(health <= 0)        --> true\nprint(health == nil)      --> false\n\nlocal state = Enum.HumanoidStateType.Running\nprint(state == Enum.HumanoidStateType.Running)   --> true\n\n-- Reference equality for tables:\nlocal a = {1, 2}\nlocal b = {1, 2}\nprint(a == b)             --> false\nprint(a == a)             --> true",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "logical-operators",
+    "if-statements",
+    "booleans",
+    "truthiness"
+  ],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,58 @@
+{
+  "id": "destroy-vs-nil-parent",
+  "title": "Destroy vs Parent = nil",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "Setting Parent = nil hides an instance but keeps it alive and reusable. Destroy() kills it and all descendants PERMANENTLY — Parent is locked, re-parenting errors. Choose deliberately.",
+  "keywords": [
+    "destroy permanent",
+    "reusing destroyed",
+    "parent locked",
+    "soft delete",
+    "hide vs destroy"
+  ],
+  "tags": [
+    "gotchas",
+    "lifecycle"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Two ways to remove: park it (nil) or burn it (Destroy). Only one is reversible.",
+    "whyItExists": "Object pooling wants reversibility; garbage wants finality. Both are legitimate.",
+    "symptoms": [
+      "'The Parent property of X is locked' when re-parenting",
+      "Objects disappearing from memory tools faster than expected (destroy cascades)",
+      "'Hidden' objects still firing events (they're parked, not dead)"
+    ],
+    "fix": "Destroy for true removal (+ disconnect YOUR connections to it). Parent=nil for pooling/soft-hiding. Never Destroy what you'll reuse.",
+    "tips": [
+      "Destroyed objects still respond to SOME calls — don't rely on them erroring loudly",
+      "Pool expensive templates with Clone-on-demand instead of destroy/recreate"
+    ],
+    "commonMistakes": [
+      "Destroying then later setting Parent expecting revival",
+      "Parent=nil and wondering why memory didn't drop (it's still referenced)",
+      "Forgetting connections to destroyed objects keep firing on events that still exist elsewhere"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Pool vs burn",
+      "code": "-- Soft-hide for reuse:\nlocal bullet = spawnBullet()\nbullet.Parent = nil            -- parked\n-- later:\nbullet.Parent = workspace      -- back! (still configured)\n\n-- Permanent:\nlocal trash = Instance.new(\"Part\")\ntrash.Parent = workspace\ntrash:Destroy()\n-- trash.Parent = workspace     ← ERROR: locked\n\n-- Pooling pattern:\nlocal pool = {}\nlocal function release(obj)\n    obj.Parent = nil\n    table.insert(pool, obj)\nend\nlocal function acquire()\n    return table.remove(pool) or createNew()\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "destroy",
+    "clone",
+    "instance-parent",
+    "object-lifetime"
+  ],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,112 @@
+{
+  "id": "run-service",
+  "title": "RunService",
+  "category": "services",
+  "type": "service",
+  "summary": "The frame loop: Heartbeat (every frame, after physics), Stepped (before physics), RenderStepped (client only, before render). Also tells you where you're running: IsServer/IsClient/IsStudio.",
+  "keywords": [
+    "Heartbeat",
+    "RenderStepped",
+    "Stepped",
+    "every frame",
+    "delta time",
+    "game loop",
+    "IsStudio"
+  ],
+  "tags": [
+    "services",
+    "loop",
+    "timing",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/RunService",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "events": [
+      {
+        "name": "Heartbeat",
+        "signature": "RunService.Heartbeat:Connect(function(deltaTime: number) end)",
+        "description": "Every frame, AFTER physics simulation. Client and server. deltaTime = seconds since last frame. The workhorse for per-frame logic."
+      },
+      {
+        "name": "Stepped",
+        "signature": "RunService.Stepped:Connect(function(totalTime: number, deltaTime: number) end)",
+        "description": "Every physics step, BEFORE simulation. Use for physics-sensitive writes."
+      },
+      {
+        "name": "RenderStepped",
+        "signature": "RunService.RenderStepped:Connect(function(deltaTime: number) end)",
+        "description": "Client ONLY, just before rendering. Ideal for camera updates and UI-critical per-frame work. Heavy work here hurts FPS directly."
+      }
+    ],
+    "methods": [
+      {
+        "name": "IsServer / IsClient",
+        "signature": "RunService:IsServer() --> boolean",
+        "description": "Which runtime am I in? Works in the same script to branch logic."
+      },
+      {
+        "name": "IsStudio",
+        "signature": "RunService:IsStudio() --> boolean",
+        "description": "Am I running inside Roblox Studio (test or edit)?"
+      },
+      {
+        "name": "BindToRenderStep",
+        "signature": "RunService:BindToRenderStep(name: string, priority: number, fn: (dt: number) -> ())",
+        "description": "Register a named RenderStepped callback with explicit ordering priority (Enum.RenderPriority). Unbind with UnbindFromRenderStep."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Your window into the engine's heartbeat. Every frame, the engine fires events you can hook into — and RunService tells you what kind of machine your script is running on.",
+    "whyItExists": "Per-frame logic (movement smoothing, timers, custom cameras) needs a reliable 'once per frame' tick with delta time.",
+    "whenToUse": [
+      "Heartbeat: cooldown timers, custom movement, AI ticks, throttled work",
+      "RenderStepped: camera control, aim smoothing — anything that must sync with rendering (client only)",
+      "Stepped: writing velocities/positions right before physics uses them",
+      "IsStudio/IsServer/IsClient for environment branching"
+    ],
+    "whenNotToUse": [
+      "As a replacement for task.wait in simple delays — task library is cleaner",
+      "Heavy work every frame without need — it costs FPS",
+      "RenderStepped on the server — it doesn't fire there"
+    ],
+    "mentalModel": "```text\nOne frame on the client:\n  Stepped ─▶ physics sim ─▶ Heartbeat ─▶ RenderStepped ─▶ render\n\nServer frame:\n  Stepped ─▶ physics sim ─▶ Heartbeat\n\nAll give you deltaTime: scale movement by it!\npos += velocity * dt   (framerate-independent)\n```",
+    "tips": [
+      "Always multiply movement by deltaTime — otherwise speed varies with FPS",
+      "Disconnect connections when done: `conn:Disconnect()`",
+      "Heartbeat is usually the right default; reach for the others deliberately"
+    ],
+    "commonMistakes": [
+      "Connecting RenderStepped on the server — silently never fires",
+      "Frame-dependent movement (no dt multiplication) — speed changes with lag",
+      "Accumulating connections every frame/respawn without disconnecting old ones"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Framerate-independent movement",
+      "code": "local RunService = game:GetService(\"RunService\")\n\nlocal SPEED = 12   -- studs per second\n\nlocal connection = RunService.Heartbeat:Connect(function(dt)\n    local character = script.Parent\n    local root = character:FindFirstChild(\"HumanoidRootPart\")\n    if root then\n        root.CFrame += root.CFrame.LookVector * (SPEED * dt)\n    end\nend)\n\n-- Later:\n-- connection:Disconnect()",
+      "language": "lua"
+    },
+    {
+      "title": "Environment detection",
+      "code": "local RunService = game:GetService(\"RunService\")\n\nif RunService:IsStudio() then\n    print(\"Testing in Studio — use dev data\")\nend\n\nif RunService:IsServer() then\n    print(\"Server systems boot\")\nelse\n    print(\"Client systems boot\")\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "heartbeat",
+    "render-stepped",
+    "task-library",
+    "camera",
+    "event-cleanup",
+    "frame-budgets"
+  ],
+  "added": "2026-10-04"
+}

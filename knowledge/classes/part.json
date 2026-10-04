@@ -1,0 +1,156 @@
+{
+  "id": "part",
+  "title": "Part",
+  "category": "classes",
+  "type": "class",
+  "summary": "The basic 3D building block: a primitive block/sphere/cylinder with physics, position, size, color, and the Touched event. Almost everything physical starts as a Part.",
+  "keywords": [
+    "BasePart",
+    "block",
+    "brick",
+    "3d object",
+    "Anchored",
+    "CanCollide",
+    "Transparency",
+    "Touched",
+    "Position",
+    "CFrame"
+  ],
+  "tags": [
+    "classes",
+    "world",
+    "physics",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Part",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "Position",
+        "type": "Vector3",
+        "description": "Center of the part in world coordinates. Use for measurements."
+      },
+      {
+        "name": "CFrame",
+        "type": "CFrame",
+        "description": "Position AND orientation. Use for placement/movement."
+      },
+      {
+        "name": "Size",
+        "type": "Vector3",
+        "description": "Dimensions in studs (X, Y, Z)."
+      },
+      {
+        "name": "Color / Material / MaterialVariant",
+        "type": "Color3 / Enum",
+        "description": "Appearance."
+      },
+      {
+        "name": "Anchored",
+        "type": "boolean",
+        "description": "true = physics frozen in place (buildings, floors). false = simulated (falls, pushed)."
+      },
+      {
+        "name": "CanCollide",
+        "type": "boolean",
+        "description": "Whether physical collisions occur with this part."
+      },
+      {
+        "name": "CanTouch",
+        "type": "boolean",
+        "description": "Whether Touched events can fire for this part."
+      },
+      {
+        "name": "Transparency",
+        "type": "number",
+        "description": "0 (opaque) to 1 (invisible). Note: 1 does NOT disable collision."
+      },
+      {
+        "name": "Mass / AssemblyLinearVelocity",
+        "type": "number / Vector3",
+        "description": "Computed mass; velocity of the assembly the part belongs to."
+      },
+      {
+        "name": "BrickColor",
+        "type": "BrickColor",
+        "description": "Legacy palette color — prefer Color (Color3)."
+      }
+    ],
+    "events": [
+      {
+        "name": "Touched",
+        "signature": "Part.Touched:Connect(function(otherPart: BasePart) end)",
+        "description": "Fires when another part begins touching this one. Passes the OTHER part. Requires CanTouch on both and actual physics contact."
+      },
+      {
+        "name": "TouchEnded",
+        "signature": "Part.TouchEnded:Connect(function(otherPart: BasePart) end)",
+        "description": "Fires when the touch ends."
+      }
+    ],
+    "methods": [
+      {
+        "name": "ApplyImpulse",
+        "signature": "Part:ApplyImpulse(impulse: Vector3)",
+        "description": "Instant physics push (unanchored parts only)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The atom of Roblox worlds: a physical box (or sphere/cylinder via Shape) you can place, color, anchor, collide with, and touch.",
+    "whyItExists": "Every 3D game needs primitives with physics. Parts are those primitives, plus the hooks (Touched) that make gameplay happen.",
+    "whenToUse": [
+      "Buildings, terrain accents, platforms (Anchored)",
+      "Projectiles, pickups, physics props (unanchored)",
+      "Kill bricks, pads, triggers via Touched + attributes/tags",
+      "Invisible trigger volumes (Transparency 1, CanCollide false)"
+    ],
+    "whenNotToUse": [
+      "Complex meshes — MeshPart instead",
+      "Pure visual-only decor at scale — consider merged meshes for performance"
+    ],
+    "mentalModel": "```text\nPart = box + physics + appearance\n  Anchored=true   → statue (stays put)\n  Anchored=false  → object (falls, pushes)\n  CanCollide      → can I bump it?\n  CanTouch+Touched → can it notice me?\n```",
+    "tips": [
+      "Touched fires PER touching part — a character can fire it 5+ times; debounce or check for humanoid",
+      "Invisible ≠ non-colliding: set CanCollide=false for ghost blocks",
+      "Move parts with CFrame (PivotTo/CFrame math), not Position, when orientation matters",
+      "Set CanQuery/CanCollide deliberately for trigger volumes"
+    ],
+    "commonMistakes": [
+      "Trusting one Touched event per person — limbs trigger multiple touches",
+      "Unanchoring a part you meant to stay (watch it fall at runtime)",
+      "Comparing Positions for movement instead of using CFrame",
+      "Making invisible walls but forgetting CanCollide — players walk through"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Kill brick (the classic)",
+      "code": "local killBrick = script.Parent\n\nkillBrick.Touched:Connect(function(hit)\n    local humanoid = hit.Parent:FindFirstChildOfClass(\"Humanoid\")\n    if humanoid then\n        humanoid.Health = 0\n    end\nend)",
+      "commonMistake": "No debounce here is fine (setting Health=0 is idempotent), but for rewards you MUST guard against multiple touches.",
+      "language": "lua"
+    },
+    {
+      "title": "A bouncy pad",
+      "code": "local pad = script.Parent\n\npad.Touched:Connect(function(hit)\n    local root = hit.Parent:FindFirstChild(\"HumanoidRootPart\")\n    if root then\n        root.AssemblyLinearVelocity = Vector3.new(0, 100, 0)\n    end\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "model-vs-basepart",
+    "position-vs-cframe",
+    "touched",
+    "model",
+    "debounce",
+    "model",
+    "humanoid",
+    "part-anchored"
+  ],
+  "added": "2026-10-04"
+}

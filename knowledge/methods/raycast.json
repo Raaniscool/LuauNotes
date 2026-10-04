@@ -1,0 +1,97 @@
+{
+  "id": "raycast",
+  "title": "Workspace:Raycast()",
+  "category": "methods",
+  "type": "method",
+  "summary": "The modern raycasting API: cast from an origin along a direction vector (its magnitude = range), get back a RaycastResult with Instance/Position/Normal/Distance — or nil. Filter with RaycastParams.",
+  "keywords": [
+    "ray",
+    "hitscan",
+    "line of sight",
+    "shooting",
+    "raycastresult",
+    "raycastparams",
+    "bullet detection"
+  ],
+  "tags": [
+    "physics",
+    "combat",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Workspace",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Workspace:Raycast(origin: Vector3, direction: Vector3, raycastParams: RaycastParams?) --> RaycastResult?",
+    "parameters": [
+      {
+        "name": "origin",
+        "type": "Vector3",
+        "description": "Where the ray starts."
+      },
+      {
+        "name": "direction",
+        "type": "Vector3",
+        "description": "Direction AND range: the vector's magnitude is the ray's length. (lookVector * 300 = 300 studs)"
+      },
+      {
+        "name": "raycastParams",
+        "type": "RaycastParams?",
+        "description": "Optional filter: FilterDescendantsInstances list + FilterType (Exclude/Include), IgnoreWater."
+      }
+    ],
+    "returns": "RaycastResult { Instance, Position, Normal, Distance, Material } or nil if nothing was hit.",
+    "details": [
+      {
+        "heading": "Filter semantics",
+        "body": "Exclude: ray passes through the listed instances. Include: ONLY those instances can be hit. Use Exclude for your own character; Include for 'only hit targets'."
+      },
+      {
+        "heading": "Deprecated cousins",
+        "body": "FindPartOnRay / Ray.new are legacy — migrate to Raycast for control and clarity."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "An instant invisible laser: report what it touches first.",
+    "whyItExists": "Hitscan weapons, line-of-sight checks, ground probes, selection tools — all are 'what's in this direction?'",
+    "whenToUse": [
+      "Shooting (server verifies client-reported hits)",
+      "Can the NPC see the player?",
+      "Finding the ground below a position",
+      "Mouse-target picking: camera → mouse ray"
+    ],
+    "whenNotToUse": [
+      "Physical projectiles that should bounce/interact — real parts with physics",
+      "Volume queries — GetPartBoundsInBox/Radius"
+    ],
+    "tips": [
+      "Direction vector's LENGTH is the range — the most common confusion",
+      "Always exclude the shooter's character",
+      "IgnoreWater = true unless water matters to you"
+    ],
+    "commonMistakes": [
+      "Passing an endpoint as direction (range becomes the small vector between points)",
+      "Self-hits: forgetting FilterDescendantsInstances = {character}",
+      "Raycasting on the client and trusting it server-side — re-validate server-side for authority"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Hitscan shot with validation pattern",
+      "code": "-- Client: fires ray from camera through mouse\nlocal camera = workspace.CurrentCamera\nlocal origin = camera.CFrame.Position\nlocal direction = camera.CFrame.LookVector * 300\n\nlocal params = RaycastParams.new()\nparams.FilterDescendantsInstances = { character }\nparams.FilterType = Enum.RaycastFilterType.Exclude\nparams.IgnoreWater = true\n\nlocal result = workspace:Raycast(origin, direction, params)\n\n-- Tell the server; the server RE-CASTS or validates distance/plausibility\nshootRemote:FireServer(origin, direction.Unit * 300)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "workspace",
+    "client-vs-server",
+    "never-trust-the-client",
+    "camera"
+  ],
+  "added": "2026-10-04"
+}

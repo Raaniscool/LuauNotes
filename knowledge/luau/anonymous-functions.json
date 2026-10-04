@@ -1,0 +1,81 @@
+{
+  "id": "anonymous-functions",
+  "title": "Anonymous Functions",
+  "category": "luau",
+  "type": "concept",
+  "summary": "Functions without a name, written inline as `function(...) end` or `(...) -> ...`. The standard way to pass behavior to event connections, task.spawn, and callbacks.",
+  "keywords": [
+    "callback",
+    "inline function",
+    "lambda",
+    "function expression",
+    "arrow function"
+  ],
+  "tags": [
+    "functions",
+    "callbacks",
+    "basics"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/functions",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "-- classic form\npart.Touched:Connect(function(hit)\n    print(hit.Name)\nend)\n\n-- arrow syntax (Luau)\nlocal double = (n) -> n * 2\nlocal greet = (name) -> `Hello, {name}!`\n\n-- multi-statement arrow\nlocal clamp01 = (x) -> math.clamp(x, 0, 1)"
+    ],
+    "details": [
+      {
+        "heading": "They are values",
+        "body": "An anonymous function is just a function value that was never given a variable name. You can still assign it: `local fn = function() end` — that's how 'anonymous' functions get names."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A function you create right where you need it, without inventing a name for it. Most often used as a *callback*: 'here is what to do when X happens'.",
+    "whyItExists": "Event-driven Roblox code constantly needs 'do this when that happens'. One-off handlers don't deserve top-level names.",
+    "whenToUse": [
+      "Event connections: `button.Activated:Connect(function() ... end)`",
+      "`task.spawn(function() ... end)` / `task.delay(1, function() ... end)`",
+      "Comparators: `table.sort(t, function(a, b) return a > b end)`",
+      "Short arrow functions for one-liners"
+    ],
+    "whenNotToUse": [
+      "If the callback is longer than ~10 lines, promote it to a named local function — stack traces and readability improve hugely",
+      "If you need to disconnect the connection later, a named function + stored connection is easier to manage"
+    ],
+    "mentalModel": "```text\nbutton.Activated:Connect(\n    function()                -- \"the thing to do\"\n        print(\"Clicked!\")\n    end\n)\n```\nYou're handing Roblox a sealed envelope of behavior. It opens it when the event fires.",
+    "tips": [
+      "Anonymous functions capture locals from their surroundings (closures) — that's how they see your `player` variable",
+      "Arrow syntax `(x) -> x * 2` is concise but only for single expressions"
+    ],
+    "commonMistakes": [
+      "Passing a *call* instead of the function: `Connect(onClick())` runs immediately and passes nil. Write `Connect(onClick)` or `Connect(function() onClick() end)`",
+      "Forgetting `end` — anonymous functions need their own closing `end`",
+      "Deeply nested anonymous functions making code unreadable — extract names"
+    ]
+  },
+  "examples": [
+    {
+      "title": "The classic Roblox callback",
+      "code": "local button = script.Parent\n\nbutton.Activated:Connect(function()\n    print(\"Button clicked by someone!\")\nend)\n\n-- Same thing, named version (easier to read once it grows):\nlocal function onClick()\n    print(\"Button clicked by someone!\")\nend\nbutton.Activated:Connect(onClick)",
+      "commonMistake": "`button.Activated:Connect(onClick())` would call onClick *now* and connect its return value (nil) — a very common beginner bug.",
+      "language": "lua"
+    },
+    {
+      "title": "Arrow functions",
+      "code": "local double = (n) -> n * 2\nlocal shout = (text) -> string.upper(text) .. \"!\"\n\nprint(double(21))       --> 42\nprint(shout(\"hi\"))      --> HI!\n\nlocal numbers = {3, 1, 2}\ntable.sort(numbers, (a, b) -> a > b)\nprint(numbers[1])       --> 3",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "functions",
+    "closures",
+    "event-connections",
+    "task-library"
+  ],
+  "added": "2026-10-04"
+}

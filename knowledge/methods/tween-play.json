@@ -1,0 +1,98 @@
+{
+  "id": "tween-play",
+  "title": "Tween:Play() / Pause / Cancel",
+  "category": "methods",
+  "type": "method",
+  "summary": "Playback controls on a Tween object: Play starts/resumes from the current values, Pause freezes, Cancel resets to the beginning. Pair with the Completed event for sequencing.",
+  "keywords": [
+    "play tween",
+    "stop tween",
+    "pause animation",
+    "Completed",
+    "tween controls"
+  ],
+  "tags": [
+    "animation",
+    "gui",
+    "tweening"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Tween",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      {
+        "name": "Play",
+        "signature": "Tween:Play()",
+        "description": "Starts (or resumes) the tween. Animates from the property's CURRENT value toward the goal."
+      },
+      {
+        "name": "Pause",
+        "signature": "Tween:Pause()",
+        "description": "Freezes mid-flight; Play resumes."
+      },
+      {
+        "name": "Cancel",
+        "signature": "Tween:Cancel()",
+        "description": "Stops and resets progress to the beginning (properties snap back when next played from start)."
+      }
+    ],
+    "events": [
+      {
+        "name": "Completed",
+        "signature": "Tween.Completed:Connect(function(playbackState: Enum.PlaybackState) end)",
+        "description": "Fires when the tween finishes or is cancelled (state tells you which). Completed:Wait() yields."
+      }
+    ],
+    "properties": [
+      {
+        "name": "PlaybackState",
+        "type": "Enum.PlaybackState",
+        "description": "Current state: Begin/Playing/Paused/Completed/Cancelled."
+      },
+      {
+        "name": "TimePosition",
+        "type": "number",
+        "description": "Current position in seconds within the tween."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The remote control for your tween.",
+    "whyItExists": "Animations get interrupted, reversed, chained — controls make that manageable.",
+    "whenToUse": [
+      "Play: start any tween",
+      "Completed:Wait() inside spawned threads for sequential animations",
+      "Cancel: interrupt (e.g. the UI closed mid-fade)"
+    ],
+    "whenNotToUse": [
+      "Pause for permanent hiding — just set the property/Enabled"
+    ],
+    "tips": [
+      "Completed fires for Cancel too — check the playbackState argument",
+      "Replaying after Cancel starts over from current (snapped-back) values"
+    ],
+    "commonMistakes": [
+      "Calling :Wait() on Completed on the main thread of an event handler — blocks that handler; spawn or defer",
+      "Assuming Completed means success — cancellations fire it too"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Chained animations",
+      "code": "local TweenService = game:GetService(\"TweenService\")\n\ntask.spawn(function()\n    local up = TweenService:Create(part, TweenInfo.new(0.5), { Position = part.Position + Vector3.new(0, 5, 0) })\n    up:Play()\n    up.Completed:Wait()\n\n    local spin = TweenService:Create(part, TweenInfo.new(1), { CFrame = part.CFrame * CFrame.Angles(0, math.rad(360), 0) })\n    spin:Play()\n    spin.Completed:Wait()\n\n    print(\"Sequence done\")\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "tween-create",
+    "tween-service",
+    "tweening",
+    "task-library"
+  ],
+  "added": "2026-10-04"
+}

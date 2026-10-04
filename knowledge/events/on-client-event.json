@@ -1,0 +1,80 @@
+{
+  "id": "on-client-event",
+  "title": "RemoteEvent.OnClientEvent",
+  "category": "events",
+  "type": "event",
+  "summary": "Client-side event that fires when the server sends a message via FireClient/FireAllClients. Receives exactly the server's arguments — no player parameter on this side.",
+  "keywords": [
+    "client receives",
+    "server message",
+    "update from server",
+    "receive fireclient"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/RemoteEvent",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "RemoteEvent.OnClientEvent:Connect(function(...args: any) end)",
+    "parameters": [
+      {
+        "name": "...args",
+        "type": "any (serialized)",
+        "description": "The server's FireClient/FireAllClients arguments, verbatim. No injected player — unlike OnServerEvent."
+      }
+    ],
+    "details": [
+      {
+        "heading": "Where it works",
+        "body": "LocalScripts only. On the server, sending-side is FireClient/FireAllClients and receiving-side is OnServerEvent."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The client's mailbox for server messages: rounds starting, data updates, 'play this sound now'.",
+    "whyItExists": "The server decides; clients display and react. OnClientEvent is how decisions arrive.",
+    "whenToUse": [
+      "Updating HUDs from server state (coins, timers)",
+      "Receiving phase changes and announcements",
+      "Triggering local effects (sounds, camera work) on command"
+    ],
+    "whenNotToUse": [
+      "For client → server direction — FireServer",
+      "As your only sync mechanism for fast-changing state — consider attributes/replication or unreliable remotes"
+    ],
+    "tips": [
+      "Connect early in client boot (after WaitForChild on the remote)",
+      "Include a 'kind' string first argument to multiplex one remote",
+      "Arguments are serialized copies — mutating received tables doesn't touch the server"
+    ],
+    "commonMistakes": [
+      "Expecting a player parameter like OnServerEvent — there isn't one",
+      "Connecting after the server already fired — missed messages; connect before the game state flows",
+      "Heavy work inside the handler blocking other messages"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Multiplexed client handler",
+      "code": "-- LocalScript\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal remote = ReplicatedStorage:WaitForChild(\"Remotes\"):WaitForChild(\"GameState\")\n\nremote.OnClientEvent:Connect(function(kind, value)\n    if kind == \"Coins\" then\n        script.Parent.HUD.Coins.Text = `💰 {value}`\n    elseif kind == \"Phase\" then\n        print(\"Phase changed to:\", value)\n    elseif kind == \"PlaySound\" then\n        -- play sound id in value…\n    end\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "remote-event",
+    "fire-client",
+    "fire-all-clients",
+    "on-server-event",
+    "replication"
+  ],
+  "added": "2026-10-04"
+}

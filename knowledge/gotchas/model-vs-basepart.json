@@ -1,0 +1,58 @@
+{
+  "id": "model-vs-basepart",
+  "title": "Model ≠ Part",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "Models are CONTAINERS — no Position, no Size, no Color, no physics. Only BaseParts (Part, MeshPart…) have those. 'attempt to index nil with Position' on a model is this gotcha.",
+  "keywords": [
+    "model has no position",
+    "model vs part",
+    "container not part",
+    "model properties missing"
+  ],
+  "tags": [
+    "gotchas",
+    "models",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Model",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "The category confusion: models GROUP parts; parts ARE physical. The properties live on the physical things.",
+    "whyItExists": "Separation of container vs content lets you organize many parts without pretending the group is an object.",
+    "symptoms": [
+      "model.Position → nil or error",
+      "Trying to tween/resize a Model directly",
+      "CanCollide/Transparency on a model silently doing nothing"
+    ],
+    "fix": "For location: model:GetPivot().Position; to move: PivotTo. For physical properties: iterate the parts (GetDescendants, IsA(\"BasePart\")).",
+    "tips": [
+      "PrimaryPart gives a designated 'main' part for legacy workflows",
+      "Bulk styling: for _, p in model:GetDescendants() do if p:IsA(\"BasePart\") then …"
+    ],
+    "commonMistakes": [
+      "Treating the model like a big part",
+      "Setting physics properties expecting them to cascade — they don't"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Model-aware code",
+      "code": "local car = workspace.Car   -- a Model\n\n-- ❌ car.Position / car.Transparency\n\n-- ✅ Where is it?\nprint(car:GetPivot().Position)\n\n-- ✅ Move the whole thing:\ncar:PivotTo(car:GetPivot() * CFrame.new(0, 0, -10))\n\n-- ✅ Style every part inside:\nfor _, obj in car:GetDescendants() do\n    if obj:IsA(\"BasePart\") then\n        obj.Transparency = 0.5\n    end\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "model",
+    "part",
+    "moving-models",
+    "position-vs-cframe",
+    "indexing-nil"
+  ],
+  "added": "2026-10-04"
+}

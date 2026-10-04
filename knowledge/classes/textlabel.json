@@ -1,0 +1,109 @@
+{
+  "id": "textlabel",
+  "title": "TextLabel",
+  "category": "classes",
+  "type": "class",
+  "summary": "Displays text: health numbers, names, messages. Key properties: Text, TextScaled vs TextSize, RichText for inline formatting, TextWrapped, and font/color controls.",
+  "keywords": [
+    "text display",
+    "label",
+    "TextScaled",
+    "RichText",
+    "show text",
+    "font"
+  ],
+  "tags": [
+    "classes",
+    "gui",
+    "text"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/TextLabel",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "Text",
+        "type": "string",
+        "description": "The displayed string. Assign to update: label.Text = \"Coins: \" .. coins."
+      },
+      {
+        "name": "TextSize",
+        "type": "number",
+        "description": "Fixed pixel size (default 14). Mutually exclusive style with TextScaled."
+      },
+      {
+        "name": "TextScaled",
+        "type": "boolean",
+        "description": "Auto-fit text to the label's bounds — pair with TextBounds/size constraints."
+      },
+      {
+        "name": "RichText",
+        "type": "boolean",
+        "description": "Enables markup: <b>, <i>, <font color=\"...\">, <u>, <s>."
+      },
+      {
+        "name": "Font / FontFace",
+        "type": "Enum.Font / Font",
+        "description": "Legacy enum font or modern FontFace (with weight)."
+      },
+      {
+        "name": "TextColor3 / TextTransparency",
+        "type": "Color3 / number",
+        "description": "Text appearance."
+      },
+      {
+        "name": "TextWrapped / TextTruncate",
+        "type": "boolean / Enum.TextTruncate",
+        "description": "Wrapping and overflow behavior (AtEnd = ellipsis)."
+      },
+      {
+        "name": "TextXAlignment / TextYAlignment",
+        "type": "Enum",
+        "description": "Alignment inside the label."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The 'show words' GUI element. Non-interactive (use TextButton for clickable text).",
+    "whyItExists": "Every HUD needs numbers and names; labels render them.",
+    "whenToUse": [
+      "Stats displays (coins, health, timer)",
+      "Titles, descriptions, tooltips",
+      "RichText for mixed formatting in one label"
+    ],
+    "whenNotToUse": [
+      "Clickable text — TextButton",
+      "Player input — TextBox"
+    ],
+    "tips": [
+      "TextScaled for resolution-independent titles; fixed TextSize for body text",
+      "Update labels by assigning .Text — no special API needed",
+      "RichText example: `<font color=\"#FFD700\"><b>+100 coins!</b></font>`"
+    ],
+    "commonMistakes": [
+      "TextScaled text overflowing tiny frames — constrain size or use TextTruncate",
+      "Setting Text to a number directly — use tostring() (Luau auto-coerces, but explicit is clearer and safer with nil)",
+      "Updating a label in StarterGui instead of PlayerGui — see that gotcha"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Live coins counter",
+      "code": "-- LocalScript inside the TextLabel\nlocal label = script.Parent\nlocal player = game.Players.LocalPlayer\n\nlocal function update()\n    local stats = player:FindFirstChild(\"leaderstats\")\n    local coins = stats and stats:FindFirstChild(\"Coins\")\n    label.Text = if coins then `Coins: {coins.Value}` else \"Coins: —\"\nend\n\nupdate()\nlocal stats = player:WaitForChild(\"leaderstats\", 5)\nlocal coins = stats and stats:WaitForChild(\"Coins\", 5)\nif coins then\n    coins.Changed:Connect(update)\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "textbutton",
+    "frame",
+    "screengui",
+    "player-gui",
+    "string-formatting"
+  ],
+  "added": "2026-10-04"
+}

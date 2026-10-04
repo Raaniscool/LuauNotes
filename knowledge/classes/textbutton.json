@@ -1,0 +1,101 @@
+{
+  "id": "textbutton",
+  "title": "TextButton",
+  "category": "classes",
+  "type": "class",
+  "summary": "Clickable text GUI element. Activated is the modern cross-device click event (fires for mouse, touch, and gamepad); MouseButton1Click is the mouse-only legacy.",
+  "keywords": [
+    "button",
+    "click",
+    "Activated",
+    "MouseButton1Click",
+    "gui interaction"
+  ],
+  "tags": [
+    "classes",
+    "gui",
+    "input",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/TextButton",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "events": [
+      {
+        "name": "Activated",
+        "signature": "TextButton.Activated:Connect(function() end)",
+        "description": "Fires on completed activation across ALL input types (mouse click, touch tap, gamepad). The recommended event."
+      },
+      {
+        "name": "MouseButton1Click",
+        "signature": "TextButton.MouseButton1Click:Connect(function() end)",
+        "description": "Legacy: mouse left-click only. Prefer Activated."
+      },
+      {
+        "name": "MouseEnter / MouseLeave",
+        "signature": "TextButton.MouseEnter:Connect(function() end)",
+        "description": "Hover tracking for effects/tooltips."
+      }
+    ],
+    "properties": [
+      {
+        "name": "AutoButtonColor",
+        "type": "boolean",
+        "description": "Automatic hover/press shading (default true)."
+      },
+      {
+        "name": "Active",
+        "type": "boolean",
+        "description": "Whether the button consumes input."
+      },
+      {
+        "name": "(inherits TextLabel text props)",
+        "type": "—",
+        "description": "Text, TextScaled, Font, colors — same as TextLabel."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A button: the fundamental 'player decides something' control in GUIs.",
+    "whyItExists": "Menus, shops, and inventories run on buttons.",
+    "whenToUse": [
+      "Menu navigation, shop purchases, ability buttons",
+      "Toggles (swap visuals + state on Activated)",
+      "Mobile-friendly big touch targets"
+    ],
+    "whenNotToUse": [
+      "World interactions — ClickDetector/ProximityPrompt",
+      "Keybind-driven actions — input services"
+    ],
+    "tips": [
+      "Always use Activated for cross-platform; MouseButton1Click ignores mobile/gamepad",
+      "Debounce rapid taps on expensive actions",
+      "Disable (Active=false) during cooldowns and style accordingly"
+    ],
+    "commonMistakes": [
+      "Using MouseButton1Click and mobile players 'can't click'",
+      "Buttons too small for touch (aim ≥ 44px equivalent)",
+      "Client-only consequences — purchases/state must go through the server via remotes"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Shop button → server purchase",
+      "code": "-- LocalScript in a TextButton\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal buyEvent = ReplicatedStorage:WaitForChild(\"BuyItem\")\nlocal button = script.Parent\n\nlocal lastClick = 0\nbutton.Activated:Connect(function()\n    local now = os.clock()\n    if now - lastClick < 0.5 then return end   -- debounce\n    lastClick = now\n    buyEvent:FireServer(\"Sword\")\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "textlabel",
+    "gui-toggle",
+    "debounce",
+    "remote-event",
+    "client-vs-server"
+  ],
+  "added": "2026-10-04"
+}

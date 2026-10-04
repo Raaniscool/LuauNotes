@@ -1,0 +1,82 @@
+{
+  "id": "replicated-storage",
+  "title": "ReplicatedStorage",
+  "category": "services",
+  "type": "service",
+  "summary": "The shared container: everything parented here replicates to all clients and is also visible to the server. Standard home for remotes, shared modules, and prefabs both sides need.",
+  "keywords": [
+    "shared storage",
+    "replicates to client",
+    "where to put remotes",
+    "shared modules"
+  ],
+  "tags": [
+    "services",
+    "containers",
+    "replication",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ReplicatedStorage",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "Replication",
+        "body": "Children replicate to every client automatically. Anything placed here should be considered public: clients can read all of it (exploiters included)."
+      },
+      {
+        "heading": "What belongs here",
+        "body": "RemoteEvents/RemoteFunctions, shared ModuleScripts, asset prefabs both sides instantiate, shared config. Server-only logic belongs in ServerStorage/ServerScriptService instead."
+      },
+      {
+        "heading": "Timing",
+        "body": "Clients may start running LocalScripts before every ReplicatedStorage item arrives — always WaitForChild on the client."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The 'visible to everyone' bookshelf. Server and clients can both reach in; anything you shelve here gets copied to every player's machine.",
+    "whyItExists": "Client and server need common materials — remotes to talk through, modules to share, models to clone. This container is the hand-off point.",
+    "whenToUse": [
+      "Parenting RemoteEvents/RemoteFunctions",
+      "Shared ModuleScripts and config",
+      "Prefabs both sides need (weapons, pickups, effects)"
+    ],
+    "whenNotToUse": [
+      "Server secrets, authoritative tables, or anti-cheat data — use ServerStorage",
+      "Client-only assets — put those in client containers (StarterPlayerScripts, etc.)"
+    ],
+    "mentalModel": "```text\nReplicatedStorage\n   │  replicates\n   ▼\nAll clients can read it\n(Server reads it too)\n\nRule of thumb: if the client must SEE it, it goes here.\nIf only the SERVER should see it → ServerStorage.\n```",
+    "tips": [
+      "Organize with folders: Remotes/, Modules/, Assets/",
+      "Client access pattern: `ReplicatedStorage:WaitForChild(\"Remotes\"):WaitForChild(\"Buy\")`",
+      "Scripts parented here DO run on the server — but LocalScripts here also run on clients once replicated"
+    ],
+    "commonMistakes": [
+      "Storing admin commands or prices you'll trust blindly — clients can read everything here",
+      "Forgetting WaitForChild on the client and getting nil on the first run",
+      "Putting a LocalScript here expecting it to run server-side"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Standard remote setup",
+      "code": "-- Server (once at startup):\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal remotes = Instance.new(\"Folder\")\nremotes.Name = \"Remotes\"\nlocal buyEvent = Instance.new(\"RemoteEvent\")\nbuyEvent.Name = \"Buy\"\nbuyEvent.Parent = remotes\nremotes.Parent = ReplicatedStorage\n\n-- Client:\nlocal remotes = ReplicatedStorage:WaitForChild(\"Remotes\")\nlocal buyEvent = remotes:WaitForChild(\"Buy\")\nbuyEvent:FireServer(\"Sword\")",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "server-storage",
+    "server-script-service",
+    "remote-event",
+    "replication",
+    "wait-for-child",
+    "starter-gui"
+  ],
+  "added": "2026-10-04"
+}

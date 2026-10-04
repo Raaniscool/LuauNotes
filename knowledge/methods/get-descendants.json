@@ -1,0 +1,81 @@
+{
+  "id": "get-descendants",
+  "title": "GetDescendants()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Returns an array of EVERY instance beneath this one — children, grandchildren, and deeper. The workhorse for whole-tree operations (and the thing hand-rolled recursion usually imitates).",
+  "keywords": [
+    "all descendants",
+    "whole tree",
+    "deep search",
+    "every part in model",
+    "subtree"
+  ],
+  "tags": [
+    "instance",
+    "iteration",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Instance:GetDescendants() --> { Instance }",
+    "returns": "Flat array of every descendant at any depth. Can be large on workspace-sized calls.",
+    "details": [
+      {
+        "heading": "Cost",
+        "body": "The array is built on every call — calling GetDescendants() on workspace every frame is a performance hazard. Call once and cache, or use targeted queries (tags, GetChildren on known containers)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The full family tree in one array — no manual recursion needed.",
+    "whyItExists": "'Do something to everything under here' is a constant need: counting parts, finding all Sounds, tagging geometry.",
+    "whenToUse": [
+      "One-shot tree sweeps (setup, migration scripts)",
+      "Finding all instances of a class under a model",
+      "Building caches of what exists at a moment in time"
+    ],
+    "whenNotToUse": [
+      "Every frame — cache or use events (ChildAdded/DescendantAdded)",
+      "On huge trees when a tag or direct path would do",
+      "Repeatedly for the same question — restructure data instead"
+    ],
+    "tips": [
+      "Filter with IsA in the loop",
+      "DescendantAdded event for 'react to new things under here'",
+      "For known shapes, direct paths beat whole-tree scans"
+    ],
+    "commonMistakes": [
+      "GetDescendants on workspace in Heartbeat — framerate killer",
+      "Expecting the returned array to update as the tree changes",
+      "Scanning when CollectionService tags already answer the question"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Find every Sound under a model",
+      "code": "local map = workspace.Map\n\nlocal sounds = {}\nfor _, descendant in map:GetDescendants() do\n    if descendant:IsA(\"Sound\") then\n        table.insert(sounds, descendant)\n    end\nend\nprint(`Map contains {#sounds} sounds`)",
+      "language": "lua"
+    },
+    {
+      "title": "React to new descendants",
+      "code": "workspace.Map.DescendantAdded:Connect(function(instance)\n    if instance:IsA(\"BasePart\") then\n        instance:SetAttribute(\"MapPart\", true)\n    end\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "get-children",
+    "find-first-child",
+    "instance",
+    "recursion",
+    "collection-service",
+    "frame-budgets"
+  ],
+  "added": "2026-10-04"
+}

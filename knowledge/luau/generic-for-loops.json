@@ -1,0 +1,85 @@
+{
+  "id": "generic-for-loops",
+  "title": "Generic For Loops",
+  "category": "luau",
+  "type": "keyword",
+  "summary": "`for k, v in source do ... end` walks whatever a source yields: array elements, dictionary pairs, players, tagged instances. In Luau, built-in tables can be iterated directly.",
+  "keywords": [
+    "iterate",
+    "for k v in",
+    "loop through table",
+    "for in loop"
+  ],
+  "tags": [
+    "basics",
+    "loops",
+    "iteration",
+    "tables"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "for i, v in pairs(t) do end        -- all key/value pairs (any order)",
+      "for i, v in ipairs(arr) do end     -- array part, 1..n in order",
+      "for i, v in arr do end             -- Luau: direct iteration = ipairs",
+      "for k, v in next, t do end         -- explicit next-based walk",
+      "for player in Players:GetPlayers() do end  -- arrays from APIs work too"
+    ],
+    "details": [
+      {
+        "heading": "Iterator protocol",
+        "body": "The `in` clause takes an iterator function plus its state. `pairs`, `ipairs`, `string.gmatch`, and custom generators all fit. Roblox APIs that return arrays can be iterated directly in Luau."
+      },
+      {
+        "heading": "Loop variables are per-iteration",
+        "body": "In Luau (unlike classic Lua), each iteration gets its own copy of the loop variables — closing over them in callbacks behaves intuitively."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The 'walk through everything' loop. You don't manage indices by hand — the source hands you each entry.",
+    "whyItExists": "Iterating collections is the most common loop; generic for makes it one line and impossible to off-by-one.",
+    "whenToUse": [
+      "`for i, v in array` for ordered lists",
+      "`for k, v in pairs(dict)` for named entries",
+      "`for word in text:gmatch(\"%S+\")` for pattern matches",
+      "`for _, player in Players:GetPlayers()` for players"
+    ],
+    "whenNotToUse": [
+      "Don't mutate the array you're iterating (adding/removing) — iterate a copy or walk indices backwards with a numeric for",
+      "Don't use `pairs` when order matters — it guarantees none"
+    ],
+    "mentalModel": "```text\nlocal pets = {\"Cat\", \"Dog\", \"Dragon\"}\n\nfor i, v in pets do\n    print(i, v)\nend\n--> 1 Cat\n--> 2 Dog\n--> 3 Dragon\n```\nThe loop asks the source for 'the next one' until it says 'no more'.",
+    "tips": [
+      "Use `_` for a variable you don't need: `for _, player in Players:GetPlayers()`",
+      "Breaking early is fine: `for ... do if found then break end end`",
+      "Generic for variables can't be assigned to inside the body"
+    ],
+    "commonMistakes": [
+      "Using `ipairs`/direct iteration on a dictionary — you'll see nothing (no array part)",
+      "Removing items from the table mid-iteration and skipping entries",
+      "Assuming `pairs` returns insertion order"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Walking players and dictionaries",
+      "code": "local Players = game:GetService(\"Players\")\n\n-- Every player in the game\nfor _, player in Players:GetPlayers() do\n    print(player.Name, player.Team)\nend\n\n-- Every entry in a dictionary (order not guaranteed!)\nlocal config = { Speed = 16, Jump = 50, Health = 100 }\nfor key, value in config do\n    print(key, \"=\", value)\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "ipairs",
+    "pairs",
+    "numeric-for-loops",
+    "tables",
+    "string-operations"
+  ],
+  "added": "2026-10-04"
+}

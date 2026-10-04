@@ -1,0 +1,98 @@
+{
+  "id": "metatables",
+  "title": "Metatables & Metamethods",
+  "category": "luau",
+  "type": "concept",
+  "summary": "The mechanism that lets tables customize behavior: __index for fallback lookups (the backbone of OOP), __newindex, __tostring, __add, __eq and friends.",
+  "keywords": [
+    "metatable",
+    "__index",
+    "__newindex",
+    "setmetatable",
+    "getmetatable",
+    "operator overloading",
+    "classes"
+  ],
+  "tags": [
+    "intermediate",
+    "tables",
+    "oop",
+    "metatables"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/tables#metatables",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "setmetatable(table, metatable) --> table",
+    "methods": [
+      {
+        "name": "setmetatable",
+        "signature": "setmetatable(t, mt) --> t",
+        "description": "Assigns mt as t's metatable and returns t (so `setmetatable({}, mt)` is a constructor idiom)."
+      },
+      {
+        "name": "getmetatable",
+        "signature": "getmetatable(t) --> table?",
+        "description": "Returns the metatable or nil."
+      }
+    ],
+    "details": [
+      {
+        "heading": "Key metamethods",
+        "body": "`__index` — fallback when a key is missing (table or function). `__newindex` — intercepts writes to missing keys. `__tostring` — string form. `__eq`, `__lt`, `__le` — comparisons. `__add`, `__sub`, `__mul`, `__div`, `__unm` — arithmetic. `__call` — makes a table callable like a function. `__iter` (Luau) — custom iteration. `__metatable` — hides the real metatable from getmetatable."
+      },
+      {
+        "heading": "__index is the OOP engine",
+        "body": "With `t.__index = t` on a 'class' table and `setmetatable(obj, class)` on instances, method lookups that miss on the instance fall back to the class — that's method inheritance."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A metatable is a table that describes how *another* table should behave — what happens when a missing key is read, when it's printed, when you add two of them together. Metamethods are the hooks inside it.",
+    "whyItExists": "Plain tables are just data. Metatables let you build objects, classes, read-only configs, defaults systems, and vector-like types on top of them.",
+    "whenToUse": [
+      "OOP: classes and inheritance via `__index`",
+      "Defaults: `__index` returns fallback values for missing settings",
+      "Read-only tables: `__newindex = function() error(\"read-only\") end`",
+      "Nice printing: `__tostring`"
+    ],
+    "whenNotToUse": [
+      "Don't reach for metatables for simple data — plain tables plus functions are clearer",
+      "Don't stack clever metamethods where a function call would read fine"
+    ],
+    "mentalModel": "```text\nlocal class = { greet = function(self) print(\"hi \" .. self.name) end }\nclass.__index = class          -- \"look in class for missing keys\"\n\nlocal obj = setmetatable({ name = \"Ada\" }, class)\nobj:greet()                    -- obj has no `greet`,\n                               -- __index redirects to class.greet\n```\nRead lookup as: 'check the object; if nothing there, ask the metatable's __index where to look.'",
+    "tips": [
+      "Memorize the two-line class idiom: `Class.__index = Class` + `setmetatable(obj, Class)`",
+      "Colon calls `obj:method()` pass the object as self — required for instance methods",
+      "`table.freeze` is simpler than a read-only metatable for config"
+    ],
+    "commonMistakes": [
+      "Forgetting `class.__index = class` — methods then never resolve",
+      "Using `.` instead of `:` for method calls, so `self` is nil",
+      "Expecting metamethods to fire on keys that already exist (they only trigger on misses/writes-to-missing)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Defaults via __index",
+      "code": "local DEFAULTS = { Speed = 16, Jump = 50, Health = 100 }\n\nlocal function withDefaults(overrides)\n    return setmetatable(overrides or {}, { __index = DEFAULTS })\nend\n\nlocal config = withDefaults({ Speed = 20 })\nprint(config.Speed)    --> 20  (overridden)\nprint(config.Jump)     --> 50  (falls back to default)",
+      "language": "lua"
+    },
+    {
+      "title": "A minimal class",
+      "code": "local BankAccount = {}\nBankAccount.__index = BankAccount\n\nfunction BankAccount.new(owner, balance)\n    return setmetatable({ owner = owner, balance = balance or 0 }, BankAccount)\nend\n\nfunction BankAccount:deposit(amount)\n    self.balance += amount\nend\n\nlocal acc = BankAccount.new(\"Raanis\", 100)\nacc:deposit(50)\nprint(acc.owner, acc.balance)   --> Raanis 150",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "object-oriented-programming",
+    "tables",
+    "modules",
+    "type-checking"
+  ],
+  "added": "2026-10-04"
+}

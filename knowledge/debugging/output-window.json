@@ -1,0 +1,65 @@
+{
+  "id": "output-window",
+  "title": "The Output Window",
+  "category": "debugging",
+  "type": "concept",
+  "summary": "Studio's log: prints, warnings, and every error with script + line number. Open it FIRST when anything misbehaves (View → Output). Errors double-click to jump to the exact line.",
+  "keywords": [
+    "output",
+    "error messages",
+    "studio log",
+    "warn",
+    "where are errors",
+    "red text"
+  ],
+  "tags": [
+    "debugging",
+    "studio",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/studio/output",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Your console: everything your scripts say (print/warn) and everything the engine complains about lands here.",
+    "whyItExists": "Games have no terminal; Output is the shared channel between your code and your eyes.",
+    "whenToUse": [
+      "First stop for ANY bug — read the red lines fully",
+      "print/warn breadcrumbs during development (remove later)",
+      "Double-click errors → jumps to the offending line",
+      "Server vs client messages both appear (labels show context in Play Solo/teams tests)"
+    ],
+    "whenNotToUse": [
+      "For production logging at scale — use the proper logging APIs",
+      "As a UI channel for players"
+    ],
+    "tips": [
+      "View → Output if it's missing; keep it docked while building",
+      "warn() prefixes 'WARNING:' and survives log filtering better than print",
+      "Stack traces below errors show the call chain — read upward to the FIRST relevant frame",
+      "Flooded output? Filter or add conditional prints"
+    ],
+    "commonMistakes": [
+      "Coding with Output closed — missing every error",
+      "Skimming past the line number",
+      "Leaving debug spam in shipped games"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Useful breadcrumbs",
+      "code": "print(\"[Round] starting with\", #players, \"players\")\nwarn(\"[Save] retry\", attempt, \"for\", player.UserId)\n\n-- Structured-ish prints beat mystery values:\nprint(\"hit:\", hit:GetFullName(),\n      \"humanoid:\", hit.Parent:FindFirstChildOfClass(\"Humanoid\") ~= nil)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "debugging-workflow",
+    "string-formatting",
+    "error-handling"
+  ],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,75 @@
+{
+  "id": "modules",
+  "title": "Modules & Module Patterns",
+  "category": "luau",
+  "type": "concept",
+  "summary": "How to structure code into reusable ModuleScripts: namespace tables, singletons, factories, and the conventions that keep large Roblox codebases sane.",
+  "keywords": [
+    "module pattern",
+    "code organization",
+    "reusable code",
+    "singleton module",
+    "module design"
+  ],
+  "tags": [
+    "modules",
+    "architecture",
+    "modulescripts"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ModuleScript",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "What a module can return",
+        "body": "Anything: a table of functions (most common), a single function, a value, a class-like constructor, or an object with private state via closures."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The craft of splitting your game's code into focused ModuleScripts — each owning one job — and wiring them together with require().",
+    "whyItExists": "A 3,000-line Script is undebuggable. Modules give you files-with-jobs: InventoryManager, RoundTimer, CoinSpawner — each independently readable and testable.",
+    "whenToUse": [
+      "Namespace pattern: `local M = {}` + functions + `return M` — for utility collections",
+      "Singleton pattern: module returns a state table or object — one shared instance per runtime",
+      "Factory pattern: module returns a constructor `M.new(...)` that creates fresh objects",
+      "Service wrappers: one module per Roblox service isolating all calls to it"
+    ],
+    "whenNotToUse": [
+      "Don't make a module for three lines used once",
+      "Avoid modules that require each other in circles — flatten the dependency direction"
+    ],
+    "mentalModel": "```text\nReplicatedStorage/\n  Modules/\n    CoinUtils        (namespace of coin helpers)\n    GameState        (singleton store)\n    PetFactory       (returns .new())\n\nScript/LocalScript:\n  local X = require(path)   -- pull in just what you need\n```\nThink LEGO: each module is a brick with a clear interface.",
+    "tips": [
+      "One module = one responsibility; name it after that responsibility",
+      "Put shared modules in ReplicatedStorage, server-only in ServerStorage/ServerScriptService",
+      "Keep module dependencies pointing one direction (high-level → low-level), never circular",
+      "Initialize lazily inside an `Init()` function when order matters, rather than in module body"
+    ],
+    "commonMistakes": [
+      "Modules that do heavy work at require-time, slowing every requirer's startup",
+      "Treating a singleton module's state as automatically synced — client and server have separate copies",
+      "Circular requires between modules"
+    ]
+  },
+  "examples": [
+    {
+      "title": "The three classic shapes",
+      "code": "-- 1) NAMESPACE: bag of related functions\nlocal Utils = {}\nfunction Utils.shout(text) print(string.upper(text)) end\nreturn Utils\n\n-- 2) SINGLETON: shared state object\nlocal Scoreboard = { scores = {} }\nfunction Scoreboard.add(player, points)\n    Scoreboard.scores[player.UserId] = (Scoreboard.scores[player.UserId] or 0) + points\nend\nreturn Scoreboard\n\n-- 3) FACTORY: makes fresh objects\nlocal Pet = {}\nPet.__index = Pet\nfunction Pet.new(name)\n    return setmetatable({ name = name, hunger = 100 }, Pet)\nend\nfunction Pet:feed(amount) self.hunger = math.min(100, self.hunger + amount) end\nreturn Pet",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "modulescript",
+    "require",
+    "metatables",
+    "object-oriented-programming",
+    "return"
+  ],
+  "added": "2026-10-04"
+}

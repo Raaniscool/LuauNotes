@@ -1,0 +1,71 @@
+{
+  "id": "client-vs-server",
+  "title": "Client vs Server",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "The fundamental split: one authoritative server runs the real game; each player's device runs a client that renders and inputs. They talk only through replication and remotes — and the server never trusts the client.",
+  "keywords": [
+    "client server boundary",
+    "authority",
+    "where code runs",
+    "server authoritative",
+    "client prediction",
+    "two worlds"
+  ],
+  "tags": [
+    "concepts",
+    "architecture",
+    "security",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/cloud/open-cloud",
+    "lastVerified": "2026-10-04",
+    "notes": "General client/server model page: create.roblox.com/docs/networking (client-server model)."
+  },
+  "explanation": {
+    "whatItIs": "Every Roblox game is two programs wearing one costume: the SERVER (one, authoritative, hidden) and the CLIENTS (one per player, renderers + input readers). Same code can run in both places but sees different worlds.",
+    "whyItExists": "Multiplayer needs one source of truth. If clients decided damage or currency, cheaters would rule. The server decides; clients present.",
+    "whenToUse": [
+      "Server: rules, state, saving, validation, economy, spawning",
+      "Client: input, camera, UI, sound, prediction and polish",
+      "Between them: replication (automatic) + remotes (explicit)"
+    ],
+    "whenNotToUse": [
+      "Client for authority — never",
+      "Server for rendering concerns — it has no screen"
+    ],
+    "mentalModel": "```text\n        SERVER (truth)\n   decides · validates · saves\n        │            ▲\n  replication     remotes\n  (auto, down)  (explicit, both ways)\n        ▼            │\nCLIENT 1 … CLIENT n\n  renders · reads input · predicts\n\nClient says 'I want X'.\nServer decides whether X happens.\n```",
+    "tips": [
+      "Ask 'who owns this?' for every system — ownership belongs to the server by default",
+      "RunService:IsServer()/IsClient() branches shared modules cleanly",
+      "LocalScripts = client, Scripts (default) = server, ModuleScripts = wherever required",
+      "Design latency-friendly: client acts instantly, server corrects if wrong"
+    ],
+    "commonMistakes": [
+      "Authoritative logic in LocalScripts (exploitable and unreliable)",
+      "Expecting client-created objects/state to exist on the server",
+      "Confusing Studio 'test' behavior (single-process) with production reality",
+      "Reading server-only services on the client and debugging nils"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Same module, both sides",
+      "code": "-- SharedModule (ReplicatedStorage)\nlocal RunService = game:GetService(\"RunService\")\n\nlocal M = {}\n\nfunction M.init()\n    if RunService:IsServer() then\n        print(\"Server: authoritative systems\")\n    else\n        print(\"Client: UI and input systems\")\n    end\nend\n\nreturn M\n\n-- Required from both a Script and a LocalScript,\n-- each side takes its own branch.",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "replication",
+    "never-trust-the-client",
+    "script",
+    "localscript",
+    "remote-event",
+    "server-validation",
+    "serialization"
+  ],
+  "added": "2026-10-04"
+}

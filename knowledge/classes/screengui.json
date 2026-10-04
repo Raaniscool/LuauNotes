@@ -1,0 +1,100 @@
+{
+  "id": "screengui",
+  "title": "ScreenGui",
+  "category": "classes",
+  "type": "class",
+  "summary": "The 2D canvas for screen-space UI: parent Frames, labels, and buttons into one. Controls reset-on-spawn behavior (ResetOnSpawn), layering (DisplayOrder), and inset handling.",
+  "keywords": [
+    "gui container",
+    "screen ui",
+    "DisplayOrder",
+    "ResetOnSpawn",
+    "IgnoreGuiInset",
+    "hud"
+  ],
+  "tags": [
+    "classes",
+    "gui",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ScreenGui",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "ResetOnSpawn",
+        "type": "boolean",
+        "description": "Whether this GUI is destroyed & re-copied at each respawn (default true). Set false for persistent HUDs."
+      },
+      {
+        "name": "DisplayOrder",
+        "type": "number",
+        "description": "Stacking layer between ScreenGuis — higher draws on top."
+      },
+      {
+        "name": "Enabled",
+        "type": "boolean",
+        "description": "Toggles the whole GUI's visibility."
+      },
+      {
+        "name": "IgnoreGuiInset",
+        "type": "boolean",
+        "description": "Draw under the Roblox topbar/notch area (fullscreen UIs)."
+      },
+      {
+        "name": "ZIndexBehavior",
+        "type": "Enum.ZIndexBehavior",
+        "description": "Sibling (default) vs Global ZIndex interpretation."
+      },
+      {
+        "name": "ScreenInsets",
+        "type": "Enum.ScreenInsets",
+        "description": "Which safe insets the gui respects (device notches, topbar)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The invisible sheet of glass your UI lives on. It renders nothing itself — it hosts everything else.",
+    "whyItExists": "UI needs a coordinate space, a layering group, and respawn policy. ScreenGui is that container.",
+    "whenToUse": [
+      "One ScreenGui per logical UI: HUD, Shop, Menu, Chat",
+      "DisplayOrder to stack menus above HUD",
+      "ResetOnSpawn=false for anything that should survive death"
+    ],
+    "whenNotToUse": [
+      "For UI attached to 3D objects — BillboardGui/SurfaceGui instead"
+    ],
+    "mentalModel": "```text\nPlayerGui\n ├─ HUD (ScreenGui, DisplayOrder=1, ResetOnSpawn=false)\n ├─ Shop (ScreenGui, DisplayOrder=10)\n └─ Menu (ScreenGui, DisplayOrder=20)\nHigher DisplayOrder = drawn on top.\n```",
+    "tips": [
+      "Name GUIs meaningfully and find them by WaitForChild, not position assumptions",
+      "Group per-feature; toggle whole features with Enabled",
+      "Fullscreen backgrounds: IgnoreGuiInset = true"
+    ],
+    "commonMistakes": [
+      "HUD disappearing every death → ResetOnSpawn was true",
+      "Menu appearing UNDER the HUD → DisplayOrder unset (all 0, undefined order)",
+      "Putting GUIs directly in PlayerGui without a ScreenGui — GuiObjects need a ScreenGui (or Billboard/SurfaceGui) ancestor to render"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Persistent HUD scaffold",
+      "code": "-- LocalScript\nlocal playerGui = game.Players.LocalPlayer:WaitForChild(\"PlayerGui\")\n\nlocal hud = Instance.new(\"ScreenGui\")\nhud.Name = \"HUD\"\nhud.ResetOnSpawn = false       -- survives deaths\nhud.DisplayOrder = 1\nhud.Parent = playerGui\n\nlocal menu = Instance.new(\"ScreenGui\")\nmenu.Name = \"ShopMenu\"\nmenu.Enabled = false            -- hidden until opened\nmenu.DisplayOrder = 10          -- above HUD when visible\nmenu.Parent = playerGui",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "player-gui",
+    "starter-gui",
+    "frame",
+    "gui-hierarchy-requirements",
+    "screen-gui-reset-on-spawn",
+    "udim2"
+  ],
+  "added": "2026-10-04"
+}

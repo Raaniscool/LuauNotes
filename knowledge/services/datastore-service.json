@@ -1,0 +1,117 @@
+{
+  "id": "datastore-service",
+  "title": "DataStoreService",
+  "category": "services",
+  "type": "service",
+  "summary": "Persistent cloud storage: GetDataStore gives you key → value stores that survive server shutdowns. GetAsync reads, SetAsync overwrites, UpdateAsync modifies atomically. Budget-limited and throttle-prone — always pcall + retry.",
+  "keywords": [
+    "save data",
+    "persistent data",
+    "DataStore",
+    "GetAsync",
+    "SetAsync",
+    "UpdateAsync",
+    "player data saving",
+    "data loss",
+    "OrderedDataStore"
+  ],
+  "tags": [
+    "services",
+    "data",
+    "persistence",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/DataStoreService",
+    "lastVerified": "2026-10-04",
+    "notes": "Budget/throttle numbers change over time; keep to general guidance rather than exact quotas."
+  },
+  "reference": {
+    "methods": [
+      {
+        "name": "GetDataStore",
+        "signature": "DataStoreService:GetDataStore(name: string, scope?: string) --> DataStore",
+        "description": "Opens (or creates) a named store. Same name + same game = same store, forever."
+      },
+      {
+        "name": "GetOrderedDataStore",
+        "signature": "DataStoreService:GetOrderedDataStore(name: string, scope?: string) --> OrderedDataStore",
+        "description": "Store whose numeric values can be ranked (GetSortedAsync) — classic leaderboards."
+      },
+      {
+        "name": "ListDataStoresAsync",
+        "signature": "DataStoreService:ListDataStoresAsync() --> DataStoreListingPages",
+        "description": "Enumerate existing stores (paged)."
+      }
+    ],
+    "details": [
+      {
+        "heading": "DataStore members",
+        "body": "`GetAsync(key)` → current value (nil if none). `SetAsync(key, value)` → overwrite. `UpdateAsync(key, transformFn)` → atomic read-modify-write; the transform receives the old value and returns the new one (return nil to cancel). `RemoveAsync(key)`. `IncrementAsync(key, delta)` for counters."
+      },
+      {
+        "heading": "Value restrictions",
+        "body": "Values must be serializable: tables of primitives, strings, numbers, booleans (no Instances, functions, or NaN/±inf). Size cap around 4 MB per value; strings recommended under 64KB for performance."
+      },
+      {
+        "heading": "Budgets and throttling",
+        "body": "Requests consume a budget scaled with player count. Exceeding it throws throttling errors — hence pcall + retry with backoff, batching saves, and saving on PlayerRemoving + periodically."
+      },
+      {
+        "heading": "Studio access",
+        "body": "Studio needs 'Enable Studio Access to API Services' (Game Settings → Security) to touch production stores; otherwise Studio uses a separate sandbox."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The game's long-term memory. Coins, levels, inventory — anything that must survive leaving the game lives in a DataStore keyed per player.",
+    "whyItExists": "Server memory dies with the server. DataStores are Roblox's managed, replicated, durable key-value cloud built into the platform.",
+    "whenToUse": [
+      "Player profiles: `key = \"Player_\" .. userId`, value = save table",
+      "Global data: server MOTD, seasonal state (a shared key)",
+      "Leaderboards via OrderedDataStore",
+      "IncrementAsync for counters (visits, global coins)"
+    ],
+    "whenNotToUse": [
+      "High-frequency writes — budgets will throttle you; batch and debounce",
+      "Storing huge blobs or non-serializable values",
+      "As a message bus between servers — use MessagingService for pub/sub",
+      "Trusting Studio sandbox data as production data"
+    ],
+    "mentalModel": "```text\nGetDataStore(\"PlayerData\")\n        │\n        ├─ GetAsync(\"Player_123\")      → saved table or nil\n        ├─ UpdateAsync(\"Player_123\", fn) → atomic modify\n        └─ SetAsync(\"Player_123\", data)  → overwrite\n\nRules of survival:\n  pcall everything · retry with backoff · save on leave\n  save periodically · never trust one write\n```",
+    "tips": [
+      "Wrap every call in pcall + retry — network and throttling failures are normal",
+      "UpdateAsync for anything concurrent (trading, shared counters) — it's atomic",
+      "Version your save schema (`data.version = 2`) so you can migrate later",
+      "Save on PlayerRemoving AND on a periodic loop (crash insurance); BindToClose for shutdown saves"
+    ],
+    "commonMistakes": [
+      "No pcall: one throttle error kills the saving script",
+      "Saving every second per player — instant budget exhaustion; debounce/batch",
+      "SetAsync races: two writes clobbering each other — use UpdateAsync",
+      "Forgetting BindToClose — servers shutting down lose the last save",
+      "Testing against production data in Studio without realizing Studio Access is on"
+    ]
+  },
+  "examples": [
+    {
+      "title": "The complete, safe player-data pattern",
+      "code": "local Players = game:GetService(\"Players\")\nlocal DataStoreService = game:GetService(\"DataStoreService\")\nlocal RunService = game:GetService(\"RunService\")\n\nlocal store = DataStoreService:GetDataStore(\"PlayerData_v1\")\nlocal cache = {}   -- userId → data\n\nlocal function withRetry(fn, attempts)\n    for i = 1, attempts do\n        local ok, result = pcall(fn)\n        if ok then return result end\n        warn(`Attempt {i}: {result}`)\n        task.wait(1)\n    end\n    return nil\nend\n\nlocal function loadData(player)\n    local key = \"Player_\" .. player.UserId\n    local data = withRetry(function()\n        return store:UpdateAsync(key, function(old)\n            return old or { coins = 0, level = 1, version = 1 }\n        end)\n    end, 3)\n    cache[player.UserId] = data or { coins = 0, level = 1, version = 1 }\nend\n\nlocal function saveData(player)\n    local data = cache[player.UserId]\n    if not data then return end\n    withRetry(function()\n        store:SetAsync(\"Player_\" .. player.UserId, data)\n    end, 3)\nend\n\nPlayers.PlayerAdded:Connect(loadData)\nPlayers.PlayerRemoving:Connect(saveData)\n\n-- Periodic safety save every 5 minutes\nwhile true do\n    task.wait(300)\n    for _, player in Players:GetPlayers() do\n        task.spawn(saveData, player)\n    end\nend",
+      "whyItWorks": "UpdateAsync creates the default atomically if missing; retries absorb throttling; saving on leave plus periodically covers crashes and disconnects.",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "datastore-save-load",
+    "pcall",
+    "error-handling",
+    "serialization",
+    "players",
+    "player-added",
+    "player-removing",
+    "http-service"
+  ],
+  "added": "2026-10-04"
+}

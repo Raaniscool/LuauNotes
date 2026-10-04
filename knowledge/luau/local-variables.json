@@ -1,0 +1,89 @@
+{
+  "id": "local-variables",
+  "title": "local Variables",
+  "category": "luau",
+  "type": "keyword",
+  "summary": "`local` declares a variable that only exists inside the block where it was created. It is faster and safer than globals — in Roblox code, nearly every variable should be local.",
+  "keywords": [
+    "local keyword",
+    "local scope",
+    "declare local",
+    "local vs global"
+  ],
+  "tags": [
+    "basics",
+    "variables",
+    "scope",
+    "local"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "local x = 10                 -- local variable",
+      "local a, b = 1, 2            -- multiple locals at once",
+      "local name                   -- declares first, assigns later"
+    ],
+    "details": [
+      {
+        "heading": "Scope and lifetime",
+        "body": "A local is visible from its declaration until the end of the enclosing block — a block is the body of a function, an `if`/`for`/`while`/`do` statement, or the whole script. When the block ends, the local can no longer be accessed."
+      },
+      {
+        "heading": "Performance",
+        "body": "Locals are stored in fast VM registers; globals go through a table lookup in `_G`. Tight loops using locals can be noticeably faster than global lookups."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "`local` creates a variable whose lifetime and visibility are limited to the block it was declared in. Write `local coins = 50` inside a function, and nothing outside that function can see `coins`.",
+    "whyItExists": "Locals prevent name collisions, make code easier to reason about (the value can only change inside the block you're reading), keep memory tidy, and run faster than globals.",
+    "whenToUse": [
+      "For essentially every variable you write: `local`, then the name",
+      "Inside loops and callbacks, to avoid leaking names outward",
+      "At the top of a script, to cache services: `local Players = game:GetService(\"Players\")`"
+    ],
+    "whenNotToUse": [
+      "Almost never omit it. The only common intentional global is shared state like `_G.something`, and even that is better done with ModuleScripts or attributes"
+    ],
+    "mentalModel": "```text\ndo\n    local secret = 42\n    print(secret)   --> 42\nend\nprint(secret)       --> nil  (out of scope)\n```\nEach `do ... end`, function, loop, or `if` body is a room. A `local` is born in that room and dies when you leave it.",
+    "tips": [
+      "If the autocomplete/underline says a variable is global, you probably forgot `local`",
+      "Declare at the top of the scope where it is used, not pages earlier",
+      "Closures can capture locals — see the closures entry"
+    ],
+    "commonMistakes": [
+      "Declaring `local x` inside an `if` block and then trying to read `x` after the `end`",
+      "Re-declaring with `local` by accident inside a loop: `local count = count + 1` makes a *new* local each iteration instead of updating the outer one",
+      "Assuming `local` makes a value unchangeable — it does not. There is no const in Luau"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Scope in action",
+      "code": "local outside = \"I live in the whole script\"\n\nif true then\n    local inside = \"I only live in this if block\"\n    print(inside)   --> works\n    print(outside)  --> works (outer locals are visible inside)\nend\n\nprint(outside)      --> works\nprint(inside)       --> nil! `inside` no longer exists",
+      "commonMistake": "Beginners often declare a variable inside an `if`/`for` block and are surprised when it's nil afterwards. Declare it *before* the block if you need it after.",
+      "language": "lua"
+    },
+    {
+      "title": "The accidental re-declaration bug",
+      "code": "local total = 0\nfor i = 1, 5 do\n    local total = total + i   -- BUG: new local, shadows outer one\nend\nprint(total)                  --> still 0!\n\n-- Correct:\nlocal sum = 0\nfor i = 1, 5 do\n    sum = sum + i             -- no `local` here: updates the outer one\nend\nprint(sum)                    --> 15",
+      "whyItWorks": "Inside the loop, `local total` creates a fresh variable that shadows the outer one each iteration, so the outer `total` is never touched.",
+      "commonMistake": "Adding `local` when you meant to update an existing variable. Only the *first* declaration gets `local`.",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "variables",
+    "scope",
+    "closures",
+    "while-loops",
+    "functions"
+  ],
+  "added": "2026-10-04"
+}

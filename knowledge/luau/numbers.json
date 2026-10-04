@@ -1,0 +1,81 @@
+{
+  "id": "numbers",
+  "title": "Numbers",
+  "category": "luau",
+  "type": "concept",
+  "summary": "Numeric values: integers like 42 and decimals like 3.5. Luau stores them as double-precision floats by default, with `//` floor division and the math library for everything else.",
+  "keywords": [
+    "integer",
+    "float",
+    "decimal",
+    "math",
+    "arithmetic"
+  ],
+  "tags": [
+    "basics",
+    "types",
+    "numbers",
+    "math"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/numbers",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "Representation",
+        "body": "By default all numbers are 64-bit doubles (precise for integers up to 2^53). Luau also has an optional 32-bit integer mode for specialized use."
+      },
+      {
+        "heading": "Operators",
+        "body": "`+ - * /` arithmetic, `//` floor division, `^` power (returns float), `%` modulo, unary `-`. `^` binds tighter than unary minus: `-2^2` is `-4`."
+      },
+      {
+        "heading": "math library",
+        "body": "`math.abs`, `math.floor`, `math.ceil`, `math.round` (Luau addition), `math.min`, `math.max`, `math.clamp` (Luau addition), `math.sqrt`, `math.random`, `math.randomseed`, `math.huge`, `math.pi`."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Numbers are values you do arithmetic with — health, coins, speed, positions, time. Luau doesn't force you to pick integer vs decimal up front: one number type handles both.",
+    "whyItExists": "Everything measurable in a game is a number: damage, timers, probabilities, 3D coordinates.",
+    "whenToUse": [
+      "Game state: `local health = 100`",
+      "Timers and cooldowns using `task.wait(seconds)` and `os.clock()`",
+      "Randomness: `math.random(1, 6)` for a dice roll"
+    ],
+    "whenNotToUse": [
+      "Don't compare floats for exact equality after math — `0.1 + 0.2 == 0.3` is `false`. Use a tolerance for positions and timers",
+      "Don't use numbers where a string id is clearer (prefer tags/attributes over magic numbers)"
+    ],
+    "mentalModel": "```text\n10 / 3    --> 3.3333...   (normal division, always float)\n10 // 3   --> 3           (floor division)\n10 % 3    --> 1           (remainder)\n2 ^ 10    --> 1024\nmath.clamp(150, 0, 100) --> 100\n```",
+    "tips": [
+      "`math.clamp(value, min, max)` keeps a number in range — perfect for health bars",
+      "`math.random()` with no args gives a float in [0, 1); with one arg, integer 1..n; with two, integer m..n",
+      "String→number: `tonumber(\"42\")` → 42 (nil if it can't parse); number→string: `tostring(42)`"
+    ],
+    "commonMistakes": [
+      "Integer division surprise: `7 / 2` is 3.5, not 3 — use `//` when you want 3",
+      "Floating point drift: adding 0.1 repeatedly never lands exactly on whole numbers",
+      "Forgetting `%` with negatives behaves toward +infinity semantics: `-7 % 3 == 2`"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Common number utilities in a game",
+      "code": "local health = 100\n\nlocal function takeDamage(amount)\n    health = math.clamp(health - amount, 0, 100)\n    print(\"Health:\", health)\nend\n\ntakeDamage(30)   --> Health: 70\ntakeDamage(999)  --> Health: 0   (clamped, never negative)\n\n-- Random item from a loot table\nlocal loot = {\"Coin\", \"Gem\", \"Sword\", \"Nothing\"}\nlocal drop = loot[math.random(#loot)]\nprint(\"You got:\", drop)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "arithmetic-operators",
+    "math-library",
+    "strings",
+    "type-checking"
+  ],
+  "added": "2026-10-04"
+}

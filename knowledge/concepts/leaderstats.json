@@ -1,0 +1,65 @@
+{
+  "id": "leaderstats",
+  "title": "leaderstats",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "A magic Folder name: create a Folder named exactly 'leaderstats' inside a Player, put value objects in it, and Roblox shows them on the built-in leaderboard — zero GUI work.",
+  "keywords": [
+    "leaderboard",
+    "stats folder",
+    "score display",
+    "leaderstats folder",
+    "built-in leaderboard"
+  ],
+  "tags": [
+    "concepts",
+    "players",
+    "gui",
+    "classic"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/players/leaderboards",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Convention-as-code: the engine scans each Player for a child Folder named 'leaderstats' and renders its value-object children in the stock leaderboard UI.",
+    "whyItExists": "Every game needs scores; one naming convention replaces boilerplate UI.",
+    "whenToUse": [
+      "Server Script in PlayerAdded: build the folder + IntValue/StringValue children",
+      "Updating stats by writing .Value — the board updates automatically",
+      "Order on the board follows child order"
+    ],
+    "whenNotToUse": [
+      "For anything not shown as a leaderboard stat — attributes/regular folders",
+      "Client-side creation — the server should own stats"
+    ],
+    "tips": [
+      "Name must be exact (case-sensitive) and parented to the Player",
+      "Rebuild in PlayerAdded — stats don't survive respawns (they're on Player, not Character, so they DO persist across deaths within a session)",
+      "Persist values yourself (DataStore) — leaderstats is display only"
+    ],
+    "commonMistakes": [
+      "Misspelling 'leaderstats' (capital S, etc.) — silently no leaderboard",
+      "Parenting to Character instead of Player",
+      "Expecting built-in saving — it's display, not storage"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Standard setup",
+      "code": "-- Server Script\nlocal Players = game:GetService(\"Players\")\n\nPlayers.PlayerAdded:Connect(function(player)\n    local stats = Instance.new(\"Folder\")\n    stats.Name = \"leaderstats\"      -- exact name!\n\n    local coins = Instance.new(\"IntValue\")\n    coins.Name = \"Coins\"\n    coins.Value = 0\n    coins.Parent = stats\n\n    local level = Instance.new(\"IntValue\")\n    level.Name = \"Level\"\n    level.Value = 1\n    level.Parent = stats\n\n    stats.Parent = player            -- parent to PLAYER\n\n    coins.Value += 10                -- leaderboard updates live\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "player",
+    "player-added",
+    "value-base-value",
+    "datastore-service",
+    "datastore-save-load"
+  ],
+  "added": "2026-10-04"
+}

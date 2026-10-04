@@ -1,0 +1,93 @@
+{
+  "id": "script",
+  "title": "Script",
+  "category": "classes",
+  "type": "class",
+  "summary": "A server-side script: runs on the server, can touch everything authoritative (DataStores, ServerStorage, all players), and is invisible/inaccessible to clients.",
+  "keywords": [
+    "server script",
+    "server code",
+    "authoritative",
+    "Script object"
+  ],
+  "tags": [
+    "script-types",
+    "server",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Script",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "Disabled",
+        "type": "boolean",
+        "description": "When true, the script does not run."
+      },
+      {
+        "name": "RunContext",
+        "type": "Enum.RunContext",
+        "description": "Luau-era addition: can retarget a Script to client or shared contexts (Enum.RunContext.Client/Server/Shared). Default is Server."
+      },
+      {
+        "name": "Source",
+        "type": "string",
+        "description": "The script's code."
+      }
+    ],
+    "details": [
+      {
+        "heading": "Where Scripts run",
+        "body": "Scripts run wherever they're parented within the server-visible DataModel — but convention (and safety) says ServerScriptService, workspace, or ServerStorage-adjacent containers. Scripts inside ReplicatedStorage also run on the server."
+      },
+      {
+        "heading": "What server code can do that client code can't",
+        "body": "Read/write DataStores, use ServerStorage, see every Player's authoritative state, use HttpService freely, create authoritative gameplay. The server is the source of truth."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The 'authority' script type. It runs on Roblox's server for your game: it sees everything, decides everything official, and exploiters cannot touch its code.",
+    "whyItExists": "Someone has to be in charge: validating actions, storing data, running rounds. That someone is server code.",
+    "whenToUse": [
+      "Game systems: rounds, economy, damage, saving",
+      "Anything touching DataStores, MarketplaceService receipts, HttpService",
+      "Validating and applying every client request"
+    ],
+    "whenNotToUse": [
+      "UI interaction, camera, input, sounds — that's LocalScript territory",
+      "Anything that must react instantly to local input (client-side first, then tell the server)"
+    ],
+    "mentalModel": "```text\nSERVER (Script)                 CLIENTS (LocalScript)\n─────────────────               ────────────────────\nsees all players                sees own view only\nauthoritative                   guesses & displays\nDataStores, HttpService         UI, camera, input\n   ▲                                │\n   └──────── remotes ───────────────┘\n```",
+    "tips": [
+      "Default to ServerScriptService for server scripts — clients can't even see them there",
+      "If a Script needs to talk to clients, use RemoteEvent/RemoteFunction via ReplicatedStorage",
+      "Server scripts start running as soon as their container loads — connect handlers early"
+    ],
+    "commonMistakes": [
+      "Putting authoritative logic in a LocalScript 'because it works in Studio' — clients can break or bypass it",
+      "Expecting Players.LocalPlayer in a Script — that's client-only (nil on server)",
+      "Forgetting a Script in StarterGui doesn't do what you think — StarterGui contents run as client context via LocalScripts; plain Scripts there are unusual and often a mistake"
+    ]
+  },
+  "examples": [
+    {
+      "title": "A minimal authoritative Script",
+      "code": "-- ServerScriptService/Main (Script)\nlocal Players = game:GetService(\"Players\")\n\nPlayers.PlayerAdded:Connect(function(player)\n    print(player.Name .. \" joined (server knows first)\")\nend)\n\n-- Server-side only APIs work here:\nlocal DataStoreService = game:GetService(\"DataStoreService\")   -- OK\n-- game.Players.LocalPlayer would be nil here — server has no 'local player'",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "localscript",
+    "modulescript",
+    "client-vs-server",
+    "localscript-location-limits",
+    "remote-event"
+  ],
+  "added": "2026-10-04"
+}

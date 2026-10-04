@@ -1,0 +1,60 @@
+{
+  "id": "return-mistakes",
+  "title": "Return Statement Mistakes",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "return must be the LAST statement of its block — code after it is dead; returning inside a nested function returns from THAT function; forgetting return gives nil. Module returns are their own gotcha (see module-return-mistakes).",
+  "keywords": [
+    "dead code",
+    "return placement",
+    "returning nil",
+    "early exit",
+    "return in wrong function"
+  ],
+  "tags": [
+    "gotchas",
+    "functions",
+    "basics"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/functions",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Return has strict placement rules; breaking them yields dead code, wrong-level exits, or silent nils.",
+    "whyItExists": "A block ends at return — anything after can never run, so Luau forbids it syntactically (mostly) and nil-fills omissions.",
+    "symptoms": [
+      "'Expected <eof>'-style errors when return isn't last",
+      "Guard returns accidentally ending the outer function (nested function boundary confusion)",
+      "Functions returning nil because no return was written on some path"
+    ],
+    "fix": "Place returns last in their block; make every logical path return explicitly; remember function boundaries when writing guards inside callbacks.",
+    "tips": [
+      "Guard clauses first, main logic after — early returns shine",
+      "Multiple returns: return a, b — callers pick what they need",
+      "Strict mode flags missing return paths on typed functions"
+    ],
+    "commonMistakes": [
+      "Writing cleanup after return — unreachable",
+      "Returning from a Connect callback thinking it stops the outer function",
+      "If/else where only one branch returns — other branch yields nil"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Three classic slips",
+      "code": "-- ❌ Dead code (Luau actually errors on this):\n-- return 5\n-- print(\"never\")\n\n-- ❌ Return in the wrong function:\nlocal function outer()\n    part.Touched:Connect(function(hit)\n        return        -- exits the CALLBACK, not outer!\n    end)\n    print(\"this still runs\")\nend\n\n-- ❌ Missing path:\nlocal function classify(n)\n    if n > 0 then\n        return \"positive\"\n    end\n    -- n <= 0 falls through → nil!\nend\n\n-- ✅ Every path:\nlocal function classifySafe(n)\n    if n > 0 then return \"positive\" end\n    return \"zero or negative\"\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "return",
+    "functions",
+    "module-return-mistakes",
+    "if-statements"
+  ],
+  "added": "2026-10-04"
+}

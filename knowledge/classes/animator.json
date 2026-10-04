@@ -1,0 +1,87 @@
+{
+  "id": "animator",
+  "title": "Animator",
+  "category": "classes",
+  "type": "class",
+  "summary": "The animation player inside a Humanoid: LoadAnimation(animation) returns an AnimationTrack you Play/Stop, with priority, speed adjustment, weight fading, and events.",
+  "keywords": [
+    "LoadAnimation",
+    "AnimationTrack",
+    "play animation",
+    "Priority",
+    "AdjustSpeed",
+    "KeyframeReached"
+  ],
+  "tags": [
+    "classes",
+    "animation",
+    "characters"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Animator",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      {
+        "name": "LoadAnimation",
+        "signature": "Animator:LoadAnimation(animation: Animation) --> AnimationTrack",
+        "description": "Loads the animation asset into a track. Errors if the asset can't be used by this experience."
+      },
+      {
+        "name": "GetPlayingAnimationTracks",
+        "signature": "Animator:GetPlayingAnimationTracks() --> { AnimationTrack }",
+        "description": "Currently playing tracks."
+      }
+    ],
+    "details": [
+      {
+        "heading": "AnimationTrack essentials",
+        "body": "`Play(fadeTime?, weight?, speed?)`, `Stop(fadeTime?)`, `AdjustSpeed(speed)`, `TimePosition`, `Length`, `Looped`, `Priority` (Enum.AnimationPriority: Idle/Movement/Action/Action2/Action3/Action4 — higher overrides lower), events: `Stopped`, `Played`, `KeyframeReached`, `MarkerReached`."
+      },
+      {
+        "heading": "Where Animator lives",
+        "body": "As a child of the Humanoid: character.Humanoid.Animator. (Humanoid:LoadAnimation still exists but Animator is the modern path.)"
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The character's animation deck: load cassettes (Animation), get tracks, play/blend/stop them with priorities.",
+    "whyItExists": "Characters layer many animations — walking + waving + facial. Animator manages playback and priority blending.",
+    "whenToUse": [
+      "Abilities and emotes: load once, play on demand",
+      "Custom NPC behaviors",
+      "Adjusting playback speed dynamically (slow-mo effects)"
+    ],
+    "whenNotToUse": [
+      "Re-loading the same animation every play — load once and reuse the track",
+      "Server-only contexts where the character isn't streamed appropriately"
+    ],
+    "tips": [
+      "Cache tracks per character: loading is relatively expensive",
+      "Set Priority so attacks override walks (Action > Movement)",
+      "KeyframeReached syncs effects (footsteps, swings) to exact frames"
+    ],
+    "commonMistakes": [
+      "LoadAnimation errors because the animation asset isn't owned by the experience",
+      "Playing on the client only — other players don't see it; animate on the server or replicate intent",
+      "Forgetting Stop() on looping tracks"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Play an emote with priority",
+      "code": "local humanoid = character:WaitForChild(\"Humanoid\")\nlocal animator = humanoid:WaitForChild(\"Animator\")\n\nlocal wave = Instance.new(\"Animation\")\nwave.AnimationId = \"rbxassetid://507770239\"\n\nlocal track = animator:LoadAnimation(wave)\ntrack.Priority = Enum.AnimationPriority.Action\ntrack.Looped = false\n\nlocal function playWave()\n    track:Play(0.2)   -- 0.2s fade in\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "animation",
+    "humanoid",
+    "motor6d"
+  ],
+  "added": "2026-10-04"
+}

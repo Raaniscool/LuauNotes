@@ -1,0 +1,94 @@
+{
+  "id": "attachment",
+  "title": "Attachment",
+  "category": "classes",
+  "type": "class",
+  "summary": "A named point (with orientation) on a part: used by particles, beams, sounds, constraints, and animations to say 'right here'. Zero visual presence — pure positional marker.",
+  "keywords": [
+    "anchor point",
+    "particle emitter position",
+    "beam endpoints",
+    "constraint points",
+    "attachment points"
+  ],
+  "tags": [
+    "classes",
+    "physics",
+    "effects"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Attachment",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "Position",
+        "type": "Vector3",
+        "description": "Offset from the parent part's center (in the part's local space)."
+      },
+      {
+        "name": "Orientation / Rotation",
+        "type": "Vector3",
+        "description": "Local rotation of the attachment's axes."
+      },
+      {
+        "name": "WorldPosition / WorldCFrame",
+        "type": "Vector3 / CFrame",
+        "description": "Read-only world-space pose."
+      },
+      {
+        "name": "Axis / SecondaryAxis",
+        "type": "Vector3",
+        "description": "Direction vectors used by constraints like HingeConstraint."
+      }
+    ],
+    "details": [
+      {
+        "heading": "Who uses attachments",
+        "body": "ParticleEmitters and Sounds placed at the attachment emit from it; Beams and Ropes connect Attachment0/Attachment1; constraints (Hinge, VectorForce, Motor6D's C0/C1 logic) reference attachments; animation rigs are built from them."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A pushpin you stick into a part at an exact spot and angle. Effects, sounds, ropes, and motors then plug into that pin instead of fiddling with raw coordinates.",
+    "whyItExists": "'The muzzle of this gun', 'the top of this flagpole', 'the left wheel hub' — named local points beat magic-number offsets everywhere.",
+    "whenToUse": [
+      "Particle emitter / sound placement (parent the emitter to the attachment)",
+      "Beam endpoints (Attachment0/Attachment1)",
+      "Constraint anchors (hinges, springs, motors)",
+      "Custom rigs and animation joints"
+    ],
+    "whenNotToUse": [
+      "For one-off world positions — just use a Vector3",
+      "As a visual marker — attachments render nothing"
+    ],
+    "tips": [
+      "Attachments move WITH their part — ideal for effects on moving objects",
+      "Name them clearly ('Muzzle', 'ExhaustL') — they show up in the Explorer",
+      "Use WorldCFrame to get the attachment's live world pose"
+    ],
+    "commonMistakes": [
+      "Parenting a ParticleEmitter to the part instead of the attachment and losing the offset",
+      "Confusing attachment Position (local) with WorldPosition",
+      "Forgetting constraints need matching attachments on BOTH parts"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Muzzle attachment for effects",
+      "code": "local gun = workspace.Gun\nlocal muzzle = Instance.new(\"Attachment\")\nmuzzle.Name = \"Muzzle\"\nmuzzle.Position = Vector3.new(0, 0, -2)   -- tip of barrel, local space\nmuzzle.Parent = gun\n\nlocal flash = Instance.new(\"ParticleEmitter\")\nflash.Rate = 0\nflash.Parent = muzzle      -- emits from the attachment\n\nlocal function fire()\n    flash:Emit(5)\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "weldconstraint",
+    "motor6d",
+    "part",
+    "sound"
+  ],
+  "added": "2026-10-04"
+}

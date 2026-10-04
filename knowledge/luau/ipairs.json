@@ -1,0 +1,72 @@
+{
+  "id": "ipairs",
+  "title": "ipairs()",
+  "category": "luau",
+  "type": "function",
+  "summary": "Iterates the array part of a table in order: indices 1..n. Stops at the first hole. In Luau you can usually iterate arrays directly without calling it.",
+  "keywords": [
+    "iterate array",
+    "for i v in ipairs",
+    "ordered iteration"
+  ],
+  "tags": [
+    "iteration",
+    "arrays",
+    "tables",
+    "functions"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/builtins",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "ipairs(t) --> iterator",
+    "details": [
+      {
+        "heading": "Behavior",
+        "body": "Yields (index, value) pairs for 1, 2, 3, ... and stops at the first nil. A table with a hole ({1, nil, 3}) stops at index 1."
+      },
+      {
+        "heading": "Luau shortcut",
+        "body": "Luau lets you write `for i, v in t` directly for arrays — same behavior, slightly faster. `ipairs` remains useful for clarity and for iterators-as-values."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The ordered array walker. Give it a list, get back each index and value from first to last.",
+    "whyItExists": "Before Luau's direct iteration, this was *the* way to walk an array safely and in order.",
+    "whenToUse": [
+      "Any time you need both the index and the value, in order",
+      "When you want to signal 'this is an array' explicitly to readers"
+    ],
+    "whenNotToUse": [
+      "For dictionaries — `ipairs` sees no array part and loops zero times",
+      "On tables with holes — iteration stops early"
+    ],
+    "tips": [
+      "`for i, v in t` (Luau) ≡ `for i, v in ipairs(t)` for arrays",
+      "Need reverse order? Use numeric for: `for i = #t, 1, -1 do`"
+    ],
+    "commonMistakes": [
+      "Using ipairs on a dictionary and wondering why nothing prints",
+      "Relying on it over sparse arrays"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Walking an array in order",
+      "code": "local racers = {\"Turbo\", \"Blaze\", \"Pixel\"}\n\nfor i, name in ipairs(racers) do\n    print(`#{i}: {name}`)\nend\n--> #1: Turbo\n--> #2: Blaze\n--> #3: Pixel",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "pairs",
+    "generic-for-loops",
+    "arrays",
+    "tables"
+  ],
+  "added": "2026-10-04"
+}

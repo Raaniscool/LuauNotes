@@ -1,0 +1,64 @@
+{
+  "id": "get-children",
+  "title": "GetChildren()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Returns an array of all direct children of an instance. Iterate with `for _, child in parent:GetChildren()`. Order is not guaranteed.",
+  "keywords": [
+    "list children",
+    "iterate children",
+    "all children",
+    "direct children"
+  ],
+  "tags": [
+    "instance",
+    "iteration"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Instance:GetChildren() --> { Instance }",
+    "returns": "Array of direct children (one level only). Order unspecified — don't rely on it."
+  },
+  "explanation": {
+    "whatItIs": "'Show me everything directly inside this.'",
+    "whyItExists": "Systems constantly need to act on a container's contents: round up spawn points, tag every part, count occupants.",
+    "whenToUse": [
+      "Looping a folder's contents (spawn points, waypoints)",
+      "Filtering children by class: `if child:IsA(\"BasePart\") then`",
+      "Counting: `#folder:GetChildren()`"
+    ],
+    "whenNotToUse": [
+      "When you need the whole subtree — GetDescendants",
+      "When you're looking for one known child — FindFirstChild"
+    ],
+    "tips": [
+      "Combine with IsA filters for typed sweeps",
+      "Snapshot semantics: the array is a copy — later additions don't appear in it",
+      "For tagged objects prefer CollectionService:GetTagged"
+    ],
+    "commonMistakes": [
+      "Assuming array order matches Explorer order",
+      "Modifying parenting while iterating the returned array (fine technically — it's a snapshot — but logic bugs follow)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Count and filter",
+      "code": "local spawnFolder = workspace.SpawnPoints\n\nlocal count = 0\nfor _, spawn in spawnFolder:GetChildren() do\n    if spawn:IsA(\"BasePart\") then\n        count += 1\n    end\nend\nprint(`{count} valid spawn points`)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "get-descendants",
+    "find-first-child",
+    "instance",
+    "collection-service"
+  ],
+  "added": "2026-10-04"
+}

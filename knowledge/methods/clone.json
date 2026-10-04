@@ -1,0 +1,77 @@
+{
+  "id": "clone",
+  "title": "Clone()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Creates a full copy of an instance and its descendants — unparented. Archivable=false instances are skipped. The returned copy must be parented to appear.",
+  "keywords": [
+    "copy",
+    "duplicate",
+    "instantiate prefab",
+    "spawn from template",
+    "Archivable"
+  ],
+  "tags": [
+    "instance",
+    "creation"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Instance:Clone() --> Instance",
+    "returns": "A deep copy with Parent = nil. Internal welds/constraints are re-wired within the copy.",
+    "details": [
+      {
+        "heading": "Archivable",
+        "body": "Any descendant with Archivable = false is omitted from the clone (that's also what publishing uses)."
+      },
+      {
+        "heading": "What is NOT cloned",
+        "body": "Script runtime state isn't carried over meaningfully; player-owned transient state, event connections made at runtime by OTHER scripts don't transfer."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Photocopy, then place. Templates live in storage; clones enter the world.",
+    "whyItExists": "Prefabs: design once, spawn many — enemies, pickups, projectiles.",
+    "whenToUse": [
+      "Spawning from ServerStorage/ReplicatedStorage templates",
+      "Duplicating player-built structures",
+      "Projectile factories"
+    ],
+    "whenNotToUse": [
+      "When you need a DIFFERENT class — build fresh with Instance.new",
+      "Cloning huge trees every frame — pool instead"
+    ],
+    "tips": [
+      "Clone → tweak (name, position, attributes) → parent LAST (single replication event)",
+      "Rename clones! Identical names in one container confuse FindFirstChild",
+      "Keep templates Archivable and non-simulating (Anchored, CanCollide) until spawned"
+    ],
+    "commonMistakes": [
+      "Forgetting to parent the clone — it exists but nowhere",
+      "Accidentally cloning scripts that immediately re-run side effects",
+      "Archivable=false somewhere in the template → pieces silently missing"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Template spawner",
+      "code": "local ServerStorage = game:GetService(\"ServerStorage\")\nlocal template = ServerStorage:WaitForChild(\"EnemyGoblin\")\n\nlocal function spawnEnemy(position: Vector3)\n    local enemy = template:Clone()\n    enemy.Name = \"Goblin_\" .. tostring(task.getId())\n    enemy:PivotTo(CFrame.new(position))\n    enemy.Parent = workspace.Enemies     -- appears NOW\n    return enemy\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "destroy",
+    "instance",
+    "server-storage",
+    "debris",
+    "object-lifetime"
+  ],
+  "added": "2026-10-04"
+}

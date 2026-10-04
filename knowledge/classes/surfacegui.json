@@ -1,0 +1,96 @@
+{
+  "id": "surfacegui",
+  "title": "SurfaceGui",
+  "category": "classes",
+  "type": "class",
+  "summary": "GUI painted onto a part's face: shop screens, keypads, wall posters with buttons. Sized in studs relative to the part face.",
+  "keywords": [
+    "gui on part",
+    "screen on wall",
+    "Face",
+    "part face ui",
+    "keypad"
+  ],
+  "tags": [
+    "classes",
+    "gui",
+    "world-space"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/SurfaceGui",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "Face",
+        "type": "Enum.NormalId",
+        "description": "Which face of the part (Front, Back, Top…)."
+      },
+      {
+        "name": "Adornee",
+        "type": "Instance",
+        "description": "The part it renders on (defaults to Parent)."
+      },
+      {
+        "name": "PixelsPerStud",
+        "type": "number",
+        "description": "Resolution density: gui pixels per world stud (default 50)."
+      },
+      {
+        "name": "SizingMode / CanvasSize",
+        "type": "Enum / Vector2",
+        "description": "Fit-to-face vs fixed pixel canvas."
+      },
+      {
+        "name": "LightInfluence / Brightness / AlwaysOnTop",
+        "type": "number / number / boolean",
+        "description": "Lighting response and wall-clipping behavior."
+      },
+      {
+        "name": "Enabled / Active",
+        "type": "boolean",
+        "description": "Visibility and interactivity (buttons on the surface)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A GUI texture-mapped onto a part face — a working screen inside the 3D world, buttons included.",
+    "whyItExists": "Diegetic UI: TVs, vending machines, door panels — interfaces that belong IN the scene.",
+    "whenToUse": [
+      "Shop screens, keypads, elevator panels",
+      "Posters/signage with live text",
+      "Any UI that should live on a surface"
+    ],
+    "whenNotToUse": [
+      "Camera-facing UI — BillboardGui",
+      "Player HUD — ScreenGui"
+    ],
+    "tips": [
+      "PixelsPerStud controls sharpness — bump it for readable text on big walls",
+      "Buttons on a SurfaceGui work with clicks (raycast-based input) — test on mobile",
+      "Anchor the part or the surface moves with physics"
+    ],
+    "commonMistakes": [
+      "Wrong Face — the UI renders on the back of the wall",
+      "Tiny PixelsPerStud → blurry text",
+      "Expecting interaction through walls — input needs line of sight"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Wall-mounted button panel",
+      "code": "local wall = workspace.KeypadWall\n\nlocal surface = Instance.new(\"SurfaceGui\")\nsurface.Face = Enum.NormalId.Front\nsurface.Parent = wall\n\nlocal button = Instance.new(\"TextButton\")\nbutton.Size = UDim2.fromScale(0.5, 0.25)\nbutton.Position = UDim2.fromScale(0.25, 0.3)\nbutton.Text = \"OPEN DOOR\"\nbutton.Parent = surface\n\nbutton.Activated:Connect(function()\n    print(\"Door button pressed\")\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "billboardgui",
+    "screengui",
+    "part"
+  ],
+  "added": "2026-10-04"
+}

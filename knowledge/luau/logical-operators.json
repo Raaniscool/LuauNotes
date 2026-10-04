@@ -1,0 +1,88 @@
+{
+  "id": "logical-operators",
+  "title": "Logical Operators (and / or / not)",
+  "category": "luau",
+  "type": "overview",
+  "summary": "`and`, `or`, `not` combine conditions — with a twist: they return one of their operands, not just true/false. That powers defaults like `speed or 16`.",
+  "keywords": [
+    "and or not",
+    "logical and",
+    "logical or",
+    "ternary",
+    "default value",
+    "short-circuit"
+  ],
+  "tags": [
+    "basics",
+    "operators",
+    "conditions"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "What they actually return",
+        "body": "`a and b` → if a is falsy, returns a; else returns b. `a or b` → if a is truthy, returns a; else returns b. `not a` → always a boolean. They evaluate left-to-right and stop early (short-circuit)."
+      },
+      {
+        "heading": "Short-circuiting",
+        "body": "`player and player.Character` never errors on nil player: if the left side is falsy, the right side is never evaluated. Same for `or`."
+      },
+      {
+        "heading": "Luau if-expressions",
+        "body": "For true ternary behavior without the falsy-b trap, use `if c then x else y` — clearer and safer."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "`and` needs both sides truthy; `or` needs at least one; `not` flips. Because they return operands instead of booleans, they double as value selectors.",
+    "whyItExists": "Combining conditions is constant: 'alive AND has key', 'use custom speed OR the default'.",
+    "whenToUse": [
+      "Combining checks: `if alive and hasKey then`",
+      "Defaults: `local speed = config.Speed or 16`",
+      "Nil-safe chains: `local char = player and player.Character`",
+      "Early-out: `if not success then return end`"
+    ],
+    "whenNotToUse": [
+      "Don't build ternaries with `a and b or c` when b can be false/nil — you'll silently get c",
+      "Don't over-chain: `a and b or c and d` is unreadable — use real if statements"
+    ],
+    "mentalModel": "```text\ntrue  and \"x\"   --> \"x\"      (first truthy, so second decides)\nfalse and \"x\"   --> false    (short-circuit: stop early)\n\nnil   or  10    --> 10       (first falsy, take second)\n\"hi\"  or  10    --> \"hi\"     (first truthy, keep it)\n\nnot true        --> false\nnot nil         --> true\nnot 0           --> false    (0 is truthy!)\n```",
+    "tips": [
+      "`x or default` is the idiom for optional settings — but remember `false` and `nil` both fall through",
+      "When you need 'x unless it's nil', use `if x == nil then x = default end` or Luau's `x :: any` patterns in typed code"
+    ],
+    "commonMistakes": [
+      "The classic ternary bug: `cond and false or fallback` always gives fallback",
+      "Forgetting short-circuit runs left-to-right — put the cheap/safe check first",
+      "Using `&&` / `||` / `!` — those don't exist in Luau"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Defaults and nil-safety",
+      "code": "local config = { Speed = 20 }   -- Jump missing\n\nlocal speed = config.Speed or 16     --> 20 (provided)\nlocal jump  = config.Jump or 50      --> 50 (default used)\n\nlocal player = game.Players.LocalPlayer\nlocal character = player and player.Character   -- safe: no error if nil\nprint(character or \"No character yet\")",
+      "whyItWorks": "`or` returns the first truthy operand — a perfect 'fallback' machine. `and` short-circuits, so `.Character` is only touched when `player` exists.",
+      "language": "lua"
+    },
+    {
+      "title": "The ternary trap",
+      "code": "local wantsSprint = false\n\n-- BUG: wantsSprint is falsy, so this gives \"walk\" either way:\nlocal mode = wantsSprint and false or \"walk\"\nprint(mode)   --> \"walk\" ... even though 'and false' was the point\n\n-- SAFE: use an if-expression\nlocal safeMode = if wantsSprint then \"sprint\" else \"walk\"\nprint(safeMode)   --> walk (correctly)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "truthiness",
+    "comparisons",
+    "if-statements",
+    "nil",
+    "or-default"
+  ],
+  "added": "2026-10-04"
+}

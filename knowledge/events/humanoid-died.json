@@ -1,0 +1,74 @@
+{
+  "id": "humanoid-died",
+  "title": "Humanoid.Died",
+  "category": "events",
+  "type": "event",
+  "summary": "Fires once when a character's health hits zero. Death handling belongs here — but remember each respawn brings a NEW Humanoid, so reconnect it on every CharacterAdded.",
+  "keywords": [
+    "death event",
+    "died",
+    "on death",
+    "health zero",
+    "kill feed",
+    "respawn trigger"
+  ],
+  "tags": [
+    "characters",
+    "lifecycle",
+    "combat",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Humanoid",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Humanoid.Died:Connect(function() end)",
+    "details": [
+      {
+        "heading": "One-shot per Humanoid",
+        "body": "Each Humanoid instance fires Died exactly once. Respawns create new Humanoids — re-subscribe via CharacterAdded."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The moment-of-death hook: kill feeds, score credits, respawn timers, drop loot.",
+    "whyItExists": "Death is THE pivot event in most games; one clean signal marks it.",
+    "whenToUse": [
+      "Killer attribution (track last-damager yourself — Died passes no arguments)",
+      "Round logic (all players dead → round over)",
+      "Cleanup: ragdolls, death cameras, respawn delays"
+    ],
+    "whenNotToUse": [
+      "As damage detection — use HealthChanged/TakeDamage wrappers",
+      "Expecting it to tell you WHO killed — it doesn't; record damage attribution yourself"
+    ],
+    "tips": [
+      "Server-side only for authority (clients can fake local deaths)",
+      "Track last-hit source in a table keyed by character for kill credits",
+      "Died → task.wait(respawnDelay) → LoadCharacter for custom respawn timing (or use Players.RespawnTime)"
+    ],
+    "commonMistakes": [
+      "Connecting once per player instead of per character",
+      "Expecting arguments (who/what killed) — Died provides none",
+      "Acting on client-side Died for rewards — exploiters die on demand"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Death counting with proper lifecycle",
+      "code": "local Players = game:GetService(\"Players\")\nlocal deaths = {}\n\nPlayers.PlayerAdded:Connect(function(player)\n    deaths[player.UserId] = 0\n\n    player.CharacterAdded:Connect(function(character)\n        local humanoid = character:WaitForChild(\"Humanoid\")\n        humanoid.Died:Connect(function()\n            deaths[player.UserId] += 1\n            print(`{player.Name} died ({deaths[player.UserId]} total)`)\n        end)\n    end)\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "character-added",
+    "humanoid",
+    "player-added",
+    "client-vs-server"
+  ],
+  "added": "2026-10-04"
+}

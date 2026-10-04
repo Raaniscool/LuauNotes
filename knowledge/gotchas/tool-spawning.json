@@ -1,0 +1,61 @@
+{
+  "id": "tool-spawning",
+  "title": "Tool Spawning & Equipping Gotchas",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "Tools move through containers automatically: Backpack → Character on equip, back on unequip. Giving tools means parenting to player.Backpack; 'equipped' scripts re-parent; tools without Handles misbehave.",
+  "keywords": [
+    "give tool",
+    "equip tool",
+    "tool parenting",
+    "backpack to character",
+    "tool lifecycle"
+  ],
+  "tags": [
+    "gotchas",
+    "tools",
+    "lifecycle"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Tool",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Tools are nomadic: they live in StarterPack (template), get copied to Backpack, and re-parent into the Character while equipped — breaking cached paths.",
+    "whyItExists": "Equipping physically welds the tool to the hand, so the object must move to where the hand is.",
+    "symptoms": [
+      "Cached tool paths going nil after equip/unequip",
+      "Scripts inside tools running at unexpected times (Activated/Equipped)",
+      "'Tool doesn't appear' — parented to wrong container or player has no Backpack yet"
+    ],
+    "fix": "Give tools via player.Backpack: tool:Clone().Parent = player.Backpack. React to Equipped/Unequipped/Activated events instead of assuming location. Ensure a proper Handle.",
+    "tips": [
+      "StarterPack contents copy to Backpack on spawn — server can add more anytime",
+      "Tool.Enabled=false for cooldowns (greyed out, not removable)",
+      "humanoid:EquipTool(tool) forces equip server-side"
+    ],
+    "commonMistakes": [
+      "Parenting to workspace expecting auto-equip",
+      "Assuming script.Parent stays Backpack — it becomes the Character while equipped",
+      "Missing/misnamed Handle (see tool-requires-handle)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Granting a tool safely",
+      "code": "-- Server Script (e.g., shop purchase):\nlocal function grant(player, toolTemplate)\n    local backpack = player:FindFirstChildOfClass(\"Backpack\")\n    if not backpack then return end   -- dead/spawning\n    local copy = toolTemplate:Clone()\n    copy.Parent = backpack            -- player will see it in inventory\nend\n\n-- Inside the tool's Script — react, don't assume:\nlocal tool = script.Parent\ntool.Equipped:Connect(function()\n    print(\"In hand\")\nend)\ntool.Activated:Connect(function()\n    print(\"Clicked while equipped\")\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "tool",
+    "starter-pack",
+    "tool-requires-handle",
+    "clone",
+    "character-lifecycle"
+  ],
+  "added": "2026-10-04"
+}

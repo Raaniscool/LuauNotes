@@ -1,0 +1,71 @@
+{
+  "id": "never-trust-the-client",
+  "title": "Never Trust the Client",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Security rule #1: anything a client sends or holds — arguments, memory, even 'which remote fired' — can be fabricated by exploiters. The server must independently validate every claim before acting.",
+  "keywords": [
+    "exploits",
+    "cheating",
+    "server validation",
+    "hacking",
+    "client is hostile",
+    "security rules",
+    "remote validation"
+  ],
+  "tags": [
+    "concepts",
+    "security",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/production/security",
+    "lastVerified": "2026-10-04",
+    "notes": "Roblox security guidance: client code and memory are modifiable by exploiters."
+  },
+  "explanation": {
+    "whatItIs": "The mindset: every client is potentially an adversary. Not because players are evil — because tools exist that let anyone rewrite client behavior, and your server can't tell them apart.",
+    "whyItExists": "Roblox clients run on player hardware where memory and code are inspectable/editable. Anything client-side is public AND mutable.",
+    "whenToUse": [
+      "Validate every remote argument: type, range, ownership, cooldown, game state",
+      "Re-derive outcomes server-side (raycast re-checks, distance checks)",
+      "Keep authoritative values server-only: currency, permissions, inventories",
+      "Rate-limit per player to stop spam-based exploits"
+    ],
+    "whenNotToUse": [
+      "As an excuse to move EVERYTHING server-side at the cost of responsiveness — validate, don't paralyze"
+    ],
+    "mentalModel": "```text\nClient says: \"I dealt 999999 damage\"\nServer asks:  could they, really?\n             - weapon equipped?        (state check)\n             - target in range?        (distance check)\n             - cooldown elapsed?       (time check)\n             - damage value plausible? (data check)\nOnly then apply it.\n```",
+    "tips": [
+      "The player parameter Roblox injects is trustworthy; everything AFTER it is not",
+      "Server-only containers keep logic away from prying eyes (obfuscation, not protection — determined attackers still probe remotes)",
+      "Log suspicious activity to spot exploit patterns",
+      "Design exploits out: if the server always decides, client hacks change nothing"
+    ],
+    "commonMistakes": [
+      "Applying client-sent damage/currency values directly",
+      "Hiding 'secret' data in ReplicatedStorage — visible to all clients",
+      "Validating once at UI level only — remotes bypass UI",
+      "Assuming 'nobody will bother' — popular games get targeted automatically"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Validated purchase",
+      "code": "-- ❌ TRUSTING:\nremote.OnServerEvent:Connect(function(player, amount)\n    player.leaderstats.Coins.Value += amount   -- free money!\nend)\n\n-- ✅ VALIDATING:\nlocal PRICES = { Potion = 50 }\nlocal cooldowns = {}\n\nremote.OnServerEvent:Connect(function(player, itemName)\n    if typeof(itemName) ~= \"string\" then return end          -- type\n    local price = PRICES[itemName]\n    if not price then return end                              -- known item\n    local now = os.clock()\n    if cooldowns[player] and now - cooldowns[player] < 1 then return end  -- rate\n    cooldowns[player] = now\n\n    local coins = player.leaderstats and player.leaderstats:FindFirstChild(\"Coins\")\n    if coins and coins.Value >= price then                    -- affordability\n        coins.Value -= price\n        grantItem(player, itemName)                           -- server grants\n    end\nend)",
+      "language": "lua"
+    }
+  ],
+  "examples_note": null,
+  "related": [
+    "client-vs-server",
+    "server-validation",
+    "remote-parameter-rules",
+    "on-server-event",
+    "fire-server",
+    "datastore-service"
+  ],
+  "added": "2026-10-04"
+}

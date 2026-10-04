@@ -1,0 +1,178 @@
+{
+  "id": "instance",
+  "title": "Instance (base class)",
+  "category": "classes",
+  "type": "class",
+  "summary": "The ancestor of every object in Roblox: Parts, Players, GUIs, everything. Owns the universal API — Name, Parent, FindFirstChild, WaitForChild, GetChildren, Clone, Destroy, IsA, attributes, and the Changed/AncestryChanged events.",
+  "keywords": [
+    "base class",
+    "every object",
+    "FindFirstChild",
+    "WaitForChild",
+    "GetChildren",
+    "Clone",
+    "Destroy",
+    "IsA",
+    "attributes",
+    "Instance.new"
+  ],
+  "tags": [
+    "classes",
+    "core",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      {
+        "name": "Instance.new",
+        "signature": "Instance.new(className: string, parent: Instance?) --> Instance",
+        "description": "Creates a new instance of the given class. Set properties BEFORE parenting for best performance."
+      },
+      {
+        "name": "FindFirstChild",
+        "signature": "Instance:FindFirstChild(name: string, recursive: boolean?) --> Instance?",
+        "description": "Immediate child by name, or nil. Non-yielding — the safe nil-checkable lookup."
+      },
+      {
+        "name": "WaitForChild",
+        "signature": "Instance:WaitForChild(name: string, timeLimit: number?) --> Instance",
+        "description": "Yields until the child exists (or timeout → returns nil with a warning). The standard fix for replication timing."
+      },
+      {
+        "name": "FindFirstChildOfClass / FindFirstChildWhichIsA",
+        "signature": "Instance:FindFirstChildOfClass(className: string) --> Instance?",
+        "description": "First child of exact class / of that class or subclasses."
+      },
+      {
+        "name": "GetChildren / GetDescendants",
+        "signature": "Instance:GetChildren() --> { Instance }",
+        "description": "Direct children / every descendant (full subtree)."
+      },
+      {
+        "name": "IsA / IsDescendantOf",
+        "signature": "Instance:IsA(className: string) --> boolean",
+        "description": "Class check including inheritance: part:IsA(\"BasePart\") is true for Parts, MeshParts, etc."
+      },
+      {
+        "name": "Clone / Destroy",
+        "signature": "Instance:Clone() --> Instance / Instance:Destroy()",
+        "description": "Clone returns an unparented deep copy. Destroy permanently breaks the instance (Parent locked nil, Changed fires)."
+      },
+      {
+        "name": "GetAttribute / SetAttribute / GetAttributes",
+        "signature": "Instance:SetAttribute(name: string, value: any)",
+        "description": "Custom named data on any instance — replicates to clients, survives streaming, visible in Studio."
+      },
+      {
+        "name": "GetPropertyChangedSignal",
+        "signature": "Instance:GetPropertyChangedSignal(property: string) --> RBXScriptSignal",
+        "description": "Event that fires when one specific property changes."
+      }
+    ],
+    "events": [
+      {
+        "name": "Changed",
+        "signature": "Instance.Changed:Connect(function(propertyName: string) end)",
+        "description": "Fires when ANY property changes, passing the property name. For physics-heavy properties this fires very often."
+      },
+      {
+        "name": "AncestryChanged",
+        "signature": "Instance.AncestryChanged:Connect(function(instance: Instance, parent: Instance?) end)",
+        "description": "Fires when the instance's ancestry (its own or descendants') changes — parented, unparented, destroyed."
+      },
+      {
+        "name": "ChildAdded / ChildRemoved",
+        "signature": "Instance.ChildAdded:Connect(function(child: Instance) end)",
+        "description": "Children appearing/leaving this instance."
+      },
+      {
+        "name": "AttributeChanged",
+        "signature": "Instance.AttributeChanged:Connect(function(attribute: string) end)",
+        "description": "Fires when an attribute changes."
+      }
+    ],
+    "properties": [
+      {
+        "name": "Name",
+        "type": "string",
+        "description": "The object's name (not necessarily unique among siblings)."
+      },
+      {
+        "name": "Parent",
+        "type": "Instance?",
+        "description": "Where the object lives in the hierarchy. nil = not in any tree (and Destroyed objects are locked to nil)."
+      },
+      {
+        "name": "ClassName",
+        "type": "string",
+        "description": "The exact class name as a string."
+      },
+      {
+        "name": "Archivable",
+        "type": "boolean",
+        "description": "Whether Clone() copies this instance (and children)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Every object in Roblox is an Instance of some class — and every one of them inherits this shared toolbox: naming, parenting, searching the tree, cloning, destroying, tagging with attributes, and listening for changes.",
+    "whyItExists": "One consistent object model means one set of skills works everywhere: the way you find a Part is the way you find a GUI is the way you find a Player.",
+    "whenToUse": [
+      "Instance.new to build objects at runtime (set properties BEFORE parenting)",
+      "FindFirstChild for safe lookups; WaitForChild when replication timing is the issue",
+      "GetDescendants to scan a whole subtree",
+      "Attributes for lightweight per-object data that replicates"
+    ],
+    "whenNotToUse": [
+      "Indexing children directly with `parent.ChildName` when the child might not exist — nil-index crash risk; prefer FindFirstChild",
+      "WaitForChild in hot loops or with huge timeouts — it yields your thread"
+    ],
+    "mentalModel": "```text\nInstance (base)\n  ├─ BasePart → Part, MeshPart, WedgePart…\n  ├─ Model → Player characters, Spawns…\n  ├─ GuiObject → Frame, TextLabel, TextButton…\n  └─ …hundreds more\n\nEvery one of them has: Name, Parent, FindFirstChild,\nWaitForChild, Clone, Destroy, IsA, attributes, Changed.\n```",
+    "tips": [
+      "Create → configure → parent LAST: `local p = Instance.new(\"Part\"); p.Size = ...; p.Parent = workspace`",
+      "Destroyed instances are zombies: keep no references; Parent is locked nil forever",
+      "Use IsA over ClassName comparisons — it respects inheritance",
+      "Attributes + CollectionService tags = flexible per-object data + grouping"
+    ],
+    "commonMistakes": [
+      "`workspace.SomePart` style indexing when SomePart might be missing → 'attempt to index nil'",
+      "Forgetting Destroy() doesn't run immediately-garbage-collection-wise — drop your references too",
+      "Clone() returns an UNPARENTED copy — you must set Parent to see it",
+      "Listening to Changed for a property and getting flooded (e.g., Position) — use GetPropertyChangedSignal or throttle"
+    ]
+  },
+  "examples": [
+    {
+      "title": "The safe-lookup trifecta",
+      "code": "-- 1) Might not exist? FindFirstChild\nlocal coin = workspace:FindFirstChild(\"Coin\")\nif coin then\n    coin:Destroy()\nend\n\n-- 2) Should exist soon (replication)? WaitForChild\nlocal remotes = game.ReplicatedStorage:WaitForChild(\"Remotes\", 5)\nif not remotes then\n    warn(\"Remotes never replicated!\")\nend\n\n-- 3) Need a specific class? FindFirstChildOfClass\nlocal humanoid = character:FindFirstChildOfClass(\"Humanoid\")\n\n-- 4) Is it the right kind of thing?\nif coin and coin:IsA(\"BasePart\") then\n    print(\"Coin is a part\")\nend",
+      "language": "lua"
+    },
+    {
+      "title": "Runtime creation done right",
+      "code": "local part = Instance.new(\"Part\")\npart.Name = \"SpawnPad\"\npart.Size = Vector3.new(6, 1, 6)\npart.Anchored = true\npart.Material = Enum.Material.Neon\npart.Color = Color3.fromRGB(80, 200, 255)\npart.CFrame = CFrame.new(0, 0.5, 0)\npart.Parent = workspace      -- parent LAST: one replication event\n\npart:SetAttribute(\"Interactive\", true)\nprint(part:GetAttribute(\"Interactive\"))   --> true",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "find-first-child",
+    "wait-for-child",
+    "get-children",
+    "get-descendants",
+    "clone",
+    "destroy",
+    "is-a",
+    "attributes",
+    "instance-hierarchy",
+    "object-lifetime",
+    "indexing-nil",
+    "wrong-object-paths"
+  ],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,65 @@
+{
+  "id": "server-validation",
+  "title": "Server-Side Validation",
+  "category": "patterns",
+  "type": "pattern",
+  "summary": "The standard OnServerEvent body: type-check every argument, range-check every number, ownership-check every object, state-check every precondition — BEFORE acting. Reject silently or log; never trust.",
+  "keywords": [
+    "validate remotes",
+    "argument checking",
+    "remote security",
+    "sanity checks",
+    "server guards"
+  ],
+  "tags": [
+    "patterns",
+    "security",
+    "networking",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/production/security",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "A checklist discipline for every remote handler: nothing passes without proving itself.",
+    "whyItExists": "Clients are hostile territory (see never-trust-the-client). Validation is the server's immune system.",
+    "whenToUse": [
+      "Every OnServerEvent / OnServerInvoke, no exceptions",
+      "Layers: typeof → allowed-values → ownership → game state → cooldown",
+      "Log failures during development to catch broken clients AND exploit probes"
+    ],
+    "whenNotToUse": [
+      "As the only layer — pair with rate limiting and server-authoritative outcomes"
+    ],
+    "mentalModel": "```text\nOnServerEvent(player, …args)\n  1. TYPE:     typeof(arg) == expected?\n  2. VALUE:    number in sane range? string in allowlist?\n  3. OWNERSHIP: does player own/qualify for the target?\n  4. STATE:    is the game in a state where this is legal?\n  5. TIMING:   cooldown/rate ok?\n  ── only then: act, and recompute results server-side\n```",
+    "tips": [
+      "Small validator helpers keep handlers readable",
+      "Return without acting on failure; don't explain weaknesses to the caller",
+      "Instance arguments: verify they're where they should be (AncestryIsAncestorOf / Parent checks)"
+    ],
+    "commonMistakes": [
+      "Validating types but not ranges (damage = 9e9)",
+      "Trusting client-sent 'target' without distance/line-of-sight checks",
+      "Erroring the handler on bad input instead of returning (crashes your own log, not theirs)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Full validation ladder",
+      "code": "local ALLOWED = { Fireball = true, Heal = true }\nlocal lastCast = {}\nlocal RATE = 0.5\n\nremote.OnServerEvent:Connect(function(player, spellName, target)\n    -- 1. type\n    if typeof(spellName) ~= \"string\" then return end\n    -- 2. value\n    if not ALLOWED[spellName] then return end\n    -- 3. ownership/range (example: target must be a living character within 100 studs)\n    local character = player.Character\n    if not (character and character.PrimaryPart) then return end\n    if target and target.Parent then\n        local dist = (character.PrimaryPart.Position - target.Position).Magnitude\n        if dist > 100 then return end\n    end\n    -- 4. state\n    if game:GetService(\"RunService\"):IsStudio() then end -- hook your game-state checks here\n    -- 5. timing\n    local now = os.clock()\n    if lastCast[player] and now - lastCast[player] < RATE then return end\n    lastCast[player] = now\n\n    castSpell(player, spellName, target)   -- server computes the outcome\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "never-trust-the-client",
+    "on-server-event",
+    "remote-parameter-rules",
+    "typeof-function",
+    "cooldown-pattern"
+  ],
+  "added": "2026-10-04"
+}

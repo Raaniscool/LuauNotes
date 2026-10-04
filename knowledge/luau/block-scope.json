@@ -1,0 +1,71 @@
+{
+  "id": "block-scope",
+  "title": "Block Scope",
+  "category": "luau",
+  "type": "concept",
+  "summary": "Names declared with `local` live only until the end of the block they were declared in — function bodies, if/for/while bodies, do-end blocks. Outside the block they're gone; re-declaring creates a new variable.",
+  "keywords": [
+    "block",
+    "local lifetime",
+    "do end",
+    "lexical scope",
+    "variable visibility"
+  ],
+  "tags": [
+    "basics",
+    "scope"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "What is a block",
+        "body": "Every function body, every loop body, every if/elseif/else branch, every do… end, and the chunk itself."
+      },
+      {
+        "heading": "Visibility rule",
+        "body": "A local is visible from its declaration to the end of the innermost enclosing block. Inner blocks see outer locals; outer blocks can't see inner ones."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The fence around each local: declare inside, usable until the fence ends — no further.",
+    "whyItExists": "Blocks isolate temporary names so big programs don't drown in accidental collisions.",
+    "whenToUse": [
+      "Declaring loop temporaries inside the loop",
+      "do … end blocks to force early cleanup of big temporaries",
+      "Shadowing intentionally in small scopes (know you're doing it)"
+    ],
+    "whenNotToUse": [
+      "Expecting block locals to persist — hoist them instead"
+    ],
+    "tips": [
+      "Closures capture block locals — the classic counter pattern",
+      "--!strict surfaces scope mistakes as you type"
+    ],
+    "commonMistakes": [
+      "Declaring inside a branch, reading after it",
+      "Accidental shadowing of a parameter"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Fences in action",
+      "code": "do\n    local temp = 42\n    print(temp)      --> 42\nend\n-- print(temp)        ← error: temp ended with the block\n\nlocal total = 0\nfor i = 1, 3 do      -- i lives only inside the loop\n    total += i\nend\n-- print(i)           ← error\n\n-- Closures keep their block's locals alive:\nlocal function counter()\n    local n = 0\n    return function()\n        n += 1\n        return n\n    end\nend\nlocal c = counter()\nprint(c(), c())      --> 1  2",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "variables",
+    "scope",
+    "closures",
+    "scope-mistakes"
+  ],
+  "added": "2026-10-04"
+}

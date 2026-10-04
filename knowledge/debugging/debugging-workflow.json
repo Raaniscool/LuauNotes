@@ -1,0 +1,68 @@
+{
+  "id": "debugging-workflow",
+  "title": "Debugging Workflow",
+  "category": "debugging",
+  "type": "concept",
+  "summary": "The standard loop for hunting Roblox bugs: read the exact error in Output, locate the script/line, print the suspicious values (or use breakpoints), form a hypothesis, test ONE change, repeat. Reproduce first, fix second.",
+  "keywords": [
+    "how to debug",
+    "debug steps",
+    "find the bug",
+    "print debugging",
+    "breakpoints",
+    "systematic debugging"
+  ],
+  "tags": [
+    "debugging",
+    "workflow",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/studio/debugger",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "A disciplined loop that turns 'it's broken' into 'fixed, and I know why'.",
+    "whyItExists": "Random changes rarely fix real bugs and always hide the lesson. System beats luck.",
+    "whenToUse": [
+      "Step 1 — Reproduce: make the bug happen on demand",
+      "Step 2 — Read: full error text, script name, line number (Output window)",
+      "Step 3 — Inspect: print values / set breakpoints around that line",
+      "Step 4 — Hypothesize: 'this is nil because…' / 'this fires twice because…'",
+      "Step 5 — Change ONE thing, retest, repeat"
+    ],
+    "whenNotToUse": [
+      "Shotgun-editing multiple systems at once — you lose the signal"
+    ],
+    "tips": [
+      "Print TYPE + VALUE: print(\"coins:\", typeof(coins), coins)",
+      "Bisect: comment out half the logic to find which half misbehaves",
+      "Studio Debugger: breakpoints, watch expressions, call stack",
+      "Two-client tests expose client/server mismatches",
+      "Keep a scratch pad of what you ruled out"
+    ],
+    "commonMistakes": [
+      "Fixing symptoms (adding random waits) instead of causes",
+      "Ignoring the line number — it's usually pointing AT the truth",
+      "Testing with 'works sometimes' — non-reproducible means your setup varies"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Diagnostic prints that pay rent",
+      "code": "-- Instead of:  print(part)  → \"Part\"\nprint(\"trap part:\", part, part and part:GetFullName())\nprint(\"coins type/value:\", typeof(coins), coins)\n\n-- Branch tracing:\nif canActivate(player) then\n    print(\"canActivate → true for\", player.Name)\nelse\n    print(\"canActivate → FALSE for\", player.Name,\n          \"character:\", player.Character ~= nil)\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "output-window",
+    "string-formatting",
+    "pcall",
+    "indexing-nil",
+    "script-timeout"
+  ],
+  "added": "2026-10-04"
+}

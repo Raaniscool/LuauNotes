@@ -1,0 +1,70 @@
+{
+  "id": "or-default",
+  "title": "The `or default` Idiom",
+  "category": "luau",
+  "type": "pattern",
+  "summary": "`value or fallback` returns value when it's truthy, otherwise the fallback — the classic one-line default. Remember: only nil and false fall through, so legitimate false values get replaced.",
+  "keywords": [
+    "default value",
+    "fallback",
+    "or idiom",
+    "nil coalescing",
+    "optional default"
+  ],
+  "tags": [
+    "idioms",
+    "basics",
+    "nil"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "result = value or fallback",
+    "details": [
+      {
+        "heading": "Evaluation rule",
+        "body": "`a or b` evaluates `a`; if it's truthy, the expression is `a` — otherwise it's `b`. `b` is only evaluated when needed (short-circuit)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A compact 'use this, else that' expression built on truthiness.",
+    "whyItExists": "Defaulting optional arguments and missing table fields is constant; one operator covers it.",
+    "whenToUse": [
+      "Optional parameters: `local speed = opts.speed or 16`",
+      "Safe chain fallbacks: `local name = player and player.Name or \"unknown\"`",
+      "Table lookups with defaults: `PRICES[item] or 0`"
+    ],
+    "whenNotToUse": [
+      "When false/0/\"\" are meaningful values — false falls through! Compare against nil explicitly instead"
+    ],
+    "tips": [
+      "Pairs with `and`: `(cond and a or b)` is Luau's ternary — but beware `a` being falsy",
+      "For true ternary behavior on falsy values, use `if ... then ... else ...` expressions"
+    ],
+    "commonMistakes": [
+      "`enabled or true` can never produce false",
+      "`count or 5` replacing a legitimate 0",
+      "Forgetting the right side still RUNS when the left is falsy — avoid expensive calls"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Defaults in practice",
+      "code": "local function spawnEnemy(options)\n    options = options or {}\n    local hp = options.hp or 100\n    local speed = options.speed or 16\n    local boss = options.boss      -- may be false on purpose!\n    -- ❌ options.boss or false  would hide a deliberate false\n    print(hp, speed, boss)\nend\n\nspawnEnemy()                    --> 100 16 nil\nspawnEnemy({ hp = 50 })         --> 50 16 nil\nspawnEnemy({ boss = false })    --> 100 16 false\n\n-- Ternary style:\nlocal label = (player and player.Name) or \"Guest\"",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "logical-operators",
+    "truthiness",
+    "nil",
+    "if-statements"
+  ],
+  "added": "2026-10-04"
+}

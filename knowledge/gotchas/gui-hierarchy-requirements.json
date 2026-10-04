@@ -1,0 +1,60 @@
+{
+  "id": "gui-hierarchy-requirements",
+  "title": "GUIs Must Be Parented Correctly",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "A Frame floating in Workspace or a random Folder will never render. ScreenGuis must live in PlayerGui/StarterGui; GuiObjects must be descendants of a ScreenGui (or SurfaceGui/BillboardGui).",
+  "keywords": [
+    "gui invisible",
+    "frame not rendering",
+    "screengui parent",
+    "where guis live",
+    "ui not showing"
+  ],
+  "tags": [
+    "gotchas",
+    "gui",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ScreenGui",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "The rendering contract: the GUI renderer only walks GUI containers. Anything parked elsewhere exists but is invisible.",
+    "whyItExists": "Separating 3D content from 2D overlays lets the engine batch and clip UI efficiently.",
+    "symptoms": [
+      "Frame created, parented to workspace — nothing appears",
+      "TextLabel exists (FindFirstChild works) yet stays invisible",
+      "GUI shows after manually re-parenting"
+    ],
+    "fix": "Chain: PlayerGui → ScreenGui → (frames/labels/buttons). Surface/Billboard GUIs parent to parts but follow the same 'inside a GUI container' rule.",
+    "tips": [
+      "Build in Studio Explorer with correct parenting, then replicate the structure in code",
+      "Debug invisibility by walking ancestors: every hop must be GUI-ish"
+    ],
+    "commonMistakes": [
+      "Parenting ScreenGui to Workspace by accident",
+      "GuiObjects under Model/Folder 'for organization' inside PlayerGui — still invisible",
+      "SurfaceGui without a valid Adornee part"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Valid chains",
+      "code": "-- ✅ Renders:\n-- Players.You.PlayerGui.MenuScreen (ScreenGui).Title (TextLabel)\n\n-- ❌ Invisible:\n-- workspace.MenuScreen.Title\n-- Players.You.PlayerGui.StuffFolder… wait, that one ALSO fails:\n-- PlayerGui → Folder → Frame   ✘ (Folder is not a GUI container)\n\nlocal playerGui = game.Players.LocalPlayer:WaitForChild(\"PlayerGui\")\nlocal screen = Instance.new(\"ScreenGui\")\nscreen.Parent = playerGui          -- GUI container ✔\n\nlocal label = Instance.new(\"TextLabel\")\nlabel.Parent = screen              -- directly under ScreenGui ✔\nlabel.Size = UDim2.fromOffset(200, 50)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "screengui",
+    "player-gui",
+    "startergui-vs-playergui",
+    "surfacegui",
+    "billboardgui"
+  ],
+  "added": "2026-10-04"
+}

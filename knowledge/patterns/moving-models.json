@@ -1,0 +1,67 @@
+{
+  "id": "moving-models",
+  "title": "Moving Models",
+  "category": "patterns",
+  "type": "pattern",
+  "summary": "Models have no single Position — move them with PivotTo (the modern way), or translate the PrimaryPart's CFrame with SetPrimaryPartCFrame for older workflows. Welded assemblies move together; loose parts scatter.",
+  "keywords": [
+    "move model",
+    "PivotTo",
+    "SetPrimaryPartCFrame",
+    "teleport model",
+    "model position",
+    "PrimaryPart"
+  ],
+  "tags": [
+    "patterns",
+    "models",
+    "movement",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Model",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "The 'models aren't parts' playbook: pick the sanctioned API for relocating a whole assembly at once.",
+    "whyItExists": "A model is a container, not a physical object — the engine offers pivot-based movement as the sanctioned route.",
+    "whenToUse": [
+      "model:PivotTo(cframe) — moves the entire model (anchored + unanchored), preserving internal layout",
+      "Respawns/teleports of NPCs and vehicles",
+      "SetPrimaryPartCffset-style offsetting when you must keep the PrimaryPart semantics (older codebases)"
+    ],
+    "whenNotToUse": [
+      "Moving individual parts of a welded model manually — you'll tear it apart",
+      "Physics-driven motion — use forces on a BasePart instead"
+    ],
+    "mentalModel": "```text\nModel = container of parts\n  └─ the \"where\" is the PIVOT (GetPivot())\n\nMove everything:\n  model:PivotTo(newCFrame)\n\nRead 'where is it?':\n  model:GetPivot().Position\n```",
+    "tips": [
+      "PivotTo works on Humanoid characters too (teleports respect collisions reasonably)",
+      "For smooth motion, tween a placeholder or Lerp the pivot in Heartbeat — but mind physics",
+      "Weld all parts so physics moves them as one unit"
+    ],
+    "commonMistakes": [
+      "Setting .Position on parts inside a welded model individually — assembly fights itself",
+      "No PrimaryPart/Pivot expectation and 'jumps' when moving",
+      "PivotTo-ing unanchored assemblies mid-air without considering momentum"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Teleporting an NPC",
+      "code": "local npc = workspace.NPCs.Guard\n\n-- Where is it?\nlocal cf = npc:GetPivot()\nprint(\"NPC at\", cf.Position)\n\n-- Teleport 20 studs north, keeping orientation:\nnpc:PivotTo(cf * CFrame.new(0, 0, -20))\n\n-- Face the player while teleporting:\nlocal target = workspace.CurrentPlayers.Raani.Character.HumanoidRootPart.Position\nnpc:PivotTo(CFrame.lookAt(cf.Position, target))",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "model",
+    "cframe",
+    "weldconstraint",
+    "part-anchored",
+    "humanoid"
+  ],
+  "added": "2026-10-04"
+}

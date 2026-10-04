@@ -1,0 +1,61 @@
+{
+  "id": "script-timeout",
+  "title": "'Script timeout' / Infinite Yield Warnings",
+  "category": "debugging",
+  "type": "gotcha",
+  "summary": "'Script timeout: exhausted' and 'Infinite yield possible on WaitForChild' mean a thread waited past its budget — usually WaitForChild on a wrong name, an event that never fires, or an endless while-true without task.wait.",
+  "keywords": [
+    "infinite yield",
+    "script timeout exhausted",
+    "waitforchild warning",
+    "never fires",
+    "hangs forever"
+  ],
+  "tags": [
+    "debugging",
+    "yielding",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "The engine's smoke alarm for threads parked too long: something you waited for never arrived.",
+    "whyItExists": "Unbounded waiting hides bugs forever; the warning surfaces them after ~5 seconds of suspicious yielding.",
+    "symptoms": [
+      "'Infinite yield possible on 'X:WaitForChild(\"Y\")'' — usually wrong name or container",
+      "'Script timeout' after an Event:Wait() that never fired",
+      "Game 'hangs' — actually one thread parked, others may be fine"
+    ],
+    "fix": "Check the waited-for name/path (copy it from Explorer); add timeouts to WaitForChild; ensure the event you Wait() actually fires; add task.wait() to bare loops; verify the script SIDE (client waiting for server-only content).",
+    "tips": [
+      "WaitForChild(\"Name\", 5) + nil check turns hangs into diagnosable branches",
+      "Cross-check replication timing — maybe it arrives, just later than you wait",
+      "Event:Wait() inside a one-shot task.spawn keeps the main flow moving"
+    ],
+    "commonMistakes": [
+      "Typo'd child name → infinite yield (case-sensitive!)",
+      "Waiting on the wrong universe (LocalScript waiting for ServerStorage content)",
+      "while true do with no task.wait() — busy loops choke the scheduler"
+    ]
+  },
+  "examples": [
+    {
+      "title": "From hang to diagnosable",
+      "code": "-- ❌ Can hang forever:\n-- local shop = ReplicatedStorage:WaitForChild(\"Shoppe\")  -- typo!\n\n-- ✅ Times out and tells you:\nlocal shop = ReplicatedStorage:WaitForChild(\"Shoppe\", 5)\nif not shop then\n    warn(\"Shoppe not found after 5s — check name/container\")\nend\n\n-- ❌ Bare busy loop:\n-- while true do checkSomething() end\n\n-- ✅ Cooperative loop:\nwhile true do\n    checkSomething()\n    task.wait(0.1)\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "wait-for-child",
+    "yielding",
+    "replication-timing",
+    "output-window",
+    "debugging-workflow"
+  ],
+  "added": "2026-10-04"
+}

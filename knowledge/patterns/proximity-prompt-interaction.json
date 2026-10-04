@@ -1,0 +1,65 @@
+{
+  "id": "proximity-prompt-interaction",
+  "title": "ProximityPrompt Interactions",
+  "category": "patterns",
+  "type": "pattern",
+  "summary": "The modern 'press E on this' system: ProximityPrompt gives you the hold-to-interact UI for free. Triggered (completed), TriggerEnded (cancelled), server + client flavors, cooldown via ObjectText/HoldDuration.",
+  "keywords": [
+    "press e",
+    "interact prompt",
+    "hold to interact",
+    "Triggered",
+    "proximity interaction pattern"
+  ],
+  "tags": [
+    "patterns",
+    "interaction",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ProximityPrompt",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Drop a ProximityPrompt on a part and the engine handles range detection, button hints, hold timers, and firing Triggered on the right side of the network.",
+    "whyItExists": "Before prompts, every game hand-rolled 'stand near + press key' with different results. One class standardized it.",
+    "whenToUse": [
+      "Doors, chests, shops, NPCs — any interactable in the world",
+      "Triggered on the SERVER for authoritative actions (it fires there too)",
+      "PromptTriggered (client) for instant feedback + sound while server processes",
+      "HoldDuration for deliberate actions; MaxActivationDistance for range"
+    ],
+    "whenNotToUse": [
+      "UI-based interactions — use buttons",
+      "Where you need fully custom key handling — but try prompts first"
+    ],
+    "tips": [
+      "Enabled=false hides without destroying",
+      "ObjectText/ActionText customize the hint ('Door' / 'Open')",
+      "RequiresLineOfSight stops interactions through walls"
+    ],
+    "commonMistakes": [
+      "Handling Triggered only on the client — server never applies the effect",
+      "Letting players spam: add cooldown (debounce/cooldown pattern)",
+      "Forgetting prompts need an InputType-compatible setup for gamepad/touch — defaults mostly work"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Chest that opens once",
+      "code": "-- Setup (server Script):\nlocal chest = workspace.Chest\nlocal prompt = Instance.new(\"ProximityPrompt\")\nprompt.ActionText = \"Open\"\nprompt.ObjectText = \"Chest\"\nprompt.HoldDuration = 0.5\nprompt.MaxActivationDistance = 10\nprompt.RequiresLineOfSight = true\nprompt.Parent = chest\n\nprompt.Triggered:Connect(function(player)\n    prompt.Enabled = false          -- one-shot\n    giveLoot(player)\n    task.delay(60, function()\n        prompt.Enabled = true       -- respawn the interaction\n    end)\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "proximity-prompt",
+    "click-detector-interaction",
+    "server-validation",
+    "debounce",
+    "tool"
+  ],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,86 @@
+{
+  "id": "arithmetic-operators",
+  "title": "Arithmetic & Other Operators",
+  "category": "luau",
+  "type": "overview",
+  "summary": "+ - * / // % ^ for math, .. to concatenate strings, # for lengths, plus compound assignments like +=. A complete operator cheat sheet.",
+  "keywords": [
+    "operators",
+    "modulo",
+    "concatenate",
+    "power",
+    "length operator",
+    "compound assignment",
+    "+="
+  ],
+  "tags": [
+    "basics",
+    "operators"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "Arithmetic",
+        "body": "`+ - * /` standard math · `//` floor division · `%` modulo (remainder) · `^` power (right-associative, float result) · unary `-`."
+      },
+      {
+        "heading": "Strings & lengths",
+        "body": "`..` concatenates strings (converts numbers automatically). `#s` is a string's length; `#t` a table's array length."
+      },
+      {
+        "heading": "Compound assignment (Luau)",
+        "body": "`x += 1`, `x -= 1`, `x *= 2`, `x /= 2`, `x //= 2`, `x %= 2`, `x ^= 2`, `s ..= \"!\"` — all sugar for `x = x op value`."
+      },
+      {
+        "heading": "Precedence highlights",
+        "body": "`^` binds tightest, then unary ops, then `* / // %`, then `+ -`, then `..`, comparisons, `and`, `or`. Use parentheses when in doubt: `-2^2 == -4`, but `(-2)^2 == 4`."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The symbols that compute: math operators, string glue (`..`), the length probe (`#`), and shorthand updaters (`+=`).",
+    "whyItExists": "Every game tick does arithmetic — damage, timers, economy. Short forms keep it compact.",
+    "whenToUse": [
+      "`%` for wrap-around (clock math, `index % #list + 1` cycling)",
+      "`//` when you need whole chunks: `seconds // 60` = minutes",
+      "`..=` to grow strings, `+=` for counters"
+    ],
+    "whenNotToUse": [
+      "`..` in hot loops — use table.concat instead",
+      "`+` on strings — that's a type error waiting to happen (`\"a\" + \"b\"`)"
+    ],
+    "mentalModel": "```text\n7 + 3    --> 10       7 - 3 --> 4\n7 * 3    --> 21       7 / 3 --> 2.333\n7 // 3   --> 2        7 % 3 --> 1\n2 ^ 10   --> 1024\n\"ab\" .. \"cd\"  --> \"abcd\"\n#\"hello\" --> 5\n\ncoins += 5   -- same as coins = coins + 5\n```",
+    "tips": [
+      "Cycling a value: `slot = slot % #items + 1`",
+      "`% 2 == 0` tests evenness",
+      "Mixing `..` with numbers is fine: `\"Score: \" .. score`"
+    ],
+    "commonMistakes": [
+      "`..` vs `+`: `\"5\" + 5` coerces and gives 10; `\"5\" .. 5` gives \"55\"",
+      "Precedence surprises: `1 + 2 .. \"!\"` parses as `(1+2) .. \"!\"`, but `-x^2` is `-(x^2)`",
+      "Forgetting `%` on negatives: `-7 % 3` is `2` in Lua"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Operator tour",
+      "code": "local seconds = 137\nprint(seconds // 60)          --> 2  (minutes)\nprint(seconds % 60)           --> 17 (leftover seconds)\n\nlocal coins = 10\ncoins += 5                    --> 15\ncoins *= 2                    --> 30\n\nlocal msg = \"Coins: \"\nmsg ..= tostring(coins)       --> \"Coins: 30\"\nprint(msg)\n\n-- cycling through options\nlocal modes = {\"Easy\", \"Normal\", \"Hard\"}\nlocal slot = 1\nslot = slot % #modes + 1      --> 2\nslot = slot % #modes + 1      --> 3\nslot = slot % #modes + 1      --> 1  (wraps around)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "numbers",
+    "strings",
+    "comparisons",
+    "logical-operators",
+    "one-based-indexing"
+  ],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,108 @@
+{
+  "id": "frame",
+  "title": "Frame",
+  "category": "classes",
+  "type": "class",
+  "summary": "The basic rectangular GUI container: colored box for panels, cards, and layout groups. Combined with UIListLayout/UIGridLayout for automatic arrangement of children.",
+  "keywords": [
+    "gui box",
+    "panel",
+    "container",
+    "UIListLayout",
+    "UIGridLayout",
+    "UIPadding",
+    "layout"
+  ],
+  "tags": [
+    "classes",
+    "gui",
+    "layout"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Frame",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "BackgroundColor3 / BackgroundTransparency",
+        "type": "Color3 / number",
+        "description": "Fill color and opacity (1 = invisible)."
+      },
+      {
+        "name": "Size / Position",
+        "type": "UDim2",
+        "description": "Size/pos as Scale (fraction of parent) + Offset (pixels). UDim2.fromScale/fromOffset helpers."
+      },
+      {
+        "name": "AnchorPoint",
+        "type": "Vector2",
+        "description": "Which point of the frame Position refers to. (0.5, 0.5) = centered."
+      },
+      {
+        "name": "ClipsDescendants",
+        "type": "boolean",
+        "description": "Crop children to this frame's bounds — scroll areas, rounded corners."
+      },
+      {
+        "name": "Visible",
+        "type": "boolean",
+        "description": "Show/hide (and block input when hidden)."
+      },
+      {
+        "name": "ZIndex",
+        "type": "number",
+        "description": "Draw order among siblings (default 1)."
+      }
+    ],
+    "details": [
+      {
+        "heading": "Layout companions",
+        "body": "UIListLayout (rows/columns), UIGridLayout (grids), UIPadding (insets), UICorner (rounded), UIStroke (border), UIScale — parented INSIDE the Frame to affect it/its children."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A box you put other UI in — the HTML <div> of Roblox GUIs.",
+    "whyItExists": "Every interface is boxes within boxes; Frame is the plain box.",
+    "whenToUse": [
+      "Panels, cards, windows, health bars, inventory grids",
+      "Grouping elements for show/hide (Visible on the parent)",
+      "Anchoring layouts with UIListLayout/UIGridLayout"
+    ],
+    "whenNotToUse": [
+      "When you need scrolling — ScrollingFrame",
+      "For text display — TextLabel"
+    ],
+    "mentalModel": "```text\nFrame (the box)\n ├─ Size = UDim2.fromScale(0.3, 0.5)   → 30% wide, 50% tall\n ├─ AnchorPoint = (0.5, 0.5) + Position (0.5, 0.5) → centered\n ├─ UIListLayout → children stack automatically\n └─ children…\n```",
+    "tips": [
+      "Prefer Scale sizes for responsive UI; Offset for pixel-precise bits",
+      "AnchorPoint 0.5/0.5 + Position 0.5/0.5 = dead center, any resolution",
+      "UICorner + UIStroke = instant card styling"
+    ],
+    "commonMistakes": [
+      "Designing only in Offset pixels — UI breaks on other resolutions",
+      "Forgetting AnchorPoint when centering (Position alone anchors top-left)",
+      "Nested frames with BackgroundTransparency 0 everywhere → invisible UI confusion"
+    ]
+  },
+  "examples": [
+    {
+      "title": "A centered card",
+      "code": "local frame = Instance.new(\"Frame\")\nframe.Size = UDim2.fromOffset(320, 200)\nframe.AnchorPoint = Vector2.new(0.5, 0.5)\nframe.Position = UDim2.fromScale(0.5, 0.5)   -- center of screen\nframe.BackgroundColor3 = Color3.fromRGB(30, 30, 40)\nframe.Parent = script.Parent\n\nlocal corner = Instance.new(\"UICorner\")\ncorner.CornerRadius = UDim.new(0, 12)\ncorner.Parent = frame\n\nlocal list = Instance.new(\"UIListLayout\")\nlist.Padding = UDim.new(0, 8)\nlist.HorizontalAlignment = Enum.HorizontalAlignment.Center\nlist.Parent = frame",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "screengui",
+    "textlabel",
+    "scrollingframe",
+    "udim2",
+    "gui-toggle",
+    "gui-hierarchy-requirements"
+  ],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,84 @@
+{
+  "id": "fire-client",
+  "title": "RemoteEvent:FireClient()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Server → one specific client. First argument is the target Player, followed by any serializable values. The client's OnClientEvent receives only the values (no player parameter).",
+  "keywords": [
+    "server to client",
+    "send to player",
+    "targeted message",
+    "private message"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/RemoteEvent",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "RemoteEvent:FireClient(player: Player, ...args: any)",
+    "parameters": [
+      {
+        "name": "player",
+        "type": "Player",
+        "description": "The single recipient."
+      },
+      {
+        "name": "...args",
+        "type": "serializable values",
+        "description": "Payload delivered to that client's OnClientEvent."
+      }
+    ],
+    "returns": "None.",
+    "details": [
+      {
+        "heading": "Server-only",
+        "body": "Clients cannot FireClient (not even to themselves through the remote). Client→server is FireServer."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A private server → player message: 'here is YOUR inventory / YOUR reward / a message just for you'.",
+    "whyItExists": "Some information is per-player (personal stats, secret roles); broadcasting it leaks data and wastes bandwidth.",
+    "whenToUse": [
+      "Per-player data delivery (shop contents for that player, trade offers)",
+      "Triggering client effects for one person (screen flash, sound)",
+      "Replies to a specific player's earlier FireServer"
+    ],
+    "whenNotToUse": [
+      "Everyone needs it — FireAllClients",
+      "You need a return value — RemoteFunction:InvokeClient"
+    ],
+    "tips": [
+      "The target Player must still be connected — nil/leaving players just drop the message",
+      "Client receives exactly the ...args — no player prepended on this side"
+    ],
+    "commonMistakes": [
+      "Forgetting the player argument: FireClient(\"data\") errors",
+      "Expecting other players to receive it",
+      "Sending to a player mid-leave and treating it as delivered"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Reply to one player",
+      "code": "-- Server:\nremote.OnServerEvent:Connect(function(player, request)\n    if request == \"GetCoins\" then\n        local coins = getCoinsFor(player)   -- your server data\n        remote:FireClient(player, \"CoinsResult\", coins)\n    end\nend)\n\n-- Client:\nremote.OnClientEvent:Connect(function(kind, value)\n    if kind == \"CoinsResult\" then\n        print(\"I have\", value, \"coins\")\n    end\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "remote-event",
+    "fire-all-clients",
+    "on-client-event",
+    "fire-server",
+    "client-vs-server"
+  ],
+  "added": "2026-10-04"
+}

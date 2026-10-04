@@ -1,0 +1,79 @@
+{
+  "id": "input-began",
+  "title": "UserInputService.InputBegan",
+  "category": "events",
+  "type": "event",
+  "summary": "Client event firing for every input START: keys, mouse buttons, touches, gamepad buttons. Receives an InputObject (KeyCode + UserInputType) and a gameProcessed flag — always check the flag.",
+  "keywords": [
+    "key press",
+    "input started",
+    "KeyCode",
+    "gameProcessed",
+    "input event",
+    "keybind"
+  ],
+  "tags": [
+    "input",
+    "client",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/UserInputService",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessed: boolean) end)",
+    "parameters": [
+      {
+        "name": "input",
+        "type": "InputObject",
+        "description": "Has .KeyCode (which key/button, Enum.KeyCode) and .UserInputType (what kind: Keyboard, MouseButton1, Touch, Gamepad1…)."
+      },
+      {
+        "name": "gameProcessed",
+        "type": "boolean",
+        "description": "true = the engine/core UI already consumed it (typing in chat, default controls). Skip your logic when true."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The raw firehose of player input on the client.",
+    "whyItExists": "Custom gameplay starts with detecting presses; InputBegan covers all devices in one event.",
+    "whenToUse": [
+      "Custom keybinds (abilities, menus)",
+      "Touch/click detection when ContextActionService doesn't fit",
+      "Input state machines (tracking held keys with InputBegan/InputEnded)"
+    ],
+    "whenNotToUse": [
+      "Cross-device ACTION bindings with touch buttons — ContextActionService",
+      "Server-side — input is client-only; forward intents via remotes"
+    ],
+    "tips": [
+      "First line of every handler: `if gameProcessed then return end`",
+      "Check UserInputType when a KeyCode could be ambiguous (keyboard 'Space' vs gamepad button)",
+      "InputChanged for continuous values (mouse delta, triggers)"
+    ],
+    "commonMistakes": [
+      "Ignoring gameProcessed → abilities fire while typing in chat",
+      "Binding only Enum.KeyCode and forgetting mobile players have no keys",
+      "Heavy work per input event — input floods during drags/typing"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Robust keybind",
+      "code": "local UserInputService = game:GetService(\"UserInputService\")\n\nUserInputService.InputBegan:Connect(function(input, gameProcessed)\n    if gameProcessed then return end\n\n    if input.KeyCode == Enum.KeyCode.F then\n        print(\"Flashlight toggled\")\n    elseif input.UserInputType == Enum.UserInputType.Touch then\n        print(\"Screen tapped at\", input.Position)\n    end\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "user-input-service",
+    "context-action-service",
+    "localscript",
+    "client-vs-server"
+  ],
+  "added": "2026-10-04"
+}

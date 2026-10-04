@@ -1,0 +1,98 @@
+{
+  "id": "tables",
+  "title": "Tables",
+  "category": "luau",
+  "type": "concept",
+  "summary": "The one container type in Luau. A table maps keys to values — used as arrays, dictionaries, objects, inventories, config files, and module namespaces.",
+  "keywords": [
+    "container",
+    "table value",
+    "create a table",
+    "{}",
+    "key value"
+  ],
+  "tags": [
+    "basics",
+    "tables",
+    "data-structures"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/tables",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "local t = {}                              -- empty table",
+      "local arr = {\"a\", \"b\", \"c\"}               -- array part: keys 1,2,3",
+      "local dict = { coins = 50, gems = 2 }     -- dictionary part",
+      "local mixed = {1, 2, name = \"x\"}           -- both at once (valid but be careful)"
+    ],
+    "details": [
+      {
+        "heading": "Reading and writing",
+        "body": "`t[key]` reads, `t[key] = value` writes. String keys can use dot sugar: `dict.coins`. Any value except nil can be a key (numbers, strings, booleans, even other tables)."
+      },
+      {
+        "heading": "Length operator",
+        "body": "`#t` gives the length of the *array part* — the run of consecutive integer keys starting at 1. It does NOT count dictionary entries, and behaves unpredictably with holes (nils in the middle)."
+      },
+      {
+        "heading": "Tables are references",
+        "body": "Assigning `local b = t` copies the *reference*, not the contents. Both names point at the same table; changes through one are visible through the other. Use `table.clone(t)` for a shallow copy."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A table is a collection of key→value pairs. If you need to store more than one thing — a list of players, an inventory, settings, an object with fields — you reach for a table. Arrays and dictionaries are just two flavors of the same thing.",
+    "whyItExists": "Luau intentionally ships one flexible container instead of separate array/dictionary/object types. Less to learn; everything composes.",
+    "whenToUse": [
+      "Ordered collections: `local queue = {}` then `table.insert(queue, player)`",
+      "Named data: `local config = { Speed = 16, Jump = 50 }`",
+      "Objects and modules (tables of functions) — see metatables and modules",
+      "Grouping: `local byTeam = { Red = {}, Blue = {} }`"
+    ],
+    "whenNotToUse": [
+      "For a single value you don't need a table",
+      "Avoid mixing array and dictionary styles in one table unless you know what you're doing — `#t` only understands the array part"
+    ],
+    "mentalModel": "```text\nlocal player = {\n    name = \"Raanis\",     -- dictionary part\n    level = 12,\n}\nlocal scores = {97, 45, 88}   -- array part: keys are 1, 2, 3\n\nplayer.name       --> \"Raanis\"   (key lookup)\nscores[2]         --> 45         (index lookup)\n#scores           --> 3\n```",
+    "tips": [
+      "Iterate arrays with `ipairs`, dictionaries with `pairs`",
+      "Build large strings with a table + `table.concat`, not `..` in a loop",
+      "`table.freeze(t)` makes a table read-only — great for constants/config"
+    ],
+    "commonMistakes": [
+      "Starting array indices at 0 — Luau arrays start at 1",
+      "Expecting `pairs` to return keys in insertion order — it doesn't guarantee any order",
+      "Creating holes (`t[1]=a; t[3]=c`) and trusting `#t`",
+      "Thinking `local b = t` makes an independent copy"
+    ]
+  },
+  "examples": [
+    {
+      "title": "An inventory as a dictionary",
+      "code": "local inventory = {\n    sword = 1,\n    potion = 5,\n}\n\ninventory.potion = inventory.potion - 1     -- use one\ninventory.shield = 1                        -- add new key\n\nfor item, count in inventory do   -- Luau: pairs is optional in generic for\n    print(item, count)\nend",
+      "language": "lua"
+    },
+    {
+      "title": "Tables are references",
+      "code": "local original = { coins = 100 }\nlocal alias = original        -- NOT a copy!\n\nalias.coins = 0\nprint(original.coins)         --> 0  (same table)\n\nlocal copy = table.clone(original)\ncopy.coins = 999\nprint(original.coins)         --> 0  (clone is independent... shallowly)",
+      "commonMistake": "`table.clone` is shallow: nested tables inside are still shared. Deep-copy manually when needed.",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "arrays",
+    "dictionaries",
+    "table-operations",
+    "table-references-vs-copies",
+    "ipairs",
+    "pairs",
+    "metatables",
+    "one-based-indexing"
+  ],
+  "added": "2026-10-04"
+}

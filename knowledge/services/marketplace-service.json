@@ -1,0 +1,122 @@
+{
+  "id": "marketplace-service",
+  "title": "MarketplaceService",
+  "category": "services",
+  "type": "service",
+  "summary": "Monetization APIs: prompt purchases and game passes (PromptPurchase/PromptGamePassPurchase), check ownership (UserOwnsGamePassAsync), and receipt processing for developer products (ProcessReceipt).",
+  "keywords": [
+    "monetization",
+    "dev products",
+    "game passes",
+    "PromptPurchase",
+    "ProcessReceipt",
+    "UserOwnsGamePassAsync",
+    "robux purchases",
+    "receipt"
+  ],
+  "tags": [
+    "services",
+    "monetization",
+    "data",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/MarketplaceService",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      {
+        "name": "PromptPurchase",
+        "signature": "MarketplaceService:PromptPurchase(player: Player, assetId: number)",
+        "description": "Shows the buy dialog for an asset (gear, t-shirt, etc.)."
+      },
+      {
+        "name": "PromptGamePassPurchase",
+        "signature": "MarketplaceService:PromptGamePassPurchase(player: Player, gamePassId: number)",
+        "description": "Shows the buy dialog for a game pass."
+      },
+      {
+        "name": "PromptProductPurchase",
+        "signature": "MarketplaceService:PromptProductPurchase(player: Player, productId: number)",
+        "description": "Shows the buy dialog for a developer product. Delivery happens via your ProcessReceipt callback."
+      },
+      {
+        "name": "UserOwnsGamePassAsync",
+        "signature": "MarketplaceService:UserOwnsGamePassAsync(userId: number, gamePassId: number) --> boolean",
+        "description": "Yields; checks game pass ownership. pcall it — can error transiently."
+      },
+      {
+        "name": "GetProductInfo",
+        "signature": "MarketplaceService:GetProductInfo(assetId: number, infoType?: Enum.InfoType) --> table",
+        "description": "Metadata about an asset/product (name, price…). Yields; cache results."
+      },
+      {
+        "name": "GetDeveloperProductsAsync",
+        "signature": "MarketplaceService:GetDeveloperProductsAsync() --> Pages",
+        "description": "Paged list of your developer products."
+      }
+    ],
+    "properties": [
+      {
+        "name": "ProcessReceipt",
+        "type": "function",
+        "description": "ASSIGN (server) a callback receiving the purchase receipt; it must return Enum.ProductPurchaseDecision.PurchaseGranted after granting the item, or NotProcessedYet to retry later. Exactly one callback per server."
+      }
+    ],
+    "details": [
+      {
+        "heading": "Receipt flow",
+        "body": "Developer products re-deliver receipts until your ProcessReceipt returns PurchaseGranted — including across servers and rejoins. Your handler must be idempotent: granting the same receipt twice would double-grant."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The shop counter: shows purchase dialogs, checks what players own, and hands you receipts so you can deliver what they paid for.",
+    "whyItExists": "Real money changes hands — delivery must be reliable and tamper-proof, so Roblox brokers the transaction and re-delivers receipts until you confirm.",
+    "whenToUse": [
+      "Game passes: check with UserOwnsGamePassAsync on join (VIP, 2x coins)",
+      "Developer products: PromptProductPurchase + ProcessReceipt for consumables (coins, boosts)",
+      "PromptPurchase for avatar items/UGC"
+    ],
+    "whenNotToUse": [
+      "Faking purchases or trusting client claims of purchase — only ProcessReceipt on the server counts",
+      "Spamming prompts — show purchase UI only from deliberate player actions"
+    ],
+    "mentalModel": "```text\nClient clicks \"Buy 100 Coins\"\n  → PromptProductPurchase(player, productId)\n  → Roblox shows dialog, processes Robux\n  → SERVER: ProcessReceipt(receipt) fires\n      grant the coins → return PurchaseGranted\n      (if you fail → return NotProcessedYet; Roblox retries later)\n```",
+    "tips": [
+      "Cache UserOwnsGamePassAsync results per session; pcall + retry",
+      "Make ProcessReceipt idempotent: check before granting, never grant blindly twice",
+      "Store a 'pending grants' table if granting can fail, so retries complete them"
+    ],
+    "commonMistakes": [
+      "Assigning ProcessReceipt more than once (last assignment wins, silently)",
+      "Granting the product and returning NotProcessedYet — double delivery",
+      "Checking game pass ownership without pcall — transient errors break join logic",
+      "Client-side 'purchase complete' logic — delivery must be server-side receipt processing"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Idempotent ProcessReceipt",
+      "code": "local MarketplaceService = game:GetService(\"MarketplaceService\")\nlocal Players = game:GetService(\"Players\")\n\nlocal COINS_PRODUCT_ID = 000000000   -- your product id\n\nMarketplaceService.ProcessReceipt = function(receiptInfo)\n    if receiptInfo.ProductId ~= COINS_PRODUCT_ID then\n        return Enum.ProductPurchaseDecision.NotProcessedYet\n    end\n\n    local player = Players:GetPlayerByUserId(receiptInfo.PlayerId)\n    if not player then\n        -- They left before delivery: Roblox will redeliver this receipt\n        return Enum.ProductPurchaseDecision.NotProcessedYet\n    end\n\n    local stats = player:FindFirstChild(\"leaderstats\")\n    local coins = stats and stats:FindFirstChild(\"Coins\")\n    if not coins then\n        return Enum.ProductPurchaseDecision.NotProcessedYet\n    end\n\n    coins.Value += 100   -- grant\n    return Enum.ProductPurchaseDecision.PurchaseGranted\nend\n\n-- Buying (LocalScript):\n-- MarketplaceService:PromptProductPurchase(player, COINS_PRODUCT_ID)\n-- (from the server: prompt via a remote, since it needs a Player object)",
+      "language": "lua"
+    },
+    {
+      "title": "Game pass perks on join",
+      "code": "local MarketplaceService = game:GetService(\"MarketplaceService\")\nlocal VIP_PASS_ID = 000000000\n\nlocal function applyPerks(player)\n    local ok, ownsVip = pcall(function()\n        return MarketplaceService:UserOwnsGamePassAsync(player.UserId, VIP_PASS_ID)\n    end)\n    if ok and ownsVip then\n        player:SetAttribute(\"VIP\", true)\n        print(player.Name .. \" is VIP\")\n    end\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "players",
+    "pcall",
+    "datastore-service",
+    "client-vs-server",
+    "never-trust-the-client"
+  ],
+  "added": "2026-10-04"
+}

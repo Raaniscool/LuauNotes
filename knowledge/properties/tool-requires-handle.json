@@ -1,0 +1,74 @@
+{
+  "id": "tool-requires-handle",
+  "title": "Tool.RequiresHandle / the Handle part",
+  "category": "properties",
+  "type": "property",
+  "summary": "Tools attach to the player's hand through a part named exactly 'Handle'. With RequiresHandle=true (default) a missing/misnamed Handle means the tool won't hold correctly. Name it 'Handle', case-sensitive.",
+  "keywords": [
+    "handle part",
+    "tool won't equip",
+    "grip",
+    "requires handle",
+    "tool mesh"
+  ],
+  "tags": [
+    "properties",
+    "tools",
+    "gotcha-adjacent"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Tool",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "RequiresHandle",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether the tool needs a 'Handle' part to be holdable."
+      },
+      {
+        "name": "GripPos / GripForward / GripUp / GripRight",
+        "type": "Vector3",
+        "description": "How the Handle sits in the hand (advanced positioning)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The handshake between tool and character: the engine welds a specially-named part to the hand.",
+    "whyItExists": "Roblox needs ONE agreed-upon part to weld; the convention is a direct child named 'Handle'.",
+    "whenToUse": [
+      "Every visual tool: include a Handle part (the mesh/visual can be welded TO it)",
+      "Handle-less tools (magic auras, UI tools): RequiresHandle = false"
+    ],
+    "whenNotToUse": [
+      "Renaming the handle to anything else — the weld breaks"
+    ],
+    "tips": [
+      "Build visuals as children welded to Handle for complex shapes",
+      "Grip* properties fine-tune hand position without moving geometry"
+    ],
+    "commonMistakes": [
+      "Naming it 'handle' or 'Grip' — must be exactly 'Handle'",
+      "Handle not a DIRECT child of the Tool",
+      "Forgetting RequiresHandle=false for handle-less designs"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Correct tool structure",
+      "code": "-- Explorer structure:\n-- Wand (Tool)\n--  ├─ Handle (Part)        ← required name, direct child\n--  └─ Crystal (Part)       ← welded to Handle\n\nlocal crystal = script.Parent.Crystal\nlocal handle = script.Parent.Handle\nlocal weld = Instance.new(\"WeldConstraint\")\nweld.Part0 = handle\nweld.Part1 = crystal\nweld.Parent = handle",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "tool",
+    "starter-pack",
+    "weldconstraint"
+  ],
+  "added": "2026-10-04"
+}

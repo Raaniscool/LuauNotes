@@ -1,0 +1,99 @@
+{
+  "id": "localscript",
+  "title": "LocalScript",
+  "category": "classes",
+  "type": "class",
+  "summary": "A client-side script: runs on each player's machine with access to their input, camera, and UI. Only runs in specific locations (StarterPlayer, StarterGui, ReplicatedStorage, workspace…) and cannot be trusted by the server.",
+  "keywords": [
+    "client script",
+    "client code",
+    "LocalScript locations",
+    "UI code",
+    "input code"
+  ],
+  "tags": [
+    "script-types",
+    "client",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/LocalScript",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "Enabled",
+        "type": "boolean",
+        "description": "Toggles execution."
+      },
+      {
+        "name": "ResetOnSpawn",
+        "type": "boolean",
+        "description": "Whether the LocalScript restarts each time the player's character respawns (relevant in StarterPlayer/StarterGui)."
+      }
+    ],
+    "details": [
+      {
+        "heading": "Where LocalScripts run",
+        "body": "Only in client-visible containers: StarterPlayerScripts, StarterCharacterScripts, StarterGui, StarterPack, ReplicatedStorage, ReplicatedFirst, workspace, and the Player objects. They do NOT run in ServerScriptService or ServerStorage (invisible to clients)."
+      },
+      {
+        "heading": "Client-only APIs",
+        "body": "Players.LocalPlayer, UserInputService, ContextActionService, RunService.RenderStepped, camera control, sounds played locally, TweenService on client-owned objects."
+      },
+      {
+        "heading": "Trust boundary",
+        "body": "Everything a LocalScript does can be manipulated by exploiters. The server must independently validate any claim or action coming from clients."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Your game's eyes, ears, and hands on each player's machine. It's where UI reacts, cameras move, and input is captured.",
+    "whyItExists": "Only the client knows when ITS player pressed a key, and only the client should render ITS screen. Server code can't do either.",
+    "whenToUse": [
+      "GUI logic: buttons, HUD updates, menus",
+      "Input handling (UserInputService / ContextActionService)",
+      "Camera effects and control",
+      "Client-side prediction and cosmetics",
+      "Sending validated intents to the server via remotes"
+    ],
+    "whenNotToUse": [
+      "Authoritative decisions (damage, currency, saving) — server's job",
+      "Code placed where LocalScripts don't run (ServerScriptService) — it simply won't execute",
+      "Storing anything secret — clients can read all client-reachable code"
+    ],
+    "mentalModel": "```text\nLocalScript runs when its container reaches the client:\n  StarterGui / StarterPlayer → on spawn\n  ReplicatedStorage           → as soon as replicated\n\nLocalScript (client)              Script (server)\n  detects input  ──FireServer──▶   validates + applies\n  updates UI     ◀──FireClient──   authoritative result\n```",
+    "tips": [
+      "Keep one 'bootstrap' LocalScript in StarterPlayerScripts that requires your client modules — easier to manage than many scattered LocalScripts",
+      "Use WaitForChild when reaching for replicated objects — they may arrive after your LocalScript starts",
+      "ResetOnSpawn matters for GUI scripts in StarterGui: false keeps state across respawns"
+    ],
+    "commonMistakes": [
+      "Putting a LocalScript in ServerScriptService/ServerStorage and wondering why it never runs",
+      "Trusting LocalScript state server-side (exploiters edit client memory)",
+      "Accessing workspace content immediately without WaitForChild — replication race",
+      "Forgetting LocalScripts run once PER PLAYER, on their machine — there is no shared client state between players"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Client input → server action",
+      "code": "-- StarterPlayerScripts/InputHandler (LocalScript)\nlocal UserInputService = game:GetService(\"UserInputService\")\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal dashEvent = ReplicatedStorage:WaitForChild(\"Dash\")\n\nUserInputService.InputBegan:Connect(function(input, processed)\n    if processed then return end   -- ignore when typing in chat etc.\n    if input.KeyCode == Enum.KeyCode.Q then\n        dashEvent:FireServer()     -- server decides if the dash is legal\n    end\nend)",
+      "whyItWorks": "Input only exists client-side, so detection happens here — but the ACTUAL dash (movement, cooldown) should be enforced by the server that receives FireServer.",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "script",
+    "modulescript",
+    "client-vs-server",
+    "localscript-location-limits",
+    "user-input-service",
+    "starter-gui"
+  ],
+  "added": "2026-10-04"
+}

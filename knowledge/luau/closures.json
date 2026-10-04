@@ -1,0 +1,82 @@
+{
+  "id": "closures",
+  "title": "Closures",
+  "category": "luau",
+  "type": "concept",
+  "summary": "A function that remembers the local variables from where it was created. Callbacks, private state, and per-player data all rely on closures.",
+  "keywords": [
+    "upvalue",
+    "captured variables",
+    "function remembers",
+    "lexical scope"
+  ],
+  "tags": [
+    "functions",
+    "scope",
+    "intermediate"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/functions",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "Upvalues",
+        "body": "A local referenced by an inner function becomes an *upvalue*: it lives on even after the outer function returns, shared by every closure that captured it."
+      },
+      {
+        "heading": "Sharing vs copying",
+        "body": "Multiple closures created in the same scope share the same upvalue. Closures created in different loop iterations capture different variables in Luau (per-iteration loop vars)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "When a function is created, it takes an invisible snapshot of the local variables around it — and carries that snapshot wherever it goes. That function+snapshot pair is a closure.",
+    "whyItExists": "Roblox is callback-driven: you hand functions to events and timers that fire later. Closures let those callbacks still see your variables when they finally run.",
+    "whenToUse": [
+      "Event callbacks that need your local data: `part.Touched:Connect(function(hit) ... use myLocal ... end)`",
+      "Private state: a counter variable only the returned function can touch",
+      "Factory functions that produce customized functions"
+    ],
+    "whenNotToUse": [
+      "Don't capture large tables you don't need — captured locals stay alive as long as the closure does (memory)",
+      "Don't rely on closures where a simple parameter would be clearer"
+    ],
+    "mentalModel": "```text\nlocal function makeCounter()\n    local count = 0                  -- captured!\n    return function()\n        count += 1                   -- still alive in here\n        return count\n    end\nend\n\nlocal tick = makeCounter()\nprint(tick())  --> 1\nprint(tick())  --> 2    -- count persists between calls\n```\nThe inner function packed `count` in its suitcase when it left home.",
+    "tips": [
+      "Closures are how debounce/cooldown patterns remember their last-use time",
+      "Every `Connect(function() ... end)` inside a function captures that function's locals — usually exactly what you want",
+      "Use closures for encapsulation instead of script-level globals"
+    ],
+    "commonMistakes": [
+      "Assuming captured variables were copied at creation time — they're live references; later changes are visible",
+      "Creating closures in loops expecting independent copies of a shared local (Luau loop vars are per-iteration, but your own locals declared outside the loop are shared)",
+      "Forgetting closures keep upvalues alive — a closure stored forever keeps its captured data forever"
+    ]
+  },
+  "examples": [
+    {
+      "title": "A private counter (no globals)",
+      "code": "local function makeCounter(start)\n    local count = start or 0\n    return {\n        add = function(n) count += (n or 1) end,\n        get = function() return count end,\n    }\nend\n\nlocal score = makeCounter(100)\nscore.add(25)\nprint(score.get())   --> 125\n-- `count` itself is unreachable from outside — private!",
+      "language": "lua"
+    },
+    {
+      "title": "Callbacks capturing locals",
+      "code": "local function setupButton(button, reward)\n    local claimed = false    -- captured by the closure below\n    button.Activated:Connect(function(player)\n        if claimed then return end\n        claimed = true\n        print(player.Name .. \" claimed \" .. reward)\n    end)\nend\n\nsetupButton(script.Parent, \"100 coins\")",
+      "whyItWorks": "The connected callback runs much later, but still sees `claimed` and `reward` — they were captured when the closure was made.",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "functions",
+    "anonymous-functions",
+    "scope",
+    "debounce",
+    "cooldown-pattern"
+  ],
+  "added": "2026-10-04"
+}

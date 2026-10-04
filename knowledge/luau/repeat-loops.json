@@ -1,0 +1,72 @@
+{
+  "id": "repeat-loops",
+  "title": "Repeat Loops",
+  "category": "luau",
+  "type": "keyword",
+  "summary": "`repeat ... until condition` runs the body first, then checks — guaranteeing at least one iteration, and stopping when the condition becomes true.",
+  "keywords": [
+    "do while",
+    "run at least once",
+    "until loop"
+  ],
+  "tags": [
+    "basics",
+    "loops",
+    "control-flow"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "repeat\n    -- body runs, THEN condition is checked\nuntil condition   -- stops when condition is TRUE"
+    ],
+    "details": [
+      {
+        "heading": "Scope quirk",
+        "body": "The `until` expression can see locals declared inside the body — unique among Lua constructs."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The mirror image of `while`: do the thing, then ask 'should I stop?'. `until` reads like English — repeat *until* we're done.",
+    "whyItExists": "Some jobs must happen at least once before you can check: 'try once, retry until it works'.",
+    "whenToUse": [
+      "Retry logic: repeat an attempt until it succeeds",
+      "Menus: show the menu, then loop until the player picks an option",
+      "Any loop where the exit condition depends on something computed in the body"
+    ],
+    "whenNotToUse": [
+      "When the condition is already known before the first run — `while` is clearer then",
+      "Never in tight loops without yielding, same as `while`"
+    ],
+    "mentalModel": "```text\nrepeat\n    body        -- always happens at least once\nuntil done      -- stops when done == true\n```\nNote the inversion: `until true` STOPS; `while true` KEEPS GOING.",
+    "tips": [
+      "Say the condition out loud with 'until' — if it reads backwards, you inverted it",
+      "Combine with `task.wait()` for time-based retries"
+    ],
+    "commonMistakes": [
+      "Flipping the logic: writing `until not finished` when you meant `until finished`",
+      "Forgetting that `until condition == true` stops the loop — opposite of while",
+      "Infinite repeat because the exit condition never becomes true"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Retry until success",
+      "code": "local attempts = 0\nlocal success = false\n\nrepeat\n    attempts += 1\n    -- pretend this sometimes fails\n    success = math.random() > 0.7\n    print(`Attempt {attempts}: {success}`)\n    task.wait(0.5)\nuntil success or attempts >= 10\n\nprint(if success then \"Worked!\" else \"Gave up after 10 tries\")",
+      "whyItWorks": "The loop stops on the first successful attempt, or after the safety cap of 10 — the `or attempts >= 10` is your guard against forever.",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "while-loops",
+    "numeric-for-loops",
+    "break-continue"
+  ],
+  "added": "2026-10-04"
+}

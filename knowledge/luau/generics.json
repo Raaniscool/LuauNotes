@@ -1,0 +1,81 @@
+{
+  "id": "generics",
+  "title": "Generics (Type Parameters)",
+  "category": "luau",
+  "type": "concept",
+  "summary": "Type-level placeholders (`<T>`) that let one function or type work over many value types while staying fully checked — like `getOrDefault<T>(t, key, fallback: T): T`.",
+  "keywords": [
+    "generic functions",
+    "type parameters",
+    "<T>",
+    "polymorphic types"
+  ],
+  "tags": [
+    "types",
+    "advanced",
+    "type-checking"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/typecheck/generics",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "local function first<T>(list: { T }): T?\n    return list[1]\nend",
+      "type Box<T> = { value: T }\nlocal numberBox: Box<number> = { value = 42 }"
+    ],
+    "details": [
+      {
+        "heading": "Generic functions",
+        "body": "Declare type parameters in angle brackets before the parameter list. The analyzer infers T from call sites: `first({1, 2})` infers T = number, return type number?."
+      },
+      {
+        "heading": "Generic type aliases",
+        "body": "`type Result<T, E> = { ok: boolean, value: T?, error: E? }` — parameterized containers, reusable across the project."
+      },
+      {
+        "heading": "Bounds",
+        "body": "Luau does not support generic bounds like `<T : Something>` — constrain via intersections or separate signatures instead."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Generics let you write code once for *any* type, while the type checker still knows the specific type at each use site. 'Give me a list of anything; I'll return the first element of that same anything.'",
+    "whyItExists": "Utility functions (find, map, wrap, cache) shouldn't have to choose between `any` (unsafe) and one copy per type (repetitive).",
+    "whenToUse": [
+      "Container wrappers: `Cache<T>`, `Signal<T>`",
+      "Utility functions that preserve types through the call",
+      "Result/option-style types for error handling"
+    ],
+    "whenNotToUse": [
+      "For one concrete type — don't generalize speculatively",
+      "When `any` would honestly do and the code is trivial"
+    ],
+    "mentalModel": "```text\nfunction first<T>(list: {T}): T?\n              ↑        ↑      ↑\n        \"some type\" — same T everywhere\n\nfirst({1,2,3})      --> T inferred as number : returns number?\nfirst({\"a\",\"b\"})    --> T inferred as string : returns string?\n```",
+    "tips": [
+      "Let inference do the work — callers rarely need explicit generic arguments",
+      "Name type parameters meaningfully for big APIs: `<Value>`, `<State>`"
+    ],
+    "commonMistakes": [
+      "Declaring `<T>` but using `any` inside anyway — defeats the purpose",
+      "Forgetting optionality: `list[1]` is `T?`, not `T`",
+      "Treating generics as a runtime feature — they exist only in the analyzer"
+    ]
+  },
+  "examples": [
+    {
+      "title": "A typed cache",
+      "code": "--!strict\n\ntype Cache<T> = {\n    _store: { [string]: T },\n    get: (self: Cache<T>, key: string, producer: () -> T) -> T,\n}\n\nlocal function createCache<T>(): Cache<T>\n    local cache = { _store = {} :: { [string]: T } }\n    function cache.get(key: string, producer: () -> T): T\n        local existing = cache._store[key]\n        if existing ~= nil then\n            return existing\n        end\n        local fresh = producer()\n        cache._store[key] = fresh\n        return fresh\n    end\n    return cache :: Cache<T>\nend\n\nlocal priceCache = createCache<number>()\nlocal price = priceCache.get(\"sword\", function() return 250 end)\n-- price is known to be a number here — no casts needed",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "type-checking",
+    "functions",
+    "tables"
+  ],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,86 @@
+{
+  "id": "arrays",
+  "title": "Arrays",
+  "category": "luau",
+  "type": "concept",
+  "summary": "Tables with consecutive integer keys starting at 1: ordered lists. Players in a queue, loot drops, waypoints — if order matters, it's an array.",
+  "keywords": [
+    "list",
+    "sequence",
+    "ordered table",
+    "array index"
+  ],
+  "tags": [
+    "basics",
+    "tables",
+    "arrays"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/tables",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "local pets = {\"Cat\", \"Dog\", \"Dragon\"}",
+      "pets[1]              --> \"Cat\"   (1-based!)",
+      "#pets                --> 3",
+      "table.insert(pets, \"Wolf\")        -- append",
+      "table.remove(pets, 1)             -- remove at index, shifts the rest"
+    ],
+    "details": [
+      {
+        "heading": "What makes it an 'array'",
+        "body": "A table whose keys are exactly 1..n with no gaps. `#t` returns n only for such tables. `table.insert(t, v)` appends at `#t + 1`; `table.insert(t, i, v)` inserts at position i."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "An array is an ordered list. You add things to the end, take them out by position, and walk them in order — first to last.",
+    "whyItExists": "Order matters constantly: turn order, chat history, pathfinding waypoints, spawn lists.",
+    "whenToUse": [
+      "Ordered collections: `local waitingPlayers = {}`",
+      "Stacks (`insert`/`remove` at the end) and queues",
+      "Collecting results to process later: `table.concat`, batch updates"
+    ],
+    "whenNotToUse": [
+      "When you look things up by name, use a dictionary instead: `inventory[\"sword\"]` beats scanning an array",
+      "When order doesn't matter and you need fast 'is this in here?' checks, use a set-style dictionary: `owned[petId] = true`"
+    ],
+    "mentalModel": "```text\npets:   [1]=\"Cat\"  [2]=\"Dog\"  [3]=\"Dragon\"\n\npets[2]      --> \"Dog\"\npets[#pets]  --> last item  (\"Dragon\")\n#pets        --> 3\n```\nThink of numbered lockers in a row, starting at locker 1.",
+    "tips": [
+      "`pets[#pets]` is the idiom for 'the last element'",
+      "To loop backwards while removing: `for i = #t, 1, -1 do`",
+      "`table.find(t, value)` returns the first index of a value (Luau addition)",
+      "`table.sort(t)` sorts in place; pass a comparator for custom order"
+    ],
+    "commonMistakes": [
+      "Using index 0 — `pets[0]` is nil; arrays start at 1",
+      "Removing while looping forward: indices shift and you skip items — loop backwards instead",
+      "Making holes (assigning t[5] when #t is 2) and trusting #t afterwards"
+    ]
+  },
+  "examples": [
+    {
+      "title": "A simple queue",
+      "code": "local queue = {}\n\ntable.insert(queue, \"Alice\")   -- join the back\ntable.insert(queue, \"Bob\")\n\nlocal next = table.remove(queue, 1)   -- serve the front\nprint(next)        --> Alice\nprint(queue[1])    --> Bob",
+      "whyItWorks": "`table.insert(t, v)` appends; `table.remove(t, 1)` takes the front and shifts everyone forward.",
+      "language": "lua"
+    },
+    {
+      "title": "Removing safely while looping",
+      "code": "local enemies = { \"Goblin\", \"Slime\", \"Goblin\", \"Bat\" }\n\n-- WRONG: for i = 1, #enemies do ... table.remove(enemies, i) — skips items!\n-- RIGHT: walk backwards\nfor i = #enemies, 1, -1 do\n    if enemies[i] == \"Goblin\" then\n        table.remove(enemies, i)\n    end\nend\n\nprint(table.concat(enemies, \", \"))   --> Slime, Bat",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "tables",
+    "dictionaries",
+    "table-operations",
+    "one-based-indexing",
+    "ipairs"
+  ],
+  "added": "2026-10-04"
+}

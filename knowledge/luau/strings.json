@@ -1,0 +1,86 @@
+{
+  "id": "strings",
+  "title": "Strings",
+  "category": "luau",
+  "type": "concept",
+  "summary": "Text values wrapped in quotes: \"hello\". Strings are immutable, support concatenation with `..`, and have a rich string library for searching, splitting, and formatting.",
+  "keywords": [
+    "text",
+    "concatenate",
+    "string value",
+    "quotes"
+  ],
+  "tags": [
+    "basics",
+    "types",
+    "strings"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/strings",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "Writing strings",
+        "body": "Double quotes `\"hi\"`, single quotes `'hi'`, or double brackets `[[multi-line]]`. Backslash escapes: `\\n` newline, `\\t` tab, `\\\"` quote, `\\\\` backslash. Luau adds interpolated strings: `` `Hello, {name}!` ``."
+      },
+      {
+        "heading": "Core operations",
+        "body": "Concatenation `a .. b` (auto-converts numbers), length `#s`, indexing `s:sub(i, i)` (strings have no direct `[i]` access that returns a character), comparisons `<`, `==` (lexicographic)."
+      },
+      {
+        "heading": "string library",
+        "body": "`string.len`, `string.upper`, `string.lower`, `string.rep`, `string.reverse`, `string.sub`, `string.find`, `string.gmatch`, `string.gsub`, `string.format`, `string.split` (Luau), `string.byte`, `string.char`."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A string is a sequence of characters — names, chat messages, asset paths, IDs. In Luau strings are *immutable*: operations like `upper()` return a new string instead of changing the original.",
+    "whyItExists": "Games talk to players and to each other: UI text, messages, data keys, and remote payloads all rely on text.",
+    "whenToUse": [
+      "Player-facing text: `label.Text = \"Welcome, \" .. player.Name`",
+      "Identifiers and keys: DataStore keys, CollectionService tags",
+      "Building output: `string.format(\"Kills: %d\", kills)`"
+    ],
+    "whenNotToUse": [
+      "Don't concatenate in tight loops — build a table of parts and use `table.concat(parts)` instead",
+      "Don't store numbers as strings 'just in case' — it forces conversions everywhere"
+    ],
+    "mentalModel": "```text\nlocal name = \"Raanis\"\nlocal greeting = \"Hello, \" .. name .. \"!\"   -- concat\nlocal shout = string.upper(greeting)         -- new string\n\nprint(#name)        --> 6 (length)\nprint(name:sub(1,3)) --> \"Raa\"\n```\nStrings are chains of characters. Cutting and gluing always produces a *new* chain.",
+    "tips": [
+      "Interpolated strings are clean: `` `Score: {score}/{max}` ``",
+      "`tostring()` turns any value into a printable string; `tonumber()` parses numbers out of strings",
+      "`string.split(\"a,b,c\", \",\")` returns `{\"a\", \"b\", \"c\"}`"
+    ],
+    "commonMistakes": [
+      "Concatenating with `+` instead of `..` — `\"hi\" + \"there\"` errors",
+      "Treating string indices 0-based or expecting `s[1]` to give the first character",
+      "Forgetting `tostring()` before `..`-ing nil or booleans errors only for nil: `\"x\" .. nil` errors"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Everyday string operations",
+      "code": "local player = \"Raanis\"\n\nprint(\"Hello, \" .. player)          --> Hello, Raanis\nprint(`Hi, {player}!`)              --> Hi, Raanis!  (interpolation)\nprint(#player)                      --> 6\nprint(player:upper())               --> RAANIS\nprint(player:sub(1, 3))             --> Raa\nprint(player:find(\"aan\"))           --> 2  4\nprint(player:gsub(\"a\", \"o\"))        --> Roons  2\nprint(string.split(\"a,b,c\", \",\"))   --> {\"a\", \"b\", \"c\"}",
+      "language": "lua"
+    },
+    {
+      "title": "Formatting HUD text",
+      "code": "local kills = 7\nlocal timeLeft = 90\n\nlocal label = string.format(\"Kills: %d | Time: %d:%02d\", kills, timeLeft // 60, timeLeft % 60)\nprint(label)   --> Kills: 7 | Time: 1:30",
+      "whyItWorks": "`%d` inserts integers, `%02d` pads to two digits. `string.format` keeps number-heavy UI text readable.",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "string-operations",
+    "string-formatting",
+    "numbers",
+    "data-types",
+    "one-based-indexing"
+  ],
+  "added": "2026-10-04"
+}

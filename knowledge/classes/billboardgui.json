@@ -1,0 +1,103 @@
+{
+  "id": "billboardgui",
+  "title": "BillboardGui",
+  "category": "classes",
+  "type": "class",
+  "summary": "2D GUI that faces the camera and attaches to a 3D object (Adornee): name tags, health bars over heads, floating damage numbers.",
+  "keywords": [
+    "name tag",
+    "overhead ui",
+    "floating text",
+    "Adornee",
+    "AlwaysOnTop",
+    "healthbar above head"
+  ],
+  "tags": [
+    "classes",
+    "gui",
+    "world-space"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/BillboardGui",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "Adornee",
+        "type": "Instance",
+        "description": "The object it attaches to (defaults to Parent). Use studs offset via StudsOffset."
+      },
+      {
+        "name": "Size",
+        "type": "UDim2",
+        "description": "Mix of scale and OFFSET studs — offset units are world studs for billboards."
+      },
+      {
+        "name": "StudsOffset / StudsOffsetWorldSpace",
+        "type": "Vector3",
+        "description": "Position offset from the adornee in studs."
+      },
+      {
+        "name": "AlwaysOnTop",
+        "type": "boolean",
+        "description": "Render through walls."
+      },
+      {
+        "name": "MaxDistance",
+        "type": "number",
+        "description": "Hide beyond this many studs from the camera."
+      },
+      {
+        "name": "LightInfluence / Brightness",
+        "type": "number",
+        "description": "How world lighting affects the gui."
+      },
+      {
+        "name": "ResetOnSpawn",
+        "type": "boolean",
+        "description": "Respawn behavior when in StarterGui."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A screen-aligned card pinned to a 3D object — it follows the object around the world while always facing the player's camera.",
+    "whyItExists": "Overhead names, boss health bars, and pickup labels need UI that lives IN the world.",
+    "whenToUse": [
+      "NPC name plates and health bars",
+      "Floating damage/heal numbers",
+      "Interaction hints above objects (pair with ProximityPrompt)"
+    ],
+    "whenNotToUse": [
+      "Screen-fixed HUD — ScreenGui",
+      "Text painted onto surfaces — SurfaceGui"
+    ],
+    "tips": [
+      "StudsOffsetWorldSpace ignores part rotation — predictable overhead placement",
+      "MaxDistance keeps distant billboards from cluttering",
+      "Billboards replicate: server-created ones show to everyone"
+    ],
+    "commonMistakes": [
+      "Size in scale-only units — offset components are studs; oversized billboards",
+      "Forgetting Adornee when parenting elsewhere — it attaches to its Parent by default",
+      "Performance: hundreds of billboards with AlwaysOnTop get expensive"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Name tag over an NPC",
+      "code": "local npc = workspace.NPC\nlocal head = npc:FindFirstChild(\"Head\")\n\nlocal billboard = Instance.new(\"BillboardGui\")\nbillboard.Adornee = head\nbillboard.Size = UDim2.fromOffset(120, 30)\nbillboard.StudsOffset = Vector3.new(0, 2.5, 0)\nbillboard.AlwaysOnTop = true\nbillboard.Parent = head\n\nlocal name = Instance.new(\"TextLabel\")\nname.Size = UDim2.fromScale(1, 1)\nname.BackgroundTransparency = 1\nname.Text = \"Guard Lv. 5\"\nname.TextColor3 = Color3.new(1, 1, 1)\nname.TextStrokeTransparency = 0\nname.Parent = billboard",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "surfacegui",
+    "screengui",
+    "udim2",
+    "camera"
+  ],
+  "added": "2026-10-04"
+}

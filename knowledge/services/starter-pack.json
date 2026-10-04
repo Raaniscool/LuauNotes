@@ -1,0 +1,69 @@
+{
+  "id": "starter-pack",
+  "title": "StarterPack",
+  "category": "services",
+  "type": "service",
+  "summary": "The tool template container: Tools parented here are copied into each player's Backpack on spawn. Runtime inventory changes happen on the Backpack, not here.",
+  "keywords": [
+    "tools on spawn",
+    "backpack",
+    "give tool",
+    "starting tools"
+  ],
+  "tags": [
+    "services",
+    "tools",
+    "containers"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/StarterPack",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "Lifecycle",
+        "body": "At spawn, Tools in StarterPack are cloned into the player's Backpack (under the Player). Equipping moves a Tool from Backpack to Character; unequipping returns it."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The default loadout: every tool you put here shows up in every player's backpack when they spawn.",
+    "whyItExists": "Games need starting equipment without scripting it per player.",
+    "whenToUse": [
+      "Starting tools every player should have",
+      "Template tools you'll also clone dynamically for rewards"
+    ],
+    "whenNotToUse": [
+      "For giving tools mid-game — clone into player.Backpack directly",
+      "For tools that shouldn't reset on death — manage manually and set respawn behavior"
+    ],
+    "mentalModel": "```text\nStarterPack (template)          Player\n ├─ Sword            ─spawn→   Backpack\n └─ Potion           ─spawn→    ├─ Sword\n                                 └─ Potion\nEquipping: Backpack → Character (Tool welds to hand via Handle)\n```",
+    "tips": [
+      "A Tool needs a part named `Handle` to be holdable (unless RequiresHandle = false)",
+      "Giving at runtime: `tool:Clone().Parent = player.Backpack`",
+      "Tool.Activated fires on click/tap while equipped — the main interaction hook"
+    ],
+    "commonMistakes": [
+      "Parenting runtime-given tools to StarterPack instead of the player's Backpack",
+      "Missing Handle part → tool equips but floats/doesn't render correctly"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Giving a tool mid-game",
+      "code": "local ServerStorage = game:GetService(\"ServerStorage\")\n\nlocal function rewardTool(player, toolName)\n    local template = ServerStorage:FindFirstChild(toolName)\n    if not template then return end\n    local tool = template:Clone()\n    tool.Parent = player:WaitForChild(\"Backpack\")   -- appears in inventory\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "tool",
+    "tool-requires-handle",
+    "player",
+    "players"
+  ],
+  "added": "2026-10-04"
+}

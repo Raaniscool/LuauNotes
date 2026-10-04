@@ -1,0 +1,93 @@
+{
+  "id": "starter-player",
+  "title": "StarterPlayer",
+  "category": "services",
+  "type": "service",
+  "summary": "Holds per-player defaults and auto-run script containers: StarterPlayerScripts and StarterCharacterScripts run as LocalScripts for every player, plus default character/camera settings.",
+  "keywords": [
+    "StarterPlayerScripts",
+    "StarterCharacterScripts",
+    "client bootstrap",
+    "default character settings"
+  ],
+  "tags": [
+    "services",
+    "containers",
+    "client",
+    "gui"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/StarterPlayer",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "StarterPlayerScripts",
+        "type": "Instance",
+        "description": "Container whose LocalScripts run for each player (copied into PlayerScripts)."
+      },
+      {
+        "name": "StarterCharacterScripts",
+        "type": "Instance",
+        "description": "Container whose LocalScripts are copied into each character model on spawn."
+      },
+      {
+        "name": "CharacterWalkSpeed / CharacterJumpHeight",
+        "type": "number",
+        "description": "Defaults applied to new Humanoids."
+      },
+      {
+        "name": "CameraMinZoomDistance / CameraMaxZoomDistance",
+        "type": "number",
+        "description": "Default camera zoom limits."
+      },
+      {
+        "name": "DevEnableMouseLock / DevComputerMovementMode",
+        "type": "boolean / Enum",
+        "description": "Default control scheme settings."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The 'what every player starts with' service: default movement/camera settings plus two magic folders that automatically run client code for every player.",
+    "whyItExists": "You want one place that bootstraps each client (StarterPlayerScripts) and one place for per-character client logic (StarterCharacterScripts), without wiring it manually.",
+    "whenToUse": [
+      "StarterPlayerScripts: your client bootstrap — input, UI manager, sound manager",
+      "StarterCharacterScripts: code that should restart with each character (character effects)",
+      "Tuning global defaults: walk speed, jump height, camera limits"
+    ],
+    "whenNotToUse": [
+      "Server logic — nothing here runs on the server",
+      "Code that must NOT re-run on respawn — use StarterPlayerScripts, not StarterCharacterScripts"
+    ],
+    "mentalModel": "```text\nStarterPlayer\n ├─ StarterPlayerScripts     → runs once per client session\n │    └─ ClientMain (LocalScript)\n ├─ StarterCharacterScripts  → runs once per CHARACTER spawn\n └─ (WalkSpeed, CameraMaxZoomDistance, … defaults)\n```",
+    "tips": [
+      "One ClientMain LocalScript that requires modules = clean client architecture",
+      "StarterCharacterScripts re-run every respawn — great for character-scoped effects",
+      "Character defaults can be overridden per-Humanoid at runtime"
+    ],
+    "commonMistakes": [
+      "Putting plain Scripts here expecting server execution — only LocalScripts run",
+      "Assuming StarterCharacterScripts state persists across deaths — it doesn't, they restart"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Client bootstrap pattern",
+      "code": "-- StarterPlayer/StarterPlayerScripts/ClientMain (LocalScript)\nlocal Modules = script.Parent.Modules\n\nlocal UIManager = require(Modules.UIManager)\nlocal InputManager = require(Modules.Input)\nlocal SoundManager = require(Modules.Sound)\n\nUIManager.init()\nInputManager.init()\nSoundManager.init()\n\nprint(\"Client systems online\")",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "localscript",
+    "starter-gui",
+    "starter-pack",
+    "humanoid",
+    "replicated-first"
+  ],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,88 @@
+{
+  "id": "on-server-invoke",
+  "title": "RemoteFunction.OnServerInvoke",
+  "category": "events",
+  "type": "property",
+  "summary": "The server-assigned handler answering InvokeServer calls: OnServerInvoke = function(player, ...) return value end. Assigned like a property (not :Connect'd); must exist before clients invoke.",
+  "keywords": [
+    "server invoke handler",
+    "answer client question",
+    "assigned callback",
+    "invoke response"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/RemoteFunction",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "RemoteFunction.OnServerInvoke = function(player: Player, ...args: any) ... return value end",
+    "parameters": [
+      {
+        "name": "player",
+        "type": "Player",
+        "description": "The invoking client — injected automatically, first parameter, unspoofable."
+      },
+      {
+        "name": "...args",
+        "type": "any (serialized)",
+        "description": "The client's InvokeServer arguments. Validate them."
+      }
+    ],
+    "returns": "Whatever you return is serialized and delivered back to the invoking client.",
+    "details": [
+      {
+        "heading": "Assigned, not connected",
+        "body": "It's a property holding one function. Assigning twice replaces the handler. No multiple listeners like :Connect."
+      },
+      {
+        "heading": "Must exist early",
+        "body": "If a client invokes before assignment, the invoke errors on the client. Assign at server startup."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The answering machine for client questions. Whatever you return flies back across the network to the waiting thread.",
+    "whyItExists": "InvokeServer needs a destination; OnServerInvoke is that destination with a verified player attached.",
+    "whenToUse": [
+      "Serving on-demand data (prices, inventories, permissions)",
+      "Any legitimate request/response the client may wait on"
+    ],
+    "whenNotToUse": [
+      "For event streams — remotes",
+      "For work that yields long (DataStore lookups) without caching — the client is blocked waiting"
+    ],
+    "tips": [
+      "Return quickly; offload slow work to cached data",
+      "Validate args exactly like OnServerEvent arguments",
+      "One handler per RemoteFunction — design the API with a 'request type' first argument"
+    ],
+    "commonMistakes": [
+      "Assigning in a LocalScript — no effect; server side only",
+      "Forgetting to assign at all — clients error on invoke",
+      "Yielding inside for seconds (blocking that client's request thread)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Request-type dispatch",
+      "code": "-- Server:\nrf.OnServerInvoke = function(player, requestType, ...)\n    if requestType == \"Price\" then\n        local item = ...\n        if typeof(item) ~= \"string\" then return nil end\n        return PRICES[item]\n    elseif requestType == \"Level\" then\n        return getLevel(player)\n    end\n    return nil   -- unknown request\nend\n\n-- Client:\nlocal price = rf:InvokeServer(\"Price\", \"Sword\")",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "remote-function",
+    "invoke-server",
+    "invoke-client",
+    "on-client-invoke",
+    "on-server-event"
+  ],
+  "added": "2026-10-04"
+}

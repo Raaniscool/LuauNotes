@@ -1,0 +1,101 @@
+{
+  "id": "sound-service",
+  "title": "SoundService",
+  "category": "services",
+  "type": "service",
+  "summary": "Controls the audio world: listener setup, ambient reverb, volume rules — plus PlayLocalSound for playing a sound to just the local client.",
+  "keywords": [
+    "audio",
+    "listener",
+    "reverb",
+    "PlayLocalSound",
+    "sound settings",
+    "3d audio"
+  ],
+  "tags": [
+    "services",
+    "audio"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/SoundService",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      {
+        "name": "PlayLocalSound",
+        "signature": "SoundService:PlayLocalSound(sound: Sound)",
+        "description": "Client only. Plays a Sound for this client only, regardless of where the Sound object is parented."
+      },
+      {
+        "name": "SetListener",
+        "signature": "SoundService:SetListener(listenerType: Enum.ListenerType, ...)",
+        "description": "Sets the audio listener (default: the player's camera). ListenerType.Camera or Object with an instance."
+      },
+      {
+        "name": "GetListener",
+        "signature": "SoundService:GetListener() --> (Enum.ListenerType, ...)",
+        "description": "Current listener configuration."
+      }
+    ],
+    "properties": [
+      {
+        "name": "AmbientReverb",
+        "type": "Enum.ReverbType",
+        "description": "Environmental reverb preset (Cave, Hallway, UnderWater…)."
+      },
+      {
+        "name": "DistanceFactor / DopplerScale / RolloffIntensity",
+        "type": "number",
+        "description": "3D audio tuning: perceived distance scaling, doppler strength, volume falloff intensity."
+      },
+      {
+        "name": "RespectFilteringEnabled",
+        "type": "boolean",
+        "description": "Whether client-created sounds are heard only by their creator (default true)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The audio director: it decides WHERE ears are (the listener), how sound behaves in space (reverb, doppler, falloff), and offers helpers for local playback.",
+    "whyItExists": "3D games need consistent audio physics: footsteps fading with distance, caves echoing, alarms playing for one player privately.",
+    "whenToUse": [
+      "PlayLocalSound for UI clicks and client-only effects",
+      "Setting AmbientReverb per zone (cave, underwater)",
+      "Attaching the listener to a custom camera/object",
+      "Tuning doppler/falloff for your game's feel"
+    ],
+    "whenNotToUse": [
+      "For normal world sounds — parent a Sound to a part and Play() it",
+      "Server-side PlayLocalSound — it's client-only"
+    ],
+    "mentalModel": "```text\nSound world model:\n  Listener (ears) ←── default: current camera\n  Sounds in 3D space ── distance → volume falloff,\n                        doppler, reverb (AmbientReverb)\n\nPlayLocalSound = whisper to this client only.\n```",
+    "tips": [
+      "UI sounds: create one Sound, keep it around, change SoundId and Play()",
+      "For footsteps/impact sync, use Sound.TimePosition and Ended events",
+      "Zone reverb: set AmbientReverb when players enter caves/water"
+    ],
+    "commonMistakes": [
+      "Calling PlayLocalSound from a Script (server) — must be a LocalScript",
+      "Creating dozens of Sound instances per play instead of reusing one",
+      "Forgetting sounds replicate: a client-created sound isn't heard by others by default"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Client-only UI sound",
+      "code": "-- LocalScript\nlocal SoundService = game:GetService(\"SoundService\")\n\nlocal click = Instance.new(\"Sound\")\nclick.SoundId = \"rbxassetid://12222087\"   -- any valid sound id\nclick.Volume = 0.5\n\nlocal function playClick()\n    SoundService:PlayLocalSound(click)\nend\n\nscript.Parent.Activated:Connect(playClick)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "sound",
+    "camera",
+    "localscript",
+    "client-vs-server"
+  ],
+  "added": "2026-10-04"
+}

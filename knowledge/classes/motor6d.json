@@ -1,0 +1,103 @@
+{
+  "id": "motor6d",
+  "title": "Motor6D",
+  "category": "classes",
+  "type": "class",
+  "summary": "A joint that connects two parts with a controllable transform — the joint type used in character rigs and animations. C0/C1 define rest poses; animating Transform (or via Animations) rotates limbs.",
+  "keywords": [
+    "joint",
+    "rig",
+    "animation joint",
+    "C0 C1",
+    "Transform",
+    "limb rotation",
+    "character rig"
+  ],
+  "tags": [
+    "classes",
+    "physics",
+    "animation",
+    "advanced"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Motor6D",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "Part0 / Part1",
+        "type": "BasePart",
+        "description": "The two joined parts (Part0 is the 'parent' side in a rig)."
+      },
+      {
+        "name": "C0 / C1",
+        "type": "CFrame",
+        "description": "The joint's anchor CFrames relative to Part0 and Part1. They define how the parts sit at rest."
+      },
+      {
+        "name": "Transform",
+        "type": "CFrame",
+        "description": "The current joint rotation/offset between the C0 and C1 anchors — animations drive this."
+      },
+      {
+        "name": "DesiredAngle / MaxVelocity / CurrentAngle",
+        "type": "number",
+        "description": "Legacy motor controls (mostly superseded by Animations)."
+      },
+      {
+        "name": "Enabled",
+        "type": "boolean",
+        "description": "Joint on/off."
+      }
+    ],
+    "details": [
+      {
+        "heading": "The rig invariant",
+        "body": "Part1.CFrame ≈ Part0.CFrame * C0 * Transform * C1:Inverse(). Animations animate Transform; the rig pose follows."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A hinge-with-memory: it holds two parts together at a defined pose AND can rotate between poses. Every animated character joint is one.",
+    "whyItExists": "Welds freeze; characters must bend. Motor6D gives joints a pose that animations can change.",
+    "whenToUse": [
+      "Building custom rigs (robots, creatures, vehicles with moving parts)",
+      "Understanding why character limbs move (Animations write Motor6D transforms)",
+      "Manual posing: adjust Transform for procedural animation"
+    ],
+    "whenNotToUse": [
+      "Static structures — WeldConstraint is simpler",
+      "Free-spinning physical joints — HingeConstraint/BallSocketConstraint"
+    ],
+    "mentalModel": "```text\nPart0 ──(C0)──◉──(Transform)──◉──(C1)── Part1\n                joint pivot\nAnimations = \"change Transform over time\"\n```",
+    "tips": [
+      "R6/R15 characters are just trees of Motor6Ds — inspect one to learn",
+      "For procedural aiming, only touch the relevant joint's Transform each frame",
+      "Keep C0/C1 authored at bind pose; don't animate them"
+    ],
+    "commonMistakes": [
+      "Setting C0/C1 at runtime and breaking the rest pose",
+      "Mixing animation playback with manual Transform writes (they fight)",
+      "Expecting Motor6D to act like a physics hinge (it's kinematic)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Simple two-part joint",
+      "code": "local base = workspace.ArmBase\nlocal arm = workspace.ArmPart\n\nlocal joint = Instance.new(\"Motor6D\")\njoint.Part0 = base\njoint.Part1 = arm\n-- Anchor the joint at the top of the base / bottom of the arm:\njoint.C0 = CFrame.new(0, base.Size.Y / 2, 0)\njoint.C1 = CFrame.new(0, -arm.Size.Y / 2, 0)\njoint.Parent = base\n\n-- Later: swing the arm\njoint.Transform = CFrame.Angles(math.rad(45), 0, 0)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "weldconstraint",
+    "attachment",
+    "animation",
+    "animator",
+    "humanoid"
+  ],
+  "added": "2026-10-04"
+}

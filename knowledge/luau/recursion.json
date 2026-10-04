@@ -1,0 +1,81 @@
+{
+  "id": "recursion",
+  "title": "Recursion",
+  "category": "luau",
+  "type": "concept",
+  "summary": "A function that calls itself to solve smaller versions of a problem. Elegant for tree-shaped data (like the instance hierarchy); needs a base case to stop.",
+  "keywords": [
+    "recursive function",
+    "calls itself",
+    "tree traversal",
+    "base case"
+  ],
+  "tags": [
+    "functions",
+    "intermediate",
+    "recursion"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/functions",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "Stack depth",
+        "body": "Each self-call adds a stack frame. Deep recursion (thousands of levels) overflows the stack. For Roblox's instance tree this is rarely a problem; for large generated data, prefer explicit loops."
+      },
+      {
+        "heading": "Local functions and recursion",
+        "body": "`local function f() f() end` works — the name is in scope inside its own body. Forward-declare only when the function is a value assigned later."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A function solving a problem by solving a smaller copy of the same problem, until the problem is trivial (the *base case*).",
+    "whyItExists": "Some data is naturally self-similar: folder hierarchies, nested tables, family trees. Recursive code mirrors that shape.",
+    "whenToUse": [
+      "Walking the instance hierarchy (though `GetDescendants()` usually replaces this)",
+      "Deep-processing nested tables",
+      "Divide-and-conquer algorithms"
+    ],
+    "whenNotToUse": [
+      "When a built-in already does it: prefer `GetDescendants()` over hand-rolled hierarchy walking",
+      "When depth is unbounded or huge — an explicit stack/queue loop is safer",
+      "When a simple loop is just as clear"
+    ],
+    "mentalModel": "```text\nprintTree(model)\n  print(model)\n  for each child:\n      printTree(child)    -- same job, smaller target\n\n-- stops when a child has no children (base case)\n```",
+    "tips": [
+      "Write the base case FIRST, then the recursive step",
+      "Every recursive call must move toward the base case, or you loop forever",
+      "Roblox provides GetDescendants() — reach for recursion when you also need custom logic per level"
+    ],
+    "commonMistakes": [
+      "Missing/incorrect base case → infinite recursion → stack overflow error",
+      "Forgetting that each call is independent — locals don't accumulate unless you pass them as arguments",
+      "Recursing through workspace every frame for something GetDescendants could cache"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Walk the hierarchy with custom logic",
+      "code": "local function tagAllParts(instance)\n    if instance:IsA(\"BasePart\") then\n        instance:SetAttribute(\"Scanned\", true)\n    end\n    for _, child in instance:GetChildren() do\n        tagAllParts(child)   -- recurse into each child\n    end\nend\n\ntagAllParts(workspace)\n-- (For pure collection, workspace:GetDescendants() is simpler.)",
+      "language": "lua"
+    },
+    {
+      "title": "Classic: factorial",
+      "code": "local function factorial(n)\n    if n <= 1 then return 1 end   -- base case\n    return n * factorial(n - 1)   -- smaller problem\nend\n\nprint(factorial(5))   --> 120",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "functions",
+    "local-functions",
+    "instance-hierarchy",
+    "get-descendants"
+  ],
+  "added": "2026-10-04"
+}

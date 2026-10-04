@@ -1,0 +1,131 @@
+{
+  "id": "table-operations",
+  "title": "Table Operations (table library)",
+  "category": "luau",
+  "type": "library",
+  "summary": "The table library: insert, remove, find, sort, concat, move, create, clone, freeze — the standard toolkit for working with arrays and tables.",
+  "keywords": [
+    "table.insert",
+    "table.remove",
+    "table.sort",
+    "table.find",
+    "table.concat",
+    "table.clone",
+    "table.freeze"
+  ],
+  "tags": [
+    "tables",
+    "library",
+    "arrays"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/tables",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      {
+        "name": "table.insert",
+        "signature": "table.insert(t, [pos,] value)",
+        "description": "Append value at the end, or insert at position pos (shifting later elements up)."
+      },
+      {
+        "name": "table.remove",
+        "signature": "table.remove(t, pos?) --> any",
+        "description": "Remove and return the element at pos (default: last). Later elements shift down."
+      },
+      {
+        "name": "table.find",
+        "signature": "table.find(t, value, init?) --> number?",
+        "description": "Luau addition. First index whose element == value, or nil."
+      },
+      {
+        "name": "table.sort",
+        "signature": "table.sort(t, comp?)",
+        "description": "Sort the array part in place. Optional comparator(a, b) returns true if a comes first."
+      },
+      {
+        "name": "table.concat",
+        "signature": "table.concat(t, sep?, i?, j?) --> string",
+        "description": "Join array elements into one string — the fast way to build big strings."
+      },
+      {
+        "name": "table.move",
+        "signature": "table.move(a1, f, e, t, a2?) --> table",
+        "description": "Copy elements a1[f..e] into positions starting at t (in a2, or a1 itself)."
+      },
+      {
+        "name": "table.create",
+        "signature": "table.create(n, value?) --> table",
+        "description": "Luau addition. Pre-sized array, optionally filled with value."
+      },
+      {
+        "name": "table.clone",
+        "signature": "table.clone(t) --> table",
+        "description": "Luau addition. Shallow copy of a table."
+      },
+      {
+        "name": "table.freeze",
+        "signature": "table.freeze(t) --> table",
+        "description": "Luau addition. Makes t read-only; writes error. Freezes recursively for typed tables."
+      },
+      {
+        "name": "table.clear",
+        "signature": "table.clear(t)",
+        "description": "Luau addition. Empties a table in place, keeping its capacity."
+      },
+      {
+        "name": "table.pack / unpack",
+        "signature": "table.pack(...) / table.unpack(t, i?, j?)",
+        "description": "Convert between varargs and arrays."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Built-in functions for the everyday surgery of tables: adding, removing, sorting, joining, copying.",
+    "whyItExists": "These operations are needed constantly; builtins are battle-tested and faster than hand-rolled loops.",
+    "whenToUse": [
+      "`insert`/`remove` for dynamic lists (queues, inventories)",
+      "`find` to locate a value in a small array",
+      "`sort` with a comparator for leaderboards: `table.sort(scores, function(a, b) return a.points > b.points end)`",
+      "`concat` whenever you build one string from many pieces"
+    ],
+    "whenNotToUse": [
+      "`table.find` on huge arrays every frame — use a dictionary set instead",
+      "`table.remove(t, 1)` in a hot loop on big arrays is O(n) each time; consider `table.clear` + rebuild or a proper queue"
+    ],
+    "tips": [
+      "`table.sort` comparator must be a strict ordering (return false for equal items) or you can get infinite loops/errors",
+      "`table.freeze` is perfect for constant config tables — typos then error loudly instead of silently nil-ing",
+      "`table.clone` is shallow: nested tables remain shared"
+    ],
+    "commonMistakes": [
+      "Calling `table.insert` on a dictionary and wondering where the value went (it appends to the array part)",
+      "Forgetting `table.sort` mutates the original table — clone first if you need the original order",
+      "Using `table.remove` without checking the table isn't empty"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Leaderboard sorting",
+      "code": "local scores = {\n    { name = \"Alice\", points = 90 },\n    { name = \"Bob\", points = 120 },\n    { name = \"Cara\", points = 75 },\n}\n\ntable.sort(scores, function(a, b)\n    return a.points > b.points   -- highest first\nend)\n\nfor rank, entry in scores do\n    print(rank, entry.name, entry.points)\nend\n--> 1 Bob 120 / 2 Alice 90 / 3 Cara 75",
+      "language": "lua"
+    },
+    {
+      "title": "Building chat text fast",
+      "code": "local words = {\"Welcome\", \"to\", \"the\", \"server!\"}\nlocal sentence = table.concat(words, \" \")\nprint(sentence)   --> Welcome to the server!",
+      "whyItWorks": "One allocation instead of N string concatenations. Matters in loops.",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "tables",
+    "arrays",
+    "dictionaries",
+    "ipairs"
+  ],
+  "added": "2026-10-04"
+}

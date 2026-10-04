@@ -1,0 +1,93 @@
+{
+  "id": "return",
+  "title": "return",
+  "category": "luau",
+  "type": "keyword",
+  "summary": "Hands values back to the caller and exits the function immediately. Also required at the end of ModuleScripts to define what require() receives.",
+  "keywords": [
+    "return value",
+    "exit function",
+    "module return",
+    "give back"
+  ],
+  "tags": [
+    "basics",
+    "functions",
+    "modules",
+    "control-flow"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "syntax": [
+      "return                -- exits with no values (caller gets nil)",
+      "return 42             -- one value",
+      "return a, b           -- multiple values",
+      "return f()            -- pass through all of f's returns"
+    ],
+    "details": [
+      {
+        "heading": "Position rule",
+        "body": "`return` must be the last statement of a block. To return from the middle of logic, use an `if`/`else` structure or a local result variable."
+      },
+      {
+        "heading": "Multiple returns trim in some contexts",
+        "body": "`local x = f()` keeps only the first return. `local x, y = f()` keeps two. `{f()}` keeps all; `(f())` keeps exactly one."
+      },
+      {
+        "heading": "ModuleScripts",
+        "body": "The value a ModuleScript returns is exactly what `require()` gives back. No return → require gives `true`. The return must execute at the top level of the module."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The 'here's your answer, I'm done' statement. It ends the function right there and optionally sends data back to whoever called it.",
+    "whyItExists": "Functions compute things; return delivers the result. It also enables early exits, which keep code flat.",
+    "whenToUse": [
+      "Returning computed results: `return health / maxHealth`",
+      "Guard-clause exits: `if not valid then return end`",
+      "Defining a module's public API: `return Module`"
+    ],
+    "whenNotToUse": [
+      "Don't use return 'to stop a script' mid-block — it must be the last statement of that block",
+      "Don't return ten values when a table is clearer"
+    ],
+    "mentalModel": "```text\nlocal function price(base, discount)\n    if discount then\n        return base * (1 - discount)   -- exits HERE\n    end\n    return base\nend\n\nprint(price(100, 0.2))   --> 80\n```\nThink of a vending machine: insert inputs, the `return` slot drops out the result.",
+    "tips": [
+      "Early returns for invalid input keep nesting shallow",
+      "A function with no return gives nil — sometimes that's intentional ('success = did it run')",
+      "For modules: return ONE thing (usually a table of functions) rather than multiple values"
+    ],
+    "commonMistakes": [
+      "Forgetting `return` in a ModuleScript, then wondering why require() returns true",
+      "Putting code after `return` in the same block — unreachable (and a parse error in some positions)",
+      "Expecting multiple return values through `local x = f()` — only the first survives"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Early returns keep code flat",
+      "code": "local function heal(player, amount)\n    local character = player and player.Character\n    if not character then return end\n\n    local humanoid = character:FindFirstChildOfClass(\"Humanoid\")\n    if not humanoid then return end\n\n    humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + amount)\n    return true\nend\n\n-- No nested pyramids: every failure path exits early.",
+      "language": "lua"
+    },
+    {
+      "title": "What require() receives",
+      "code": "-- Inside a ModuleScript:\nlocal Tools = {}\nfunction Tools.greet() print(\"hi\") end\nreturn Tools            -- THIS is what require() hands back\n\n-- Elsewhere:\nlocal Tools = require(pathToModule)\nTools.greet()           --> hi",
+      "commonMistake": "Forgetting the final `return Tools` means `require()` returns `true` and every `Tools.something` call errors with 'attempt to index boolean'.",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "functions",
+    "modulescript",
+    "require",
+    "module-return-mistakes",
+    "return-mistakes"
+  ],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,131 @@
+{
+  "id": "proximity-prompt",
+  "title": "ProximityPrompt",
+  "category": "classes",
+  "type": "class",
+  "summary": "The modern interaction prompt: shows '[E] Hold to Revive' style UI when players approach, works on PC/console/mobile, supports hold durations, and fires Triggered on the server. Successor to ClickDetector for most interactions.",
+  "keywords": [
+    "interact",
+    "press E",
+    "hold to",
+    "Triggered",
+    "ActionText",
+    "ObjectText",
+    "HoldDuration",
+    "interaction prompt"
+  ],
+  "tags": [
+    "classes",
+    "interaction",
+    "input",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ProximityPrompt",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      {
+        "name": "ActionText",
+        "type": "string",
+        "description": "The verb shown: 'Open', 'Revive', 'Pick Up'."
+      },
+      {
+        "name": "ObjectText",
+        "type": "string",
+        "description": "The object name shown: 'Chest', 'Door'."
+      },
+      {
+        "name": "HoldDuration",
+        "type": "number",
+        "description": "Seconds the input must be held (0 = instant)."
+      },
+      {
+        "name": "MaxActivationDistance",
+        "type": "number",
+        "description": "Interaction range in studs (default 10)."
+      },
+      {
+        "name": "ObjectText / ActionText / KeyboardKeyCode / GamepadKeyCode",
+        "type": "string / string / Enum.KeyCode / Enum.KeyCode",
+        "description": "Text + configurable input keys."
+      },
+      {
+        "name": "Enabled / RequiresLineOfSight / Exclusivity",
+        "type": "boolean / boolean / Enum.ProximityPromptExclusivity",
+        "description": "Toggles, LOS requirement, and how multiple prompts compete for one button."
+      },
+      {
+        "name": "ClickablePrompt",
+        "type": "boolean",
+        "description": "Whether it can also be clicked like a ClickDetector."
+      }
+    ],
+    "events": [
+      {
+        "name": "Triggered",
+        "signature": "ProximityPrompt.Triggered:Connect(function(playerWhoTriggered: Player) end)",
+        "description": "Fires (server and client) when the interaction completes. Passes the Player."
+      },
+      {
+        "name": "PromptShown / PromptHidden",
+        "signature": "ProximityPrompt.PromptShown:Connect(function() end)",
+        "description": "Client: when the prompt appears/disappears for the local player."
+      },
+      {
+        "name": "PromptButtonHoldBegan / PromptButtonHoldEnded",
+        "signature": "ProximityPrompt.PromptButtonHoldBegan",
+        "description": "Client: hold start/cancel tracking for custom UI."
+      }
+    ],
+    "details": [
+      {
+        "heading": "ProximityPromptService",
+        "body": "Game-wide prompt limits and styling live in ProximityPromptService (MaxPromptsVisible etc.)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Roblox's built-in 'press E to interact' system — with mobile buttons, gamepad support, hold timers, and clean visuals for free.",
+    "whyItExists": "Every game reinvented hover prompts badly; ProximityPrompt standardized them across all platforms.",
+    "whenToUse": [
+      "Doors, chests, NPCs, vehicles, revives — anything approachable",
+      "Hold-to-channel actions (HoldDuration > 0)",
+      "Cross-platform interaction with zero input code"
+    ],
+    "whenNotToUse": [
+      "Precise shooting/hit detection — that's raycasting",
+      "UI buttons — those are TextButtons"
+    ],
+    "mentalModel": "```text\nPart + ProximityPrompt\n   ActionText=\"Open\"  ObjectText=\"Chest\"\n   HoldDuration=1\n\nPlayer approaches → [E] Open Chest appears\nHolds E for 1s → Triggered(player)\n```",
+    "tips": [
+      "Keep server logic in Triggered — it fires server-side with the real Player",
+      "Disable the prompt temporarily for cooldowns: prompt.Enabled = false",
+      "Use PromptButtonHoldBegan client-side for progress circles during holds"
+    ],
+    "commonMistakes": [
+      "Listening to Triggered only in a LocalScript — exploiters can spoof it; keep consequences server-side",
+      "Forgetting MaxActivationDistance when prompts 'don't show'",
+      "Too many visible prompts cluttering the screen — ProximityPromptService limits help"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Hold-to-open chest",
+      "code": "-- Setup (server Script):\nlocal chest = workspace.Chest\nlocal prompt = Instance.new(\"ProximityPrompt\")\nprompt.ActionText = \"Open\"\nprompt.ObjectText = \"Chest\"\nprompt.HoldDuration = 1.5\nprompt.MaxActivationDistance = 8\nprompt.Parent = chest\n\nprompt.Triggered:Connect(function(player)\n    prompt.Enabled = false            -- one open per chest\n    print(player.Name .. \" opened the chest\")\n    -- loot logic here…\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "proximity-prompt-interaction",
+    "click-detector",
+    "user-input-service",
+    "client-vs-server",
+    "debounce"
+  ],
+  "added": "2026-10-04"
+}

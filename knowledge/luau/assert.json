@@ -1,0 +1,71 @@
+{
+  "id": "assert",
+  "title": "assert()",
+  "category": "luau",
+  "type": "function",
+  "summary": "Guards an assumption: errors with your message if the value is falsy, otherwise returns the value unchanged. Inline nil-guard and invariant check in one.",
+  "keywords": [
+    "invariant",
+    "guard",
+    "assertion",
+    "fail fast"
+  ],
+  "tags": [
+    "errors",
+    "functions",
+    "robustness"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/builtins",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "assert(value: any, message: string?) --> any",
+    "details": [
+      {
+        "heading": "Falsiness rule",
+        "body": "Only `nil` and `false` fail the assertion — `0` and `\"\"` pass. Custom messages make failures self-explanatory in Output."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "'I expect this to be true; if not, stop everything and tell me exactly what assumption broke.'",
+    "whyItExists": "Loud, early failure at the point of the assumption beats mysterious nil errors twenty lines later.",
+    "whenToUse": [
+      "Required setup objects: `local arena = assert(workspace:FindFirstChild(\"Arena\"))`",
+      "Validating function inputs that must be present",
+      "Sanity checks in initialization code"
+    ],
+    "whenNotToUse": [
+      "For expected-absent cases (FindFirstChild misses are normal — handle nil instead)",
+      "In hot paths where the check is redundant",
+      "As flow control — assert is for 'impossible' states"
+    ],
+    "tips": [
+      "Always write a message: `assert(x, \"x must exist before round start\")`",
+      "assert returns its value, so it composes: `local h = assert(char:FindFirstChild(\"Humanoid\"))`"
+    ],
+    "commonMistakes": [
+      "Using assert where a soft fallback is needed — assert raises, it doesn't branch",
+      "Forgetting the message and getting 'assertion failed!' with no clue"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Inline guards",
+      "code": "local function beginRound()\n    local map = assert(workspace:FindFirstChild(\"Map\"), \"Map missing!\")\n    local spawn = assert(map:FindFirstChild(\"Spawn\"), \"Spawn point missing in Map!\")\n    print(\"Round begins at\", spawn.Position)\nend",
+      "whyItWorks": "If either lookup fails, the script halts right there with a message naming the missing piece — no downstream nil mystery.",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "pcall",
+    "error-handling",
+    "nil",
+    "indexing-nil"
+  ],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,63 @@
+{
+  "id": "random-selection",
+  "title": "Random Selection",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Choosing randomly in Luau: math.random(1, #t) for uniform array picks, weighted tables for biased odds, Random instances for seeded/controlled streams. Inclusive bounds — 1-based indexing applies.",
+  "keywords": [
+    "pick random",
+    "weighted random",
+    "random element",
+    "loot table",
+    "seeded random"
+  ],
+  "tags": [
+    "concepts",
+    "math",
+    "gameplay"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/builtins",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Turning probability into picks: uniform draws from arrays, weighted lotteries for loot tables, and seeded Randoms for reproducible runs.",
+    "whyItExists": "Variety: random spawns, loot, events, map votes.",
+    "whenToUse": [
+      "Uniform: t[math.random(#t)]",
+      "Weighted: build cumulative weights, roll a number, find the bucket",
+      "No-repeat: remove picked items (bag/shuffle model)",
+      "Reproducible: Random.new(seed)"
+    ],
+    "whenNotToUse": [
+      "Security-sensitive randomness — not cryptographic",
+      "Rolling fresh per player every frame for 'fairness' — define the model once"
+    ],
+    "tips": [
+      "math.random() with no args gives [0,1); with one arg, 1..n inclusive",
+      "Shuffle via Fisher-Yates for no-repeat sequences",
+      "Seed sharing lets clients reproduce server rolls (cosmetics)"
+    ],
+    "commonMistakes": [
+      "math.random(0, #t) — 0 index isn't an array slot",
+      "Weights that don't reflect intent (0-weight entries still written into tables)",
+      "Re-seeding Random every roll with similar seeds → correlated output"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Uniform and weighted picks",
+      "code": "-- Uniform:\nlocal maps = {\"Desert\", \"Cavern\", \"Skyline\"}\nlocal pick = maps[math.random(#maps)]\n\n-- Weighted loot:\nlocal loot = {\n    { item = \"Common Sword\", weight = 70 },\n    { item = \"Rare Shield\",  weight = 25 },\n    { item = \"Legendary Helm\", weight = 5 },\n}\n\nlocal function weightedPick()\n    local total = 0\n    for _, entry in loot do total += entry.weight end\n\n    local roll = math.random() * total\n    for _, entry in loot do\n        roll -= entry.weight\n        if roll <= 0 then return entry.item end\n    end\n    return loot[#loot].item\nend\n\nprint(weightedPick())\n\n-- Seeded:\nlocal rng = Random.new(12345)\nprint(rng:NextInteger(1, 6))",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "math-library",
+    "one-based-indexing",
+    "tables"
+  ],
+  "added": "2026-10-04"
+}

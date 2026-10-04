@@ -1,0 +1,87 @@
+{
+  "id": "nil",
+  "title": "nil",
+  "category": "luau",
+  "type": "concept",
+  "summary": "The 'no value' value. A variable that is nil holds nothing; table keys set to nil are deleted; accessing something that doesn't exist gives nil.",
+  "keywords": [
+    "nothing",
+    "no value",
+    "is nil",
+    "nil value",
+    "empty"
+  ],
+  "tags": [
+    "basics",
+    "types",
+    "nil"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/syntax",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "details": [
+      {
+        "heading": "Where nil comes from",
+        "body": "Undeclared or unassigned variables read as nil. Reading a table key that doesn't exist gives nil. Calling a function with no matching return gives nil. `FindFirstChild()` returns nil when nothing is found."
+      },
+      {
+        "heading": "nil deletes",
+        "body": "Assigning `t.key = nil` removes that key from the table. This is the only way to delete a dictionary entry."
+      },
+      {
+        "heading": "nil is falsy",
+        "body": "In `if` conditions, only `nil` and `false` count as false. `0`, empty strings and empty tables are all *truthy*."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "`nil` is Luau's way of saying 'there is nothing here'. It is an actual value with its own type, used everywhere an absence needs to be represented: a search that failed, a slot that's empty, an argument that wasn't passed.",
+    "whyItExists": "Programs constantly need to express 'not found' or 'not set yet'. Without nil you'd need separate sentinels like -1 or \"\" for every type.",
+    "whenToUse": [
+      "Check for nil before using a value that might not exist: `if part then ... end` or `if part ~= nil then`",
+      "Set a table key to nil to remove it: `inventory[\"sword\"] = nil`",
+      "Return nil from a function to signal 'no result'"
+    ],
+    "whenNotToUse": [
+      "Don't use nil to mean zero or empty-string in game logic — they are different values with different meanings",
+      "Don't store nil in the *array part* of a table (holes break `#t` and `ipairs`)"
+    ],
+    "mentalModel": "```text\nlocal pet            --> nil (never assigned)\nprint(pet)           --> nil\n\npet = \"Dragon\"\nprint(pet)           --> Dragon\n\npet = nil            --> the label falls off; value forgotten\nprint(pet)           --> nil\n```\nnil is the absence of a value — the empty hook where a value could hang.",
+    "tips": [
+      "`if not x then` catches both `nil` and `false` — usually what you want",
+      "Use the or-default pattern: `local speed = config.Speed or 16`",
+      "Most 'attempt to index nil' crashes are a missing nil check — see the gotcha entry"
+    ],
+    "commonMistakes": [
+      "Assuming `0` or `\"\"` is falsy — only `nil` and `false` are falsy",
+      "Forgetting that `FindFirstChild`, `GetAttribute`, and table lookups can return nil at any time",
+      "Writing `if x = nil then` — use `==` for comparison"
+    ]
+  },
+  "examples": [
+    {
+      "title": "nil in everyday Roblox code",
+      "code": "local part = workspace:FindFirstChild(\"MissingPart\")\nprint(part)                 --> nil (not found)\n\nif part == nil then\n    warn(\"Part does not exist!\")\nend\n\n-- Roblox's nil guard, classic pattern:\nlocal spawn = workspace:FindFirstChild(\"SpawnLocation\")\nif spawn then\n    print(\"Spawn is at\", spawn.Position)\nend",
+      "commonMistake": "Using the result of FindFirstChild directly (`workspace:FindFirstChild(\"X\").Position`) crashes when the object doesn't exist. Always guard first.",
+      "language": "lua"
+    },
+    {
+      "title": "nil removes table entries",
+      "code": "local inventory = { sword = true, potion = true }\ninventory.sword = nil       -- delete the key\nprint(inventory.sword)      --> nil\nprint(inventory.potion)     --> true",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "truthiness",
+    "data-types",
+    "find-first-child",
+    "indexing-nil",
+    "or-default"
+  ],
+  "added": "2026-10-04"
+}

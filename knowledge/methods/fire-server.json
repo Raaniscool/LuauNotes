@@ -1,0 +1,90 @@
+{
+  "id": "fire-server",
+  "title": "RemoteEvent:FireServer()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Client → server message. Sends any serializable arguments to the server; Roblox automatically prepends the firing Player when the server's OnServerEvent receives it.",
+  "keywords": [
+    "client to server",
+    "send to server",
+    "FireServer arguments",
+    "player parameter automatic"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/RemoteEvent",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "RemoteEvent:FireServer(...args: any)",
+    "parameters": [
+      {
+        "name": "...args",
+        "type": "serializable values",
+        "description": "Any number of serializable arguments: numbers, strings, booleans, tables, Instances, Vector3s… No functions/threads. Total payload limited (~64KB)."
+      }
+    ],
+    "returns": "None. Fire-and-forget: no confirmation, no return value. For responses, use RemoteFunction.",
+    "details": [
+      {
+        "heading": "The invisible player argument",
+        "body": "The server receives `function(player, arg1, arg2, ...)` — the Player is injected by Roblox as the FIRST parameter. The client never (and cannot meaningfully) sends itself."
+      },
+      {
+        "heading": "Client-only",
+        "body": "Calling FireServer from the server errors. Server→client is FireClient/FireAllClients."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "'Hey server, this player did/ wants X' — the client half of RemoteEvent communication.",
+    "whyItExists": "Clients can't touch authoritative systems directly; they send intent, the server decides.",
+    "whenToUse": [
+      "Button presses, input events, purchase requests",
+      "Anything where the server must react to a player action"
+    ],
+    "whenNotToUse": [
+      "When you need a reply — RemoteFunction or a follow-up FireClient",
+      "For unimportant high-frequency data — UnreliableRemoteEvent",
+      "Server-to-server or script-to-script on the same side — BindableEvent / direct calls"
+    ],
+    "tips": [
+      "Arguments arrive shifted by one on the server: (player, ...args)",
+      "Validate EVERY argument server-side — clients can send anything",
+      "Use WaitForChild to get the remote on the client before firing"
+    ],
+    "commonMistakes": [
+      "Sending the player manually: FireServer(player, ...) — redundant and ignored as extra data",
+      "Firing before the server connected OnServerEvent — message lost",
+      "Sending tables expecting shared references — they're serialized/copied"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Request with arguments",
+      "code": "-- Client (LocalScript):\nlocal remote = game.ReplicatedStorage:WaitForChild(\"Remotes\"):WaitForChild(\"Buy\")\nremote:FireServer(\"Sword\", 2)   -- item, quantity\n\n-- Server (Script):\nremote.OnServerEvent:Connect(function(player, itemName, quantity)\n    --   ↑ injected!     ↑ client's 1st arg   ↑ client's 2nd arg\n    if typeof(itemName) ~= \"string\" or typeof(quantity) ~= \"number\" then return end\n    print(player.Name, \"wants\", quantity, itemName)\nend)",
+      "whyItWorks": "Roblox supplies `player` automatically and it can't be spoofed — the server always knows who fired.",
+      "commonMistake": "Writing OnServerEvent handlers without the leading player parameter shifts every argument.",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "remote-event",
+    "on-server-event",
+    "fire-client",
+    "fire-all-clients",
+    "remote-parameter-rules",
+    "never-trust-the-client",
+    "invoke-server",
+    "serialization"
+  ],
+  "added": "2026-10-04"
+}

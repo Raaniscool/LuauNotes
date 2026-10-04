@@ -1,0 +1,58 @@
+{
+  "id": "forgetting-dot-value",
+  "title": "Forgetting .Value on Value Objects",
+  "category": "gotchas",
+  "type": "gotcha",
+  "summary": "IntValue/StringValue/etc. are CONTAINERS — the data is in .Value. Using the object itself in math, comparisons, or Text silently fails: 'attempt to perform arithmetic on Instance', or always-false comparisons.",
+  "keywords": [
+    "instance arithmetic",
+    "coins not adding",
+    "compare value object",
+    "text shows instance",
+    "missing .Value"
+  ],
+  "tags": [
+    "gotchas",
+    "values",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ValueBase",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "The box-vs-contents mixup: you wanted the number inside the box but handed over the box.",
+    "whyItExists": "Value objects exist to put plain data in the instance tree; their 'data port' is .Value.",
+    "symptoms": [
+      "coins + 1 → 'attempt to perform arithmetic on an Instance value'",
+      "if coins == 100 then — never true (Instance ≠ number)",
+      "label.Text = coins → 'Coins' or a weird printout/error"
+    ],
+    "fix": "Touch the data port: coins.Value + 1; if coins.Value >= 100; label.Text = tostring(coins.Value).",
+    "tips": [
+      "Same rule for StringValue (.Value), ObjectValue (.Value = the Instance), BoolValue",
+      "Attributes avoid the wrapper entirely: GetAttribute returns the raw value"
+    ],
+    "commonMistakes": [
+      "Mixing .Value and bare usage in one system — pick a convention",
+      "Writing leaderstats updates without .Value and seeing frozen scores"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Box vs contents",
+      "code": "local coins = player.leaderstats.Coins   -- IntValue (the box)\n\n-- ❌\n-- coins += 10\n-- if coins >= 50 then\n\n-- ✅\ncoins.Value += 10\nif coins.Value >= 50 then\n    print(\"Rich! Total:\", coins.Value)\nend",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "value-base-value",
+    "boolvalue-vs-boolean",
+    "attributes",
+    "leaderstats"
+  ],
+  "added": "2026-10-04"
+}

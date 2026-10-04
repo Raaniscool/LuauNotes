@@ -1,0 +1,142 @@
+{
+  "id": "remote-event",
+  "title": "RemoteEvent",
+  "category": "classes",
+  "type": "class",
+  "summary": "One-way client ↔ server messaging. Fire-and-forget: FireServer sends to the server, FireClient/FireAllClients send to players, OnServerEvent/OnClientEvent receive. Reliable and ordered, but no return values.",
+  "keywords": [
+    "remote",
+    "client to server",
+    "server to client",
+    "FireServer",
+    "OnServerEvent",
+    "communication",
+    "fire and forget",
+    "remote arguments"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/RemoteEvent",
+    "lastVerified": "2026-10-04",
+    "notes": "Roblox's networking docs have shifted over the years toward recommending RemoteFunction only for true request/response and remotes for events; core RemoteEvent API has been stable."
+  },
+  "reference": {
+    "methods": [
+      {
+        "name": "FireServer",
+        "signature": "RemoteEvent:FireServer(...: any)",
+        "description": "Client only. Sends a message to the server with any serializable arguments."
+      },
+      {
+        "name": "FireClient",
+        "signature": "RemoteEvent:FireClient(player: Player, ...: any)",
+        "description": "Server only. Sends a message to one specific player."
+      },
+      {
+        "name": "FireAllClients",
+        "signature": "RemoteEvent:FireAllClients(...: any)",
+        "description": "Server only. Broadcasts a message to every connected player."
+      }
+    ],
+    "events": [
+      {
+        "name": "OnServerEvent",
+        "signature": "RemoteEvent.OnServerEvent:Connect(function(player: Player, ...: any) end)",
+        "description": "Server only. Fires when any client calls FireServer. The firing Player is ALWAYS the first parameter — supplied by Roblox, and impossible for clients to fake."
+      },
+      {
+        "name": "OnClientEvent",
+        "signature": "RemoteEvent.OnClientEvent:Connect(function(...: any) end)",
+        "description": "Client only. Fires when the server calls FireClient/FireAllClients targeting this client. No player parameter here."
+      }
+    ],
+    "properties": [],
+    "details": [
+      {
+        "heading": "Delivery guarantees",
+        "body": "RemoteEvent is **reliable and ordered**: messages arrive in the order they were sent, and Roblox retransmits lost packets. It is still one-way — the sender gets no confirmation that the receiver handled the message (only that transport delivered it). If you need a reply, use RemoteFunction."
+      },
+      {
+        "heading": "Argument serialization",
+        "body": "Arguments are serialized when sent: tables are deep-copied, Instances are passed as references (the other side must be able to access them), and metatables/functions/threads are not allowed. Total argument size is limited (historically ~65,536 bytes per message)."
+      },
+      {
+        "heading": "Security",
+        "body": "The first parameter of OnServerEvent (the Player) is injected by the engine and cannot be spoofed. Everything ELSE in the arguments is client-controlled and must be validated server-side. Never trust client-sent values for authoritative state."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A two-way intercom between clients and the server. Clients shout 'I pressed the button!' to the server; the server shouts 'the round started!' to clients. Messages are guaranteed to arrive, in order — but nobody sends a reply back through this intercom.",
+    "whyItExists": "Client code and server code run in separate worlds with separate data. Remotes are the *only* way they talk, and RemoteEvent is the workhorse for everything that isn't a question-and-answer.",
+    "whenToUse": [
+      "Client → server: input and intent ('buy this item', 'open this door', 'I'm equipping this tool')",
+      "Server → client(s): state updates and notifications ('round starting', 'your coins changed', 'play this sound')",
+      "Any message where you don't need an immediate answer"
+    ],
+    "whenNotToUse": [
+      "When you need a return value / synchronous answer — use RemoteFunction (sparingly)",
+      "For very frequent, loss-tolerant updates (position telemetry, cosmetic effects) — UnreliableRemoteEvent is cheaper",
+      "Between two scripts on the SAME side — use BindableEvent or just call the function/module directly"
+    ],
+    "mentalModel": "```text\nCLIENT                          SERVER\n  │                               │\n  │  RemoteEvent:FireServer(...)  │\n  ├──────────────────────────────▶│\n  │                               │ OnServerEvent(player, ...)\n  │                               │    (player = who fired, always first)\n  │                               │\n  │  RemoteEvent:FireClient(plr)  │\n  │◀──────────────────────────────┤\n  │ OnClientEvent(...)            │\n  │                               │\n```",
+    "tips": [
+      "Put RemoteEvents in ReplicatedStorage so both sides can reach them; use WaitForChild on the client",
+      "Always validate arguments on the server: type-check, range-check, and rate-limit",
+      "Use ONE remote with a command-string first argument (\"buy\", \"equip\") rather than dozens of remotes — dispatch with a handlers table",
+      "Remember the player parameter: server handlers get (player, arg1, arg2...) — the client never sends itself"
+    ],
+    "commonMistakes": [
+      "Listening on the wrong side: OnServerEvent only works in Scripts (server); OnClientEvent only in LocalScripts (client)",
+      "Forgetting that OnServerEvent's first parameter is the Player — arguments are shifted one to the right",
+      "Trusting client arguments: a client can send any number, string, or table — the server must validate",
+      "Firing before the other side has connected its handler — the message is lost; connect handlers early at startup",
+      "Expecting a reply from FireServer — RemoteEvent is one-way; nothing comes back unless the server fires separately"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Client → Server: request to purchase",
+      "description": "A LocalScript fires the intent; a Script validates and applies it.",
+      "code": "-- == LocalScript (in a TextButton) ==\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal buyEvent = ReplicatedStorage:WaitForChild(\"BuyItem\")\n\nscript.Parent.Activated:Connect(function()\n    buyEvent:FireServer(\"Sword\")   -- client says WHAT it wants\nend)\n\n-- == Script (ServerScriptService) ==\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal buyEvent = ReplicatedStorage:WaitForChild(\"BuyItem\")\nlocal PRICES = { Sword = 100, Shield = 50 }\n\nbuyEvent.OnServerEvent:Connect(function(player, itemName)\n    -- 1) VALIDATE: never trust the client\n    if typeof(itemName) ~= \"string\" then return end\n    local price = PRICES[itemName]\n    if not price then return end\n\n    -- 2) apply authoritatively on the server\n    print(player.Name .. \" bought \" .. itemName .. \" for \" .. price)\nend)",
+      "whyItWorks": "Roblox supplies `player` as the first OnServerEvent parameter — the server always knows WHO fired, and that identity can't be faked. The server still validates the itemName argument.",
+      "commonMistake": "Beginners often write `FireServer(player, \"Sword\")` trying to send the player themselves. Don't — the engine adds the player automatically.",
+      "language": "lua"
+    },
+    {
+      "title": "Server → Client: broadcast round start",
+      "code": "-- == Script (server) ==\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal roundEvent = ReplicatedStorage:WaitForChild(\"RoundUpdate\")\n\nroundEvent:FireAllClients(\"RoundStart\", 120)   -- message + seconds\n\n-- == LocalScript (StarterGui) ==\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal roundEvent = ReplicatedStorage:WaitForChild(\"RoundUpdate\")\n\nroundEvent.OnClientEvent:Connect(function(message, seconds)\n    if message == \"RoundStart\" then\n        print(\"Round starts! Time:\", seconds)\n    end\nend)",
+      "whyItWorks": "FireAllClients reaches every player at once. OnClientEvent receives exactly the arguments the server sent — no player parameter on the client side.",
+      "language": "lua"
+    },
+    {
+      "title": "One remote, many commands (dispatch pattern)",
+      "code": "-- Server: one handler table beats 20 remotes\nlocal handlers = {\n    Buy   = function(player, item) print(\"buy\", item) end,\n    Equip = function(player, item) print(\"equip\", item) end,\n    Sell  = function(player, item) print(\"sell\", item) end,\n}\n\nremote.OnServerEvent:Connect(function(player, command, ...)\n    local fn = handlers[command]\n    if fn then fn(player, ...) end   -- unknown commands ignored\nend)\n\n-- Client:\n-- remote:FireServer(\"Buy\", \"Sword\")",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "unreliable-remote-event",
+    "remote-function",
+    "fire-server",
+    "on-server-event",
+    "fire-client",
+    "fire-all-clients",
+    "on-client-event",
+    "client-vs-server",
+    "never-trust-the-client",
+    "remote-parameter-rules",
+    "bindable-event",
+    "replication",
+    "serialization",
+    "server-validation"
+  ],
+  "added": "2026-10-04"
+}

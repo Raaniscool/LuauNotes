@@ -1,0 +1,64 @@
+{
+  "id": "replication-timing",
+  "title": "Replication Timing",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Replicated content arrives on clients AFTER the server creates it — sometimes milliseconds, sometimes seconds later. Client code that assumes instant availability races ahead of reality. WaitForChild and event-driven code fix it.",
+  "keywords": [
+    "race condition",
+    "content not loaded",
+    "nil on client",
+    "async replication",
+    "waitforchild why",
+    "timing bug"
+  ],
+  "tags": [
+    "concepts",
+    "networking",
+    "timing"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "The network gap between 'server created it' and 'client has it'. Every LocalScript starts racing against arrivals it can't see.",
+    "whyItExists": "Replication rides network packets scheduled by the engine — not guaranteed synchronous with your script startup.",
+    "whenToUse": [
+      "WaitForChild with timeout for expected-but-delayed content",
+      "ChildAdded/DescendantAdded listeners for open-ended arrival",
+      "Structuring: server signals readiness via a RemoteEvent instead of clients polling"
+    ],
+    "whenNotToUse": [
+      "Sleeping arbitrary seconds 'to be safe' — race windows vary; use waits/events"
+    ],
+    "mentalModel": "```text\nt=0   server: creates Folder \"Shop\"\nt=12ms server: packet queued\nt=??ms client: packet arrives  ← only NOW can client code see it\n\nClient script started at t=0 and looked at t=1ms:\n  FindFirstChild → nil. (It wasn't late. YOU were early.)\n```",
+    "tips": [
+      "Anything in ReplicatedStorage that a LocalScript needs: WaitForChild",
+      "For streaming-enabled games, treat far-away content as possibly GONE too",
+      "Server→client 'ready' handshakes beat guessing"
+    ],
+    "commonMistakes": [
+      "LocalScript indexing ReplicatedStorage children directly at startup",
+      "No timeout on WaitForChild → silent infinite yield when names mismatch",
+      "Caching replicated objects that streaming later removes"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Robust client access",
+      "code": "-- ❌ racy:\n-- local shop = ReplicatedStorage.Shop\n\n-- ✅ waits:\nlocal shop = ReplicatedStorage:WaitForChild(\"Shop\", 10)\nassert(shop, \"Shop folder missing — check replication\")\n\n-- ✅ open-ended arrivals:\nReplicatedStorage.ChildAdded:Connect(function(child)\n    print(\"Newly replicated:\", child:GetFullName())\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "replication",
+    "wait-for-child",
+    "client-vs-server",
+    "replicated-storage"
+  ],
+  "added": "2026-10-04"
+}

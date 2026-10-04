@@ -1,0 +1,68 @@
+{
+  "id": "players",
+  "title": "Players",
+  "category": "services",
+  "type": "service",
+  "summary": "Manages every connected player: join/leave events (PlayerAdded/PlayerRemoving), the player list (GetPlayers), and client-side access to the local player (LocalPlayer).",
+  "keywords": ["Players service", "PlayerAdded", "PlayerRemoving", "GetPlayers", "LocalPlayer", "player joined", "player left", "GetPlayerFromCharacter"],
+  "tags": ["services", "players", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Players",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      { "name": "GetPlayers", "signature": "Players:GetPlayers() --> { Player }", "description": "Array of every Player currently in the game." },
+      { "name": "GetPlayerFromCharacter", "signature": "Players:GetPlayerFromCharacter(character: Model?) --> Player?", "description": "Given a character model, returns its Player (or nil)." },
+      { "name": "GetPlayerByUserId", "signature": "Players:GetPlayerByUserId(userId: number) --> Player?", "description": "Finds an in-game player by UserId." },
+      { "name": "GetHumanoidDescriptionFromUserId", "signature": "Players:GetHumanoidDescriptionFromUserId(userId: number) --> HumanoidDescription", "description": "Fetches a user's avatar description (yields; server only)." }
+    ],
+    "events": [
+      { "name": "PlayerAdded", "signature": "Players.PlayerAdded:Connect(function(player: Player) end)", "description": "Fires when a player joins. On the server this is where you load data, set up leaderstats, etc." },
+      { "name": "PlayerRemoving", "signature": "Players.PlayerRemoving:Connect(function(player: Player) end)", "description": "Fires just before a player leaves — the standard save hook." }
+    ],
+    "properties": [
+      { "name": "LocalPlayer", "type": "Player", "description": "Client only. The Player object of the person running this client. Nil on the server." },
+      { "name": "NumPlayers", "type": "number", "description": "Current player count." },
+      { "name": "MaxPlayers", "type": "number", "description": "Server capacity." },
+      { "name": "RespawnTime", "type": "number", "description": "Seconds until a dead player respawns." },
+      { "name": "CharacterAutoLoads", "type": "boolean", "description": "Whether characters respawn automatically." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The service in charge of people: who's here, who joined, who left, and (on the client) who YOU are.",
+    "whyItExists": "Multiplayer games live and die by join/leave handling — data loading, leaderstats, cleanup all hang off these events.",
+    "whenToUse": [
+      "Server: PlayerAdded → load data / create leaderstats; PlayerRemoving → save data",
+      "Server: loop GetPlayers() for round logic",
+      "Client: Players.LocalPlayer for your own player object",
+      "Mapping characters back to players: GetPlayerFromCharacter"
+    ],
+    "whenNotToUse": [
+      "Don't access Players.LocalPlayer in Scripts (server) — it's nil there",
+      "Don't assume PlayerAdded already fired for existing players when your script starts — iterate GetPlayers() first"
+    ],
+    "mentalModel": "```text\nSERVER                              CLIENT\nPlayers.PlayerAdded  (every join)   Players.LocalPlayer (you)\nPlayers.PlayerRemoving (every leave) Players:GetPlayers() (who you see)\nPlayers:GetPlayers()  (authoritative)\n```",
+    "tips": [
+      "Classic join-handler shape: handle existing players with GetPlayers(), THEN connect PlayerAdded",
+      "Character spawning is separate: listen to player.CharacterAdded for per-spawn setup",
+      "leaderstats is a convention: a Folder named 'leaderstats' parented to the Player shows on the leaderboard"
+    ],
+    "commonMistakes": [
+      "Missing early joiners: connecting PlayerAdded after some players already joined",
+      "Saving only on PlayerRemoving — server crashes lose that data; also save periodically",
+      "Confusing Player (the account object) with Character (the physical model, which respawns)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "The canonical join/leave skeleton",
+      "code": "local Players = game:GetService(\"Players\")\n\nlocal function onPlayerAdded(player)\n    -- leaderstats (convention: Folder named \"leaderstats\")\n    local stats = Instance.new(\"Folder\")\n    stats.Name = \"leaderstats\"\n    local coins = Instance.new(\"IntValue\")\n    coins.Name = \"Coins\"\n    coins.Value = 0\n    coins.Parent = stats\n    stats.Parent = player\n\n    player.CharacterAdded:Connect(function(character)\n        print(player.Name .. \" spawned\")\n    end)\nend\n\n-- Handle players who joined BEFORE this script ran:\nfor _, player in Players:GetPlayers() do\n    task.spawn(onPlayerAdded, player)\nend\n-- ...and everyone after:\nPlayers.PlayerAdded:Connect(onPlayerAdded)\n\nPlayers.PlayerRemoving:Connect(function(player)\n    print(player.Name .. \" left — save their data NOW\")\nend)"
+    }
+  ],
+  "related": ["player", "player-added", "player-removing", "character-added", "humanoid", "leaderstats", "client-vs-server", "datastore-save-load"],
+  "added": "2026-10-04"
+}

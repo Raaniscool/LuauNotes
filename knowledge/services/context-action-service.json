@@ -1,0 +1,62 @@
+{
+  "id": "context-action-service",
+  "title": "ContextActionService",
+  "category": "services",
+  "type": "service",
+  "summary": "Client-side action binding that works across devices: BindAction gives one handler for keyboard, gamepad, and auto-generated touch buttons — the cross-platform input layer.",
+  "keywords": ["BindAction", "cross platform input", "touch button", "action binding", "gamepad support"],
+  "tags": ["services", "input", "client", "mobile"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ContextActionService",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      { "name": "BindAction", "signature": "ContextActionService:BindAction(actionName: string, functionToBind: (actionName, inputState, inputObject) -> Enum.ContextActionResult?, createTouchButton: boolean, ...inputs: Enum.KeyCode | Enum.UserInputType)", "description": "Binds an action to one or more inputs; optionally creates a mobile touch button. Handler receives (actionName, Enum.UserInputState, inputObject)." },
+      { "name": "UnbindAction", "signature": "ContextActionService:UnbindAction(actionName: string)", "description": "Removes the binding and its touch button." },
+      { "name": "SetTitle / SetImage / SetPosition", "signature": "ContextActionService:SetTitle(actionName: string, title: string)", "description": "Customize the generated touch button." },
+      { "name": "GetBoundActionTypes", "signature": "ContextActionService:GetBoundActionTypes(actionName: string) --> { Enum.UserInputType }", "description": "Inspect current bindings." }
+    ],
+    "details": [
+      {
+        "heading": "Handler lifecycle",
+        "body": "Your handler fires for Begin AND End input states — check `inputState == Enum.UserInputState.Begin` for press actions. Return Enum.ContextActionResult.Sink to consume the input, Handled otherwise."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "'Bind the concept of an action' instead of raw keys: you define 'Reload', CAS routes keyboard keys, gamepad buttons, AND a generated touch button into one handler.",
+    "whyItExists": "Shipping to PC + console + mobile with raw UserInputService means three input paths per action. CAS unifies them.",
+    "whenToUse": [
+      "Gameplay actions that should work on every platform (dash, reload, interact)",
+      "When mobile users need an auto-generated button with zero extra UI work",
+      "When you need to bind/unbind actions dynamically per game state"
+    ],
+    "whenNotToUse": [
+      "For low-level needs (mouse position, raw deltas, continuous values) — use UserInputService",
+      "Server-side (client-only service)"
+    ],
+    "mentalModel": "```text\nBindAction(\"Dash\", onDash, true,\n    Enum.KeyCode.LeftShift,           -- keyboard\n    Enum.KeyCode.ButtonL2)            -- gamepad\n\nMobile players automatically get a\n'Dash' touch button on screen.\n\nonDash(actionName, inputState, inputObject)\n    └─ check inputState == Begin\n```",
+    "tips": [
+      "Return ContextActionResult.Sink when you handled it so lower-priority bindings don't also fire",
+      "Unbind when the context disappears (menus, cinematics)",
+      "Style the touch button (SetTitle/SetImage/SetPosition/BindActivate) for polished mobile UX"
+    ],
+    "commonMistakes": [
+      "Acting on both Begin and End states — guard with inputState == Begin",
+      "Forgetting the createTouchButton flag and wondering why mobile has no button",
+      "Binding the same action name twice — the second overwrites the first"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Cross-platform dash action",
+      "code": "local ContextActionService = game:GetService(\"ContextActionService\")\n\nlocal function onDash(actionName, inputState, inputObject)\n    if inputState ~= Enum.UserInputState.Begin then return end\n    print(\"Dashing!\")\n    return Enum.ContextActionResult.Sink\nend\n\nContextActionService:BindAction(\n    \"Dash\",\n    onDash,\n    true,                              -- create touch button for mobile\n    Enum.KeyCode.LeftShift,            -- keyboard\n    Enum.KeyCode.ButtonL2              -- gamepad\n)\n\nContextActionService:SetTitle(\"Dash\", \"DASH\")\n\n-- Later (e.g. during a cutscene):\n-- ContextActionService:UnbindAction(\"Dash\")"
+    }
+  ],
+  "related": ["user-input-service", "input-began", "localscript", "proximity-prompt"],
+  "added": "2026-10-04"
+}

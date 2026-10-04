@@ -1,0 +1,69 @@
+{
+  "id": "lighting",
+  "title": "Lighting",
+  "category": "services",
+  "type": "service",
+  "summary": "Controls the look of the world: time of day (ClockTime), ambient colors, fog, technology, and post-processing effects (Atmosphere, BloomEffect, ColorCorrectionEffect…) parented inside it.",
+  "keywords": ["time of day", "ClockTime", "fog", "atmosphere", "bloom", "color correction", "lighting effects", "day night cycle"],
+  "tags": ["services", "visuals", "environment"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Lighting",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "ClockTime", "type": "number", "description": "Time of day, 0–24 (14 = 2pm). Tween it for smooth day/night cycles." },
+      { "name": "Brightness", "type": "number", "description": "Overall sun brightness." },
+      { "name": "Ambient / OutdoorAmbient", "type": "Color3", "description": "Base ambient light indoors/outdoors." },
+      { "name": "FogColor / FogStart / FogEnd", "type": "Color3 / number / number", "description": "Distance fog: color and the range where it fades in." },
+      { "name": "Technology", "type": "Enum.Technology", "description": "Renderer tier (Voxel, ShadowMap, Future)." },
+      { "name": "GlobalShadows / EnvironmentDiffuseScale / EnvironmentSpecularScale", "type": "boolean / number", "description": "Shadow and environment lighting tuning." }
+    ],
+    "details": [
+      {
+        "heading": "Effect objects live INSIDE Lighting",
+        "body": "Atmosphere, Sky, BloomEffect, BlurEffect, ColorCorrectionEffect, DepthOfFieldEffect, SunRaysEffect, Terrain — parenting these instances into Lighting activates them game-wide."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The world's moods dial: time of day, haze, glow, color grade. One service, and everything the player sees passes through it.",
+    "whyItExists": "Atmosphere sells a game. Lighting centralizes environment control so one system can move day to night, clear skies to fog.",
+    "whenToUse": [
+      "Day/night cycles (tween or step ClockTime)",
+      "Zone moods: fog in swamps, warm tint at sunset (ColorCorrectionEffect)",
+      "Post-processing: Bloom for neon, DepthOfField for menus",
+      "Reading ClockTime for time-based gameplay"
+    ],
+    "whenNotToUse": [
+      "Per-object lighting — use PointLight/SurfaceLight/SpotLight instances on parts instead",
+      "Client-only visual fakes that should not change real lighting for everyone (do those client-side with effects)"
+    ],
+    "mentalModel": "```text\nLighting\n ├─ Properties: ClockTime, FogEnd, Brightness…\n ├─ Sky (instance)            ← skybox\n ├─ Atmosphere (instance)     ← haze/scattering\n ├─ BloomEffect (instance)    ← glow\n └─ ColorCorrectionEffect     ← color grade\nParent an effect in → it applies game-wide.\n```",
+    "tips": [
+      "Smooth day/night: TweenService on ClockTime, or increment in Heartbeat",
+      "Swap ColorCorrection presets per zone for instant mood changes",
+      "Test with Technology = Future for the best shadows if your game supports it"
+    ],
+    "commonMistakes": [
+      "Setting ClockTime every frame on the server without smoothing — jumpy sun",
+      "Adding effects in workspace instead of Lighting — they won't activate",
+      "Forgetting Lighting changes on the server replicate to ALL clients"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Simple day/night cycle",
+      "code": "-- Server Script\nlocal Lighting = game:GetService(\"Lighting\")\nlocal MINUTES_PER_CYCLE = 10   -- full day in 10 minutes\n\nlocal DAY_MINUTES = 24 * 60\nlocal secondsPerMinute = (MINUTES_PER_CYCLE * 60) / DAY_MINUTES\n\nwhile true do\n    Lighting.ClockTime += 1 / 60        -- one in-game minute\n    task.wait(secondsPerMinute)\nend"
+    },
+    {
+      "title": "Foggy swamp zone",
+      "code": "local Lighting = game:GetService(\"Lighting\")\n\nlocal function enterSwamp()\n    Lighting.FogStart = 0\n    Lighting.FogEnd = 120\n    Lighting.FogColor = Color3.fromRGB(120, 140, 120)\nend\n\nlocal function leaveSwamp()\n    Lighting.FogEnd = 100000   -- effectively off\nend"
+    }
+  ],
+  "related": ["tween-service", "workspace", "replication", "camera"],
+  "added": "2026-10-04"
+}

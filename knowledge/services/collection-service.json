@@ -1,0 +1,66 @@
+{
+  "id": "collection-service",
+  "title": "CollectionService",
+  "category": "services",
+  "type": "service",
+  "summary": "Tag system for instances: AddTag/HasTag/GetTagged let you mark objects ('Coin', 'Trap', 'Interactable') and process them as groups — without scanning the hierarchy or keeping manual lists.",
+  "keywords": ["tags", "AddTag", "GetTagged", "HasTag", "GetInstanceAddedSignal", "tagged objects", "groups of parts", "interactables"],
+  "tags": ["services", "architecture", "tags", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/CollectionService",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      { "name": "AddTag", "signature": "CollectionService:AddTag(instance: Instance, tag: string)", "description": "Tags the instance. Tags replicate to clients and survive parenting moves." },
+      { "name": "RemoveTag", "signature": "CollectionService:RemoveTag(instance: Instance, tag: string)", "description": "Untags." },
+      { "name": "HasTag", "signature": "CollectionService:HasTag(instance: Instance, tag: string) --> boolean", "description": "Membership check." },
+      { "name": "GetTags", "signature": "CollectionService:GetTags(instance: Instance) --> { string }", "description": "All tags on an instance." },
+      { "name": "GetTagged", "signature": "CollectionService:GetTagged(tag: string) --> { Instance }", "description": "Every instance currently carrying the tag." },
+      { "name": "GetInstanceAddedSignal", "signature": "CollectionService:GetInstanceAddedSignal(tag: string) --> RBXScriptSignal", "description": "Fires whenever an instance gains the tag (including at game start for pre-existing ones)." },
+      { "name": "GetInstanceRemovedSignal", "signature": "CollectionService:GetInstanceRemovedSignal(tag: string) --> RBXScriptSignal", "description": "Fires when the tag is removed or the instance is destroyed." }
+    ],
+    "details": [
+      {
+        "heading": "Replication",
+        "body": "Tags set on the server replicate to clients, so client systems can also react to tags. Tags are not DataStore-serialized — they live on instances."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Sticky labels for objects. Instead of 'find every part named Coin in this folder', you tag coins once ('Coin') and ask CollectionService for all of them, anytime, anywhere they live.",
+    "whyItExists": "Grouping by name/parenting is brittle: renames and reparenting break it. Tags decouple 'what an object IS' from where it sits in the tree.",
+    "whenToUse": [
+      "Systems acting on categories: all traps, all coins, all interactables",
+      "Behavior plugins: tag a part 'Kill' in Studio, one script handles all of them",
+      "Dynamic membership: tag things at runtime and react via GetInstanceAddedSignal",
+      "Replacing long GetDescendants scans with targeted GetTagged calls"
+    ],
+    "whenNotToUse": [
+      "For one-off single objects — just keep a reference",
+      "For data-heavy grouping (tags are labels, not data — pair with Attributes for data)"
+    ],
+    "mentalModel": "```text\nStudio/script:  AddTag(part, \"Coin\")\n\nLater, anywhere:\n  GetTagged(\"Coin\")              → every coin, instantly\n  GetInstanceAddedSignal(\"Coin\") → fires for new coins too\n\nTags travel with the instance — reparenting is fine.\n```",
+    "tips": [
+      "The canonical pattern: handle existing tagged instances AND connect the added signal (both!)",
+      "Studio's Tag Editor plugin makes tagging in-edit painless",
+      "Combine tags + attributes: tag marks membership, attributes carry the data"
+    ],
+    "commonMistakes": [
+      "Only connecting GetInstanceAddedSignal — misses instances tagged BEFORE the script ran",
+      "Using tag-like names (renaming parts to 'Coin') instead of real tags",
+      "Forgetting tags need consistent spelling — define tag name constants in one module"
+    ]
+  },
+  "examples": [
+    {
+      "title": "The canonical tag handler",
+      "code": "-- Server Script\nlocal CollectionService = game:GetService(\"CollectionService\")\n\nlocal function setupCoin(coin)\n    if coin:GetAttribute(\"Collected\") then return end\n    coin.Touched:Connect(function(hit)\n        local player = game.Players:GetPlayerFromCharacter(hit.Parent)\n        if player and not coin:GetAttribute(\"Collected\") then\n            coin:SetAttribute(\"Collected\", true)\n            coin.Transparency = 1\n            coin.CanCollide = false\n            print(player.Name .. \" collected a coin\")\n        end\n    end)\nend\n\n-- 1) Everything tagged already:\nfor _, coin in CollectionService:GetTagged(\"Coin\") do\n    setupCoin(coin)\nend\n\n-- 2) Everything tagged in the future:\nCollectionService:GetInstanceAddedSignal(\"Coin\"):Connect(setupCoin)"
+    }
+  ],
+  "related": ["get-tagged", "attributes", "part", "instance-hierarchy", "event-connections"],
+  "added": "2026-10-04"
+}

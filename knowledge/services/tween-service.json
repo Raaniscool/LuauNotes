@@ -1,0 +1,77 @@
+{
+  "id": "tween-service",
+  "title": "TweenService",
+  "category": "services",
+  "type": "service",
+  "summary": "Animates properties smoothly over time: TweenService:Create(instance, TweenInfo, goal) builds a Tween you Play — moving parts, fading GUIs, growing HealthBars, without per-frame math.",
+  "keywords": ["tween", "animation", "smooth movement", "lerp", "easing", "TweenInfo", "animate gui", "move part smoothly"],
+  "tags": ["services", "animation", "gui", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/TweenService",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      { "name": "Create", "signature": "TweenService:Create(instance: Instance, tweenInfo: TweenInfo, goal: { [string]: any }) --> Tween", "description": "Builds a Tween that will animate the listed properties from current values to the goal values. Does NOT start it — call Tween:Play()." },
+      { "name": "GetValue", "signature": "TweenService:GetValue(alpha: number, easingStyle: Enum.EasingStyle, easingDirection: Enum.EasingDirection) --> number", "description": "Easing math helper: normalized progress in → eased value out." }
+    ],
+    "details": [
+      {
+        "heading": "TweenInfo",
+        "body": "`TweenInfo.new(time, easingStyle, easingDirection, repeatCount, reverses, delayTime)` — duration in seconds, curve (Linear, Quad, Bounce, Elastic…), direction (In/Out/InOut), repeats (-1 = infinite), reverse flag, start delay."
+      },
+      {
+        "heading": "Tween object",
+        "body": "Returned by Create: `Play()`, `Pause()`, `Cancel()`, `PlaybackState`, and the `Completed` event (fires with Enum.PlaybackState when finished/cancelled). Tweens on the client animate client-side."
+      },
+      {
+        "heading": "Tweenable properties",
+        "body": "Most numeric/visual datatypes: number, bool→no; Color3, UDim2, Vector3, CFrame (no rotation interpolation — use Orientation/align instead), NumberSequence, ColorSequence, Rect, etc. Property names in the goal table must be actual properties of the instance."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The 'slide it over there smoothly' service. You say where a property should end up and how long to take; TweenService interpolates every frame in between.",
+    "whyItExists": "Hand-writing RunService lerp loops for every animation is tedious and error-prone. Tweens package it: duration + curve + goal.",
+    "whenToUse": [
+      "Moving/scaling parts (doors opening, coins popping)",
+      "Fading GUI elements (menus in/out), sliding frames",
+      "Color transitions (damage flashes, day-night tints)",
+      "Camera moves (tween the Camera's CFrame)"
+    ],
+    "whenNotToUse": [
+      "Physics-driven motion — tweens override physics; don't tween things that should collide naturally",
+      "Character animation — use AnimationTracks",
+      "Tight per-frame control needs (procedural aiming) — RunService loops fit better"
+    ],
+    "mentalModel": "```text\nTweenService:Create(part, TweenInfo.new(1, Bounce, Out),\n                    { Position = targetPos })\n        │\n        ▼\n    Tween ──Play()──▶ frames interpolate automatically\n        │\n        ▼  (1 second later)\n    Completed fires → part is exactly at targetPos\n```",
+    "tips": [
+      "Reuse one Tween by calling Play() again (it replays from current values only after Cancel/reset — recreate when goals change)",
+      "`tween.Completed:Wait()` yields until done — chains beautifully inside task.spawn",
+      "GUI fades: tween BackgroundTransparency and TextTransparency together",
+      "EasingStyle.Sine/Quad InOut feels natural for UI; Bounce/Elastic for juice"
+    ],
+    "commonMistakes": [
+      "Forgetting :Play() — Create alone does nothing",
+      "Tweening a property the instance doesn't have → error",
+      "Expecting server tweens to be smooth on all clients for physics objects (networked part ownership can conflict)",
+      "Tweens on properties that also change elsewhere fighting each other"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Sliding a GUI frame in",
+      "code": "local TweenService = game:GetService(\"TweenService\")\nlocal frame = script.Parent   -- a Frame off-screen to the left\n\nlocal info = TweenInfo.new(\n    0.4,                              -- seconds\n    Enum.EasingStyle.Quad,\n    Enum.EasingDirection.Out\n)\n\nlocal goal = { Position = UDim2.fromScale(0.5, 0.5) }  -- centered\nlocal tween = TweenService:Create(frame, info, goal)\ntween:Play()\n\ntween.Completed:Connect(function()\n    print(\"Menu finished sliding in\")\nend)",
+      "whyItWorks": "The goal table names real properties of a Frame; TweenService drives Position from its current value to center over 0.4s with an ease-out curve."
+    },
+    {
+      "title": "A bouncing coin pickup effect",
+      "code": "local TweenService = game:GetService(\"TweenService\")\n\nlocal function coinPop(coin: Part)\n    local pop = TweenService:Create(coin, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out),\n        { Size = coin.Size * 1.4 })\n    local shrink = TweenService:Create(coin, TweenInfo.new(0.2),\n        { Size = Vector3.new(0.1, 0.1, 0.1), Transparency = 1 })\n\n    pop:Play()\n    pop.Completed:Connect(function()\n        shrink:Play()\n    end)\n    shrink.Completed:Connect(function()\n        coin:Destroy()\n    end)\nend"
+    }
+  ],
+  "related": ["tween-create", "tween-play", "tween-info", "tweening", "run-service", "moving-models", "screengui"],
+  "added": "2026-10-04"
+}

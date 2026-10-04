@@ -1,0 +1,70 @@
+{
+  "id": "workspace",
+  "title": "Workspace",
+  "category": "services",
+  "type": "service",
+  "summary": "The 3D world container: every rendered part, model, and terrain lives here. Also home to the active Camera and the physics/raycast API (Workspace:Raycast).",
+  "keywords": ["workspace", "3d world", "raycast", "CurrentCamera", "parts container", "gravity"],
+  "tags": ["services", "world", "physics", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Workspace",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      { "name": "Raycast", "signature": "Workspace:Raycast(origin: Vector3, direction: Vector3, raycastParams: RaycastParams?) --> RaycastResult?", "description": "Casts a ray and returns the first hit (instance, position, normal, distance) or nil. The modern raycasting API." },
+      { "name": "GetPartBoundsInBox", "signature": "Workspace:GetPartBoundsInBox(cframe: CFrame, size: Vector3, params: OverlapParams?) --> { BasePart }", "description": "Returns parts inside an oriented box region." },
+      { "name": "GetPartBoundsInRadius", "signature": "Workspace:GetPartBoundsInRadius(position: Vector3, radius: number, params: OverlapParams?) --> { BasePart }", "description": "Returns parts inside a sphere region." },
+      { "name": "GetPartsInPart", "signature": "Workspace:GetPartsInPart(part: BasePart, params: OverlapParams?) --> { BasePart }", "description": "Returns parts overlapping the given part's volume." }
+    ],
+    "properties": [
+      { "name": "CurrentCamera", "type": "Camera", "description": "The camera currently used for rendering (usually the player's camera)." },
+      { "name": "Gravity", "type": "number", "description": "World gravity in studs/s² (default 196.2)." },
+      { "name": "SpawnLocation", "type": "SpawnLocation?", "description": "Convenience reference to the first SpawnLocation found (nil if none)." }
+    ],
+    "details": [
+      {
+        "heading": "Global name",
+        "body": "`workspace` is a global shorthand for `game.Workspace` — both work everywhere."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The physical stage of your game. Anything you can see or bump into — parts, models, terrain, characters — is parented somewhere under Workspace.",
+    "whyItExists": "Rendering and physics need one shared tree of 3D objects. Workspace is that tree, plus the tools to query it (rays, regions).",
+    "whenToUse": [
+      "Parenting anything that should exist in the 3D world",
+      "Raycasts for shooting, line-of-sight, ground checks",
+      "Region queries: 'what's near this point?'",
+      "Reading/changing Gravity, or grabbing CurrentCamera"
+    ],
+    "whenNotToUse": [
+      "For non-physical containers (settings, GUI) — use other containers",
+      "For server-only objects that shouldn't replicate to clients — use ServerStorage"
+    ],
+    "mentalModel": "```text\nWorkspace\n ├─ Map (models, parts)\n ├─ Characters (players' rigs)\n ├─ Camera (CurrentCamera)\n └─ Terrain\nIf it's rendered or simulated, it lives here.\n```",
+    "tips": [
+      "Use RaycastParams to filter what a ray can hit (FilterDescendantsInstances + FilterType)",
+      "Everything in workspace replicates to clients — don't stash secrets here",
+      "Parenting to workspace makes objects stream/replicate immediately; heavy spawns can be staged in ServerStorage first"
+    ],
+    "commonMistakes": [
+      "Using deprecated FindPartOnRay instead of Raycast",
+      "Forgetting Raycast needs a DIRECTION vector (magnitude = distance), not an end point",
+      "Raycasting against your own character because you forgot to exclude it in params"
+    ]
+  },
+  "examples": [
+    {
+      "title": "A proper raycast",
+      "code": "local params = RaycastParams.new()\nparams.FilterDescendantsInstances = {character}   -- ignore own character\nparams.FilterType = Enum.RaycastFilterType.Exclude\n\nlocal origin = muzzle.Position\nlocal direction = camera.CFrame.LookVector * 200   -- 200 studs max\n\nlocal result = workspace:Raycast(origin, direction, params)\nif result then\n    print(\"Hit:\", result.Instance.Name, \"at\", result.Position,\n          \"distance:\", result.Distance)\nelse\n    print(\"Hit nothing\")\nend",
+      "whyItWorks": "The direction vector's length sets the ray's range. Excluding the shooter's character prevents self-hits at point-blank.",
+      "commonMistake": "Passing an end position instead of a direction: `Raycast(origin, target.Position)` travels only ~1 stud (the vector between them)."
+    }
+  ],
+  "related": ["raycast", "camera", "part", "model", "instance-hierarchy", "replication", "server-storage"],
+  "added": "2026-10-04"
+}

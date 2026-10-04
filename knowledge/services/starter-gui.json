@@ -1,0 +1,63 @@
+{
+  "id": "starter-gui",
+  "title": "StarterGui",
+  "category": "services",
+  "type": "service",
+  "summary": "The template container for GUIs: its contents are COPIED into each player's PlayerGui when they spawn. Editing StarterGui at runtime does NOT change already-spawned players' screens.",
+  "keywords": ["gui template", "where gui goes", "starter gui vs player gui", "screen gui location", "SetCore"],
+  "tags": ["services", "gui", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/StarterGui",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      { "name": "SetCore", "signature": "StarterGui:SetCore(coreGuiItem: string, value: any)", "description": "Client only. Controls built-in core UI: e.g. SetCore(\"ResetButtonCallback\", false), SetCore(\"ChatMakeSystemMessage\", {...})." },
+      { "name": "GetCoreGuiEnabled / SetCoreGuiEnabled", "signature": "StarterGui:GetCoreGuiEnabled(coreGuiType: Enum.CoreGuiType) --> boolean", "description": "Client only. Read/toggle built-in core GUIs (chat, leaderboard, backpack…)." }
+    ],
+    "properties": [
+      { "name": "ResetPlayerGuiOnSpawn", "type": "boolean", "description": "Whether players' PlayerGui is cleared and re-copied from StarterGui on each respawn (default true)." }
+    ],
+    "details": [
+      {
+        "heading": "Template semantics",
+        "body": "At spawn, the engine copies StarterGui's contents into the player's PlayerGui. From then on the LIVE GUI is the PlayerGui copy — server-side edits to StarterGui affect only future spawns."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The mold your GUIs are cast from. You design in StarterGui; each player gets their own fresh copy at spawn in PlayerGui.",
+    "whyItExists": "Every player needs their own independent copy of the UI (their health bar, their buttons) — the template pattern gives that automatically.",
+    "whenToUse": [
+      "Placing ScreenGuis, LocalScripts for UI, and anything UI-related that should exist per-player",
+      "Using SetCore/SetCoreGuiEnabled to manage Roblox's built-in UI (client)"
+    ],
+    "whenNotToUse": [
+      "For runtime GUI changes — manipulate the copy in PlayerGui instead",
+      "For one-off world-space UI — BillboardGui/SurfaceGui parented in workspace instead"
+    ],
+    "mentalModel": "```text\nStarterGui (TEMPLATE)          PlayerGui (LIVE COPY)\n ├─ MainHUD          ──copy→    ├─ MainHUD\n └─ ShopGui          ──copy→    └─ ShopGui\n\nChanging StarterGui now ≠ changing players' screens.\nChange PlayerGui = change THIS player's screen now.\n```",
+    "tips": [
+      "LocalScripts inside StarterGui GUIs run per-player after the copy lands in PlayerGui",
+      "ScreenGui.ResetOnSpawn controls whether that specific GUI survives respawn",
+      "To update everyone's HUD from the server, fire a RemoteEvent and let each client update its own PlayerGui"
+    ],
+    "commonMistakes": [
+      "The classic: editing StarterGui at runtime and wondering why nothing changes on screen (see gotcha)",
+      "Writing to StarterGui from the client — clients don't have a meaningful StarterGui; use PlayerGui",
+      "Forgetting PlayerGui lives under each PLAYER: player:WaitForChild(\"PlayerGui\")"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Updating the RIGHT gui at runtime",
+      "code": "-- ❌ WRONG: template edits don't touch live screens\nlocal StarterGui = game:GetService(\"StarterGui\")\n-- StarterGui.MainHUD.CashLabel.Text = \"999\"  -- pointless at runtime\n\n-- ✅ RIGHT (LocalScript): edit the live copy\nlocal Players = game:GetService(\"Players\")\nlocal playerGui = Players.LocalPlayer:WaitForChild(\"PlayerGui\")\nlocal hud = playerGui:WaitForChild(\"MainHUD\")\nhud.CashLabel.Text = \"999\"",
+      "commonMistake": "StarterGui vs PlayerGui is the #1 'my GUI won't update' bug. Template = StarterGui; live screen = PlayerGui."
+    }
+  ],
+  "related": ["player-gui", "startergui-vs-playergui", "screengui", "gui-hierarchy-requirements", "localscript", "set-core"],
+  "added": "2026-10-04"
+}

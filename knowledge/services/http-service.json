@@ -1,0 +1,77 @@
+{
+  "id": "http-service",
+  "title": "HttpService",
+  "category": "services",
+  "type": "service",
+  "summary": "Web requests from your game: GetAsync/PostAsync/RequestAsync to external APIs, plus JSONEncode/JSONDecode for structured data. Requires 'Allow HTTP Requests' enabled; never call roblox.com domains.",
+  "keywords": ["http", "web request", "API call", "JSON", "GetAsync", "PostAsync", "RequestAsync", "external api", "discord webhook"],
+  "tags": ["services", "networking", "json", "data"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/HttpService",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      { "name": "GetAsync", "signature": "HttpService:GetAsync(url: string, nocache?: boolean) --> string", "description": "HTTP GET; returns the response body as a string. Errors on non-2xx or network failure — wrap in pcall." },
+      { "name": "PostAsync", "signature": "HttpService:PostAsync(url: string, data: string, contentType?: Enum.HttpContentType) --> string", "description": "HTTP POST with a string body." },
+      { "name": "RequestAsync", "signature": "HttpService:RequestAsync(options: { Url, Method?, Headers?, Body? }) --> { Success, StatusCode, StatusMessage, Headers, Body }", "description": "Full-control request: method, headers, body. Returns a response table instead of erroring on bad status." },
+      { "name": "JSONEncode / JSONDecode", "signature": "HttpService:JSONEncode(value: any) --> string / HttpService:JSONDecode(json: string) --> any", "description": "Convert Luau tables ↔ JSON strings. The standard JSON tooling even outside HTTP." },
+      { "name": "GenerateGUID", "signature": "HttpService:GenerateGUID(wrapInBraces?: boolean) --> string", "description": "Random unique ID string — handy for request/record IDs." },
+      { "name": "UrlEncode", "signature": "HttpService:UrlEncode(value: string) --> string", "description": "URL-escape a string for query parameters." }
+    ],
+    "details": [
+      {
+        "heading": "Restrictions",
+        "body": "Game setting 'Allow HTTP Requests' must be ON. Requests to *.roblox.com and other Roblox domains are blocked. Rate limited (~500 requests/minute per server; bursts throttled). Server-side recommended — client HTTP has tighter limits and can be spied on."
+      },
+      {
+        "heading": "Errors",
+        "body": "GetAsync/PostAsync throw on failure (404, timeouts, throttling) — always pcall. RequestAsync returns Success=false instead of throwing."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Your game's phone line to the outside web: fetch data from your own backend, post to services, parse JSON — with Roblox guarding what numbers you can dial.",
+    "whyItExists": "Games often need external systems: custom leaderboards, Discord announcements, AI services, cross-game data you control.",
+    "whenToUse": [
+      "Talking to YOUR OWN backend/APIs you operate",
+      "JSONEncode/Decode for any structured data (DataStores, message payloads)",
+      "Webhooks (e.g., logging) — respecting their rate limits",
+      "RequestAsync when you need headers (auth tokens) or non-GET/POST verbs"
+    ],
+    "whenNotToUse": [
+      "Fetching arbitrary websites or untrusted URLs — validate every URL server-side",
+      "High-frequency polling — budgets are limited; cache results",
+      "Anything that could be a DataStore instead — built-in storage is simpler and safer",
+      "Never send secrets to the client; do authenticated calls from the server"
+    ],
+    "mentalModel": "```text\nserver script ──pcall──▶ HttpService:GetAsync(url)\n                              │\n                    external API answers (JSON string)\n                              │\n                    JSONDecode → Luau table\n```\nAlways: pcall it, decode defensively, retry with backoff.",
+    "tips": [
+      "pcall + retry loop, same pattern as DataStores",
+      "RequestAsync returns a response TABLE — inspect .Success and .StatusCode",
+      "Cache aggressively; treat the HTTP budget as precious",
+      "Keep auth tokens server-side only"
+    ],
+    "commonMistakes": [
+      "Forgetting to enable 'Allow HTTP Requests' — every call errors 403",
+      "Calling roblox.com endpoints — blocked by design",
+      "Doing HTTP inside RenderStepped/Heartbeat without throttling",
+      "Trusting JSONDecode output shapes without validation"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Robust GET with retries",
+      "code": "local HttpService = game:GetService(\"HttpService\")\n\nlocal function getJson(url, attempts)\n    for i = 1, attempts do\n        local ok, response = pcall(function()\n            return HttpService:GetAsync(url)\n        end)\n        if ok then\n            return HttpService:JSONDecode(response)\n        end\n        warn(`HTTP attempt {i} failed: {response}`)\n        task.wait(2 ^ i)   -- exponential backoff\n    end\n    return nil\nend\n\nlocal data = getJson(\"https://api.example.com/status\", 3)\nif data then\n    print(\"Status:\", data.status)\nend"
+    },
+    {
+      "title": "RequestAsync with headers",
+      "code": "local HttpService = game:GetService(\"HttpService\")\n\nlocal response = HttpService:RequestAsync({\n    Url = \"https://api.example.com/save\",\n    Method = \"POST\",\n    Headers = { [\"Authorization\"] = \"Bearer \" .. API_TOKEN, [\"Content-Type\"] = \"application/json\" },\n    Body = HttpService:JSONEncode({ coins = 100 }),\n})\n\nif response.Success then\n    print(\"Saved. Status:\", response.StatusCode)\nelse\n    warn(\"Failed:\", response.StatusCode, response.StatusMessage)\nend"
+    }
+  ],
+  "related": ["pcall", "datastore-service", "serialization", "error-handling", "server-validation"],
+  "added": "2026-10-04"
+}

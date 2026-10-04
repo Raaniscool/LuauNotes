@@ -1,0 +1,59 @@
+{
+  "id": "replicated-first",
+  "title": "ReplicatedFirst",
+  "category": "services",
+  "type": "service",
+  "summary": "The container whose contents replicate before anything else. LocalScripts here run earliest on the client — ideal for loading screens and bootstrapping before the world streams in.",
+  "keywords": ["loading screen", "first to replicate", "early client script", "bootstrapping"],
+  "tags": ["services", "containers", "loading"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ReplicatedFirst",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [],
+    "details": [
+      {
+        "heading": "Ordering guarantee",
+        "body": "ReplicatedFirst contents are guaranteed to replicate to the client before other services' contents. LocalScripts inside run before most other client code."
+      },
+      {
+        "heading": "FinishLoading",
+        "body": "Roblox normally proceeds automatically; the older manual 'FinishLoading' flow is deprecated — modern loading screens just build UI here and destroy it when game content is ready (e.g. wait for workspace content via ContentProvider or a signal)."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The express lane: anything in this service is the first to reach the client, and LocalScripts here get a head start over everything else.",
+    "whyItExists": "Loading screens must appear BEFORE the world does — otherwise players stare at nothing (or worse, see unpolished content stream in).",
+    "whenToUse": [
+      "Loading-screen LocalScripts and their GUI",
+      "Client bootstrap code that must run before other systems",
+      "Early anti-cheat or integrity checks on the client (paired with server validation)"
+    ],
+    "whenNotToUse": [
+      "For ordinary shared content — ReplicatedStorage is the normal choice",
+      "Don't block forever waiting for 'everything' — design a graceful transition when the world is playable"
+    ],
+    "mentalModel": "```text\nClient boot:\n1. ReplicatedFirst arrives  ← your loading screen runs NOW\n2. rest of the game streams in\n3. destroy loading UI when ready\n```",
+    "tips": [
+      "Keep loading UI simple and self-contained (no dependencies on late-replicating objects)",
+      "Destroy the loading GUI once your 'ready' condition is met — don't leave it covering the screen"
+    ],
+    "commonMistakes": [
+      "Waiting for workspace content with brittle hard sleeps instead of readiness signals",
+      "Referencing ReplicatedStorage objects from ReplicatedFirst scripts without WaitForChild (they arrive later!)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Minimal loading screen",
+      "code": "-- ReplicatedFirst/Loading (LocalScript)\nlocal Players = game:GetService(\"Players\")\nlocal player = Players.LocalPlayer\nlocal playerGui = player:WaitForChild(\"PlayerGui\")\n\nlocal gui = Instance.new(\"ScreenGui\")\ngui.IgnoreGuiInset = true\nlocal label = Instance.new(\"TextLabel\")\nlabel.Size = UDim2.fromScale(1, 1)\nlabel.BackgroundColor3 = Color3.fromRGB(20, 20, 25)\nlabel.TextColor3 = Color3.new(1, 1, 1)\nlabel.Text = \"Loading…\"\nlabel.Parent = gui\ngui.Parent = playerGui\n\n-- Wait for the world to be reasonably ready:\ntask.wait(3)   -- or a proper readiness check for your game\ngui:Destroy()\nprint(\"Loading complete\")"
+    }
+  ],
+  "related": ["replicated-storage", "starter-gui", "localscript", "replication"],
+  "added": "2026-10-04"
+}

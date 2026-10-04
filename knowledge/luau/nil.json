@@ -4,8 +4,18 @@
   "category": "luau",
   "type": "concept",
   "summary": "The 'no value' value. A variable that is nil holds nothing; table keys set to nil are deleted; accessing something that doesn't exist gives nil.",
-  "keywords": ["nothing", "no value", "is nil", "nil value", "empty"],
-  "tags": ["basics", "types", "nil"],
+  "keywords": [
+    "nothing",
+    "no value",
+    "is nil",
+    "nil value",
+    "empty"
+  ],
+  "tags": [
+    "basics",
+    "types",
+    "nil"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -57,13 +67,21 @@
     {
       "title": "nil in everyday Roblox code",
       "code": "local part = workspace:FindFirstChild(\"MissingPart\")\nprint(part)                 --> nil (not found)\n\nif part == nil then\n    warn(\"Part does not exist!\")\nend\n\n-- Roblox's nil guard, classic pattern:\nlocal spawn = workspace:FindFirstChild(\"SpawnLocation\")\nif spawn then\n    print(\"Spawn is at\", spawn.Position)\nend",
-      "commonMistake": "Using the result of FindFirstChild directly (`workspace:FindFirstChild(\"X\").Position`) crashes when the object doesn't exist. Always guard first."
+      "commonMistake": "Using the result of FindFirstChild directly (`workspace:FindFirstChild(\"X\").Position`) crashes when the object doesn't exist. Always guard first.",
+      "language": "lua"
     },
     {
       "title": "nil removes table entries",
-      "code": "local inventory = { sword = true, potion = true }\ninventory.sword = nil       -- delete the key\nprint(inventory.sword)      --> nil\nprint(inventory.potion)     --> true"
+      "code": "local inventory = { sword = true, potion = true }\ninventory.sword = nil       -- delete the key\nprint(inventory.sword)      --> nil\nprint(inventory.potion)     --> true",
+      "language": "lua"
     }
   ],
-  "related": ["truthiness", "data-types", "find-first-child", "unexpected-nil", "or-default"],
+  "related": [
+    "truthiness",
+    "data-types",
+    "find-first-child",
+    "indexing-nil",
+    "or-default"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,16 @@
   "category": "methods",
   "type": "method",
   "summary": "Returns an array of all direct children of an instance. Iterate with `for _, child in parent:GetChildren()`. Order is not guaranteed.",
-  "keywords": ["list children", "iterate children", "all children", "direct children"],
-  "tags": ["instance", "iteration"],
+  "keywords": [
+    "list children",
+    "iterate children",
+    "all children",
+    "direct children"
+  ],
+  "tags": [
+    "instance",
+    "iteration"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -42,9 +50,15 @@
   "examples": [
     {
       "title": "Count and filter",
-      "code": "local spawnFolder = workspace.SpawnPoints\n\nlocal count = 0\nfor _, spawn in spawnFolder:GetChildren() do\n    if spawn:IsA(\"BasePart\") then\n        count += 1\n    end\nend\nprint(`{count} valid spawn points`)"
+      "code": "local spawnFolder = workspace.SpawnPoints\n\nlocal count = 0\nfor _, spawn in spawnFolder:GetChildren() do\n    if spawn:IsA(\"BasePart\") then\n        count += 1\n    end\nend\nprint(`{count} valid spawn points`)",
+      "language": "lua"
     }
   ],
-  "related": ["get-descendants", "find-first-child", "instance", "collection-service"],
+  "related": [
+    "get-descendants",
+    "find-first-child",
+    "instance",
+    "collection-service"
+  ],
   "added": "2026-10-04"
 }

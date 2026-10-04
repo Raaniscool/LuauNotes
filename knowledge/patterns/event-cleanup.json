@@ -1,0 +1,66 @@
+{
+  "id": "event-cleanup",
+  "title": "Event Cleanup",
+  "category": "patterns",
+  "type": "pattern",
+  "summary": "Connections you create are yours to remove: store the RBXScriptConnection, Disconnect when the reaction should stop — especially for per-spawn, per-round, and short-lived-object handlers. Leaked connections accumulate forever.",
+  "keywords": [
+    "disconnect",
+    "connection leak",
+    "listener cleanup",
+    "once",
+    "memory growth"
+  ],
+  "tags": [
+    "patterns",
+    "events",
+    "memory",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/scripting/events",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Hygiene for event wiring: every Connect has a matching 'when do I Disconnect?' answer.",
+    "whyItExists": "Connections keep their handler functions (and everything they reference) alive. Forgotten connections run forever — duplicated work, growing memory.",
+    "whenToUse": [
+      "Per-spawn handlers: connect in CharacterAdded, disconnect on Died/CharacterRemoving",
+      "Round systems: connect at round start, disconnect at round end",
+      "Short-lived objects (projectiles, traps): disconnect in the same code path that destroys them",
+      "One-shots: use :Once() and skip manual cleanup"
+    ],
+    "whenNotToUse": [
+      "Lifetime-of-game connections from a script that itself lives forever — nothing to clean"
+    ],
+    "mentalModel": "```text\nEvery Connect answers two questions:\n  1. who owns this wire?\n  2. when does it end?\n\nconnect on spawn ──▶ disconnect on death\nconnect on round ──▶ disconnect on round end\nOnce()           ──▶ auto\n```",
+    "tips": [
+      "Keep connections in a table per system; a cleanup loop Disconnects all",
+      "conn.Connected tells you if it's still live",
+      "Destroying an object kills connections TO its events — but not connections you added to OTHER events watching it"
+    ],
+    "commonMistakes": [
+      "CharacterAdded connecting Humanoid.Died every respawn without disconnecting the old ones — N deaths fire the handler N times",
+      "Loop-spawning parts with Touched handlers, never cleaned",
+      "Holding connection tables that outlive their purpose (memory)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Per-life wiring, done right",
+      "code": "Players.PlayerAdded:Connect(function(player)\n    player.CharacterAdded:Connect(function(character)\n        local humanoid = character:WaitForChild(\"Humanoid\")\n\n        local diedConn\n        diedConn = humanoid.Died:Once(function()\n            -- once = auto-disconnect\n            handleDeath(player)\n        end)\n\n        -- Example: manual lifecycle connection\n        local stepConn = game:GetService(\"RunService\").Heartbeat:Connect(function(dt)\n            -- regen tick\n        end)\n\n        humanoid.Died:Once(function()\n            stepConn:Disconnect()   -- stop the tick at death\n        end)\n    end)\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "event-connections",
+    "character-lifecycle",
+    "object-lifetime",
+    "destroy",
+    "humanoid-died"
+  ],
+  "added": "2026-10-04"
+}

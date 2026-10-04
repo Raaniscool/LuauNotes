@@ -4,8 +4,19 @@
   "category": "concepts",
   "type": "concept",
   "summary": "Pausing the current thread without blocking the game: task.wait, WaitForChild, InvokeServer, Completed:Wait all yield. Other threads keep running; the yielded one resumes later. Know which calls yield — and avoid yielding in hot paths.",
-  "keywords": ["yield", "pause thread", "blocking", "wait yields", "thread pauses", "non-blocking"],
-  "tags": ["concepts", "concurrency", "essential"],
+  "keywords": [
+    "yield",
+    "pause thread",
+    "blocking",
+    "wait yields",
+    "thread pauses",
+    "non-blocking"
+  ],
+  "tags": [
+    "concepts",
+    "concurrency",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -40,9 +51,16 @@
   "examples": [
     {
       "title": "Yield vs spawn",
-      "code": "-- This WHOLE handler pauses at wait:\npart.Touched:Connect(function(hit)\n    task.wait(1)               -- handler thread naps 1s\n    print(\"late:\", hit.Name)\nend)\n\n-- Keep the handler snappy; offload the waiting:\npart.Touched:Connect(function(hit)\n    task.delay(1, function()\n        print(\"delayed:\", hit.Name)\n    end)\nend)"
+      "code": "-- This WHOLE handler pauses at wait:\npart.Touched:Connect(function(hit)\n    task.wait(1)               -- handler thread naps 1s\n    print(\"late:\", hit.Name)\nend)\n\n-- Keep the handler snappy; offload the waiting:\npart.Touched:Connect(function(hit)\n    task.delay(1, function()\n        print(\"delayed:\", hit.Name)\n    end)\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["task-library", "coroutines", "invoke-server", "wait-for-child", "frame-budgets"],
+  "related": [
+    "task-library",
+    "coroutines",
+    "invoke-server",
+    "wait-for-child",
+    "frame-budgets"
+  ],
   "added": "2026-10-04"
 }

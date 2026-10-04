@@ -4,8 +4,18 @@
   "category": "services",
   "type": "service",
   "summary": "Automatic cleanup: Debris:AddItem(instance, lifetime) destroys the instance after the given seconds — the standard way to expire effects, projectiles, and clones without manual timers.",
-  "keywords": ["auto destroy", "cleanup", "AddItem", "temporary parts", "expire instance"],
-  "tags": ["services", "cleanup", "effects"],
+  "keywords": [
+    "auto destroy",
+    "cleanup",
+    "AddItem",
+    "temporary parts",
+    "expire instance"
+  ],
+  "tags": [
+    "services",
+    "cleanup",
+    "effects"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,8 +25,16 @@
   },
   "reference": {
     "methods": [
-      { "name": "AddItem", "signature": "Debris:AddItem(item: Instance, lifetime?: number)", "description": "Destroys the instance after `lifetime` seconds (default 10). Re-adding an item updates its timer." },
-      { "name": "SetMaxItems", "signature": "Debris:SetMaxItems(max: number)", "description": "Caps how many items Debris tracks (default 1000); excess oldest items are destroyed immediately." }
+      {
+        "name": "AddItem",
+        "signature": "Debris:AddItem(item: Instance, lifetime?: number)",
+        "description": "Destroys the instance after `lifetime` seconds (default 10). Re-adding an item updates its timer."
+      },
+      {
+        "name": "SetMaxItems",
+        "signature": "Debris:SetMaxItems(max: number)",
+        "description": "Caps how many items Debris tracks (default 1000); excess oldest items are destroyed immediately."
+      }
     ]
   },
   "explanation": {
@@ -45,9 +63,15 @@
   "examples": [
     {
       "title": "Self-cleaning projectile",
-      "code": "local Debris = game:GetService(\"Debris\")\n\nlocal function shootBullet(origin: Vector3, direction: Vector3)\n    local bullet = Instance.new(\"Part\")\n    bullet.Size = Vector3.new(0.5, 0.5, 1)\n    bullet.CFrame = CFrame.lookAt(origin, origin + direction)\n    bullet.Parent = workspace\n    bullet.AssemblyLinearVelocity = direction * 150\n\n    Debris:AddItem(bullet, 4)   -- gone after 4s no matter what\nend"
+      "code": "local Debris = game:GetService(\"Debris\")\n\nlocal function shootBullet(origin: Vector3, direction: Vector3)\n    local bullet = Instance.new(\"Part\")\n    bullet.Size = Vector3.new(0.5, 0.5, 1)\n    bullet.CFrame = CFrame.lookAt(origin, origin + direction)\n    bullet.Parent = workspace\n    bullet.AssemblyLinearVelocity = direction * 150\n\n    Debris:AddItem(bullet, 4)   -- gone after 4s no matter what\nend",
+      "language": "lua"
     }
   ],
-  "related": ["destroy", "clone", "object-lifetime", "event-cleanup"],
+  "related": [
+    "destroy",
+    "clone",
+    "object-lifetime",
+    "event-cleanup"
+  ],
   "added": "2026-10-04"
 }

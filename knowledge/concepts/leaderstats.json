@@ -4,8 +4,19 @@
   "category": "concepts",
   "type": "concept",
   "summary": "A magic Folder name: create a Folder named exactly 'leaderstats' inside a Player, put value objects in it, and Roblox shows them on the built-in leaderboard — zero GUI work.",
-  "keywords": ["leaderboard", "stats folder", "score display", "leaderstats folder", "built-in leaderboard"],
-  "tags": ["concepts", "players", "gui", "classic"],
+  "keywords": [
+    "leaderboard",
+    "stats folder",
+    "score display",
+    "leaderstats folder",
+    "built-in leaderboard"
+  ],
+  "tags": [
+    "concepts",
+    "players",
+    "gui",
+    "classic"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -39,9 +50,16 @@
   "examples": [
     {
       "title": "Standard setup",
-      "code": "-- Server Script\nlocal Players = game:GetService(\"Players\")\n\nPlayers.PlayerAdded:Connect(function(player)\n    local stats = Instance.new(\"Folder\")\n    stats.Name = \"leaderstats\"      -- exact name!\n\n    local coins = Instance.new(\"IntValue\")\n    coins.Name = \"Coins\"\n    coins.Value = 0\n    coins.Parent = stats\n\n    local level = Instance.new(\"IntValue\")\n    level.Name = \"Level\"\n    level.Value = 1\n    level.Parent = stats\n\n    stats.Parent = player            -- parent to PLAYER\n\n    coins.Value += 10                -- leaderboard updates live\nend)"
+      "code": "-- Server Script\nlocal Players = game:GetService(\"Players\")\n\nPlayers.PlayerAdded:Connect(function(player)\n    local stats = Instance.new(\"Folder\")\n    stats.Name = \"leaderstats\"      -- exact name!\n\n    local coins = Instance.new(\"IntValue\")\n    coins.Name = \"Coins\"\n    coins.Value = 0\n    coins.Parent = stats\n\n    local level = Instance.new(\"IntValue\")\n    level.Name = \"Level\"\n    level.Value = 1\n    level.Parent = stats\n\n    stats.Parent = player            -- parent to PLAYER\n\n    coins.Value += 10                -- leaderboard updates live\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["player", "player-added", "value-base-value", "datastore-service", "datastore-save-load"],
+  "related": [
+    "player",
+    "player-added",
+    "value-base-value",
+    "datastore-service",
+    "datastore-save-load"
+  ],
   "added": "2026-10-04"
 }

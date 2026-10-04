@@ -4,8 +4,19 @@
   "category": "concepts",
   "type": "concept",
   "summary": "Events are broadcast lists: Connect registers your function, and EVERY registered handler runs whenever the event fires — unless you Disconnect. Connections are objects you own: keep them, disconnect them, don't leak them.",
-  "keywords": ["Connect", "Disconnect", "event handlers", "RBXScriptConnection", "Once", "multiple handlers"],
-  "tags": ["concepts", "events", "essential"],
+  "keywords": [
+    "Connect",
+    "Disconnect",
+    "event handlers",
+    "RBXScriptConnection",
+    "Once",
+    "multiple handlers"
+  ],
+  "tags": [
+    "concepts",
+    "events",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -40,9 +51,16 @@
   "examples": [
     {
       "title": "Connect vs Once vs Wait",
-      "code": "local prompt = workspace.Part.ProximityPrompt\n\n-- Persistent:\nlocal conn = prompt.Triggered:Connect(function(player)\n    print(player.Name, \"triggered\")\nend)\n-- later: conn:Disconnect()\n\n-- One-shot, auto-cleaning:\nworkspace.Treasure.Touched:Once(function(hit)\n    print(\"First touch only:\", hit.Name)\nend)\n\n-- Sequencing:\ntask.spawn(function()\n    prompt.Triggered:Wait()\n    print(\"Someone triggered it — continuing!\")\nend)"
+      "code": "local prompt = workspace.Part.ProximityPrompt\n\n-- Persistent:\nlocal conn = prompt.Triggered:Connect(function(player)\n    print(player.Name, \"triggered\")\nend)\n-- later: conn:Disconnect()\n\n-- One-shot, auto-cleaning:\nworkspace.Treasure.Touched:Once(function(hit)\n    print(\"First touch only:\", hit.Name)\nend)\n\n-- Sequencing:\ntask.spawn(function()\n    prompt.Triggered:Wait()\n    print(\"Someone triggered it — continuing!\")\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["event-cleanup", "touched", "humanoid-died", "yielding", "bindable-event"],
+  "related": [
+    "event-cleanup",
+    "touched",
+    "humanoid-died",
+    "yielding",
+    "bindable-event"
+  ],
   "added": "2026-10-04"
 }

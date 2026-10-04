@@ -4,8 +4,21 @@
   "category": "services",
   "type": "service",
   "summary": "Manages every connected player: join/leave events (PlayerAdded/PlayerRemoving), the player list (GetPlayers), and client-side access to the local player (LocalPlayer).",
-  "keywords": ["Players service", "PlayerAdded", "PlayerRemoving", "GetPlayers", "LocalPlayer", "player joined", "player left", "GetPlayerFromCharacter"],
-  "tags": ["services", "players", "essential"],
+  "keywords": [
+    "Players service",
+    "PlayerAdded",
+    "PlayerRemoving",
+    "GetPlayers",
+    "LocalPlayer",
+    "player joined",
+    "player left",
+    "GetPlayerFromCharacter"
+  ],
+  "tags": [
+    "services",
+    "players",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,21 +28,65 @@
   },
   "reference": {
     "methods": [
-      { "name": "GetPlayers", "signature": "Players:GetPlayers() --> { Player }", "description": "Array of every Player currently in the game." },
-      { "name": "GetPlayerFromCharacter", "signature": "Players:GetPlayerFromCharacter(character: Model?) --> Player?", "description": "Given a character model, returns its Player (or nil)." },
-      { "name": "GetPlayerByUserId", "signature": "Players:GetPlayerByUserId(userId: number) --> Player?", "description": "Finds an in-game player by UserId." },
-      { "name": "GetHumanoidDescriptionFromUserId", "signature": "Players:GetHumanoidDescriptionFromUserId(userId: number) --> HumanoidDescription", "description": "Fetches a user's avatar description (yields; server only)." }
+      {
+        "name": "GetPlayers",
+        "signature": "Players:GetPlayers() --> { Player }",
+        "description": "Array of every Player currently in the game."
+      },
+      {
+        "name": "GetPlayerFromCharacter",
+        "signature": "Players:GetPlayerFromCharacter(character: Model?) --> Player?",
+        "description": "Given a character model, returns its Player (or nil)."
+      },
+      {
+        "name": "GetPlayerByUserId",
+        "signature": "Players:GetPlayerByUserId(userId: number) --> Player?",
+        "description": "Finds an in-game player by UserId."
+      },
+      {
+        "name": "GetHumanoidDescriptionFromUserId",
+        "signature": "Players:GetHumanoidDescriptionFromUserId(userId: number) --> HumanoidDescription",
+        "description": "Fetches a user's avatar description (yields; server only)."
+      }
     ],
     "events": [
-      { "name": "PlayerAdded", "signature": "Players.PlayerAdded:Connect(function(player: Player) end)", "description": "Fires when a player joins. On the server this is where you load data, set up leaderstats, etc." },
-      { "name": "PlayerRemoving", "signature": "Players.PlayerRemoving:Connect(function(player: Player) end)", "description": "Fires just before a player leaves — the standard save hook." }
+      {
+        "name": "PlayerAdded",
+        "signature": "Players.PlayerAdded:Connect(function(player: Player) end)",
+        "description": "Fires when a player joins. On the server this is where you load data, set up leaderstats, etc."
+      },
+      {
+        "name": "PlayerRemoving",
+        "signature": "Players.PlayerRemoving:Connect(function(player: Player) end)",
+        "description": "Fires just before a player leaves — the standard save hook."
+      }
     ],
     "properties": [
-      { "name": "LocalPlayer", "type": "Player", "description": "Client only. The Player object of the person running this client. Nil on the server." },
-      { "name": "NumPlayers", "type": "number", "description": "Current player count." },
-      { "name": "MaxPlayers", "type": "number", "description": "Server capacity." },
-      { "name": "RespawnTime", "type": "number", "description": "Seconds until a dead player respawns." },
-      { "name": "CharacterAutoLoads", "type": "boolean", "description": "Whether characters respawn automatically." }
+      {
+        "name": "LocalPlayer",
+        "type": "Player",
+        "description": "Client only. The Player object of the person running this client. Nil on the server."
+      },
+      {
+        "name": "NumPlayers",
+        "type": "number",
+        "description": "Current player count."
+      },
+      {
+        "name": "MaxPlayers",
+        "type": "number",
+        "description": "Server capacity."
+      },
+      {
+        "name": "RespawnTime",
+        "type": "number",
+        "description": "Seconds until a dead player respawns."
+      },
+      {
+        "name": "CharacterAutoLoads",
+        "type": "boolean",
+        "description": "Whether characters respawn automatically."
+      }
     ]
   },
   "explanation": {
@@ -60,9 +117,19 @@
   "examples": [
     {
       "title": "The canonical join/leave skeleton",
-      "code": "local Players = game:GetService(\"Players\")\n\nlocal function onPlayerAdded(player)\n    -- leaderstats (convention: Folder named \"leaderstats\")\n    local stats = Instance.new(\"Folder\")\n    stats.Name = \"leaderstats\"\n    local coins = Instance.new(\"IntValue\")\n    coins.Name = \"Coins\"\n    coins.Value = 0\n    coins.Parent = stats\n    stats.Parent = player\n\n    player.CharacterAdded:Connect(function(character)\n        print(player.Name .. \" spawned\")\n    end)\nend\n\n-- Handle players who joined BEFORE this script ran:\nfor _, player in Players:GetPlayers() do\n    task.spawn(onPlayerAdded, player)\nend\n-- ...and everyone after:\nPlayers.PlayerAdded:Connect(onPlayerAdded)\n\nPlayers.PlayerRemoving:Connect(function(player)\n    print(player.Name .. \" left — save their data NOW\")\nend)"
+      "code": "local Players = game:GetService(\"Players\")\n\nlocal function onPlayerAdded(player)\n    -- leaderstats (convention: Folder named \"leaderstats\")\n    local stats = Instance.new(\"Folder\")\n    stats.Name = \"leaderstats\"\n    local coins = Instance.new(\"IntValue\")\n    coins.Name = \"Coins\"\n    coins.Value = 0\n    coins.Parent = stats\n    stats.Parent = player\n\n    player.CharacterAdded:Connect(function(character)\n        print(player.Name .. \" spawned\")\n    end)\nend\n\n-- Handle players who joined BEFORE this script ran:\nfor _, player in Players:GetPlayers() do\n    task.spawn(onPlayerAdded, player)\nend\n-- ...and everyone after:\nPlayers.PlayerAdded:Connect(onPlayerAdded)\n\nPlayers.PlayerRemoving:Connect(function(player)\n    print(player.Name .. \" left — save their data NOW\")\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["player", "player-added", "player-removing", "character-added", "humanoid", "leaderstats", "client-vs-server", "datastore-save-load"],
+  "related": [
+    "player",
+    "player-added",
+    "player-removing",
+    "character-added",
+    "humanoid",
+    "leaderstats",
+    "client-vs-server",
+    "datastore-save-load"
+  ],
   "added": "2026-10-04"
 }

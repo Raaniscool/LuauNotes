@@ -4,8 +4,19 @@
   "category": "concepts",
   "type": "concept",
   "summary": "Replicated content arrives on clients AFTER the server creates it — sometimes milliseconds, sometimes seconds later. Client code that assumes instant availability races ahead of reality. WaitForChild and event-driven code fix it.",
-  "keywords": ["race condition", "content not loaded", "nil on client", "async replication", "waitforchild why", "timing bug"],
-  "tags": ["concepts", "networking", "timing"],
+  "keywords": [
+    "race condition",
+    "content not loaded",
+    "nil on client",
+    "async replication",
+    "waitforchild why",
+    "timing bug"
+  ],
+  "tags": [
+    "concepts",
+    "networking",
+    "timing"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -39,9 +50,15 @@
   "examples": [
     {
       "title": "Robust client access",
-      "code": "-- ❌ racy:\n-- local shop = ReplicatedStorage.Shop\n\n-- ✅ waits:\nlocal shop = ReplicatedStorage:WaitForChild(\"Shop\", 10)\nassert(shop, \"Shop folder missing — check replication\")\n\n-- ✅ open-ended arrivals:\nReplicatedStorage.ChildAdded:Connect(function(child)\n    print(\"Newly replicated:\", child:GetFullName())\nend)"
+      "code": "-- ❌ racy:\n-- local shop = ReplicatedStorage.Shop\n\n-- ✅ waits:\nlocal shop = ReplicatedStorage:WaitForChild(\"Shop\", 10)\nassert(shop, \"Shop folder missing — check replication\")\n\n-- ✅ open-ended arrivals:\nReplicatedStorage.ChildAdded:Connect(function(child)\n    print(\"Newly replicated:\", child:GetFullName())\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["replication", "wait-for-child", "client-vs-server", "replicated-storage"],
+  "related": [
+    "replication",
+    "wait-for-child",
+    "client-vs-server",
+    "replicated-storage"
+  ],
   "added": "2026-10-04"
 }

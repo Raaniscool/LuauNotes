@@ -4,8 +4,21 @@
   "category": "classes",
   "type": "class",
   "summary": "An equippable item: lives in the Backpack, moves to the Character when equipped (welded to the hand via a part named 'Handle'), and fires Equipped/Unequipped/Activated events.",
-  "keywords": ["tool", "weapon", "equip", "Handle", "Activated", "equipped", "backpack item", "held item"],
-  "tags": ["classes", "tools", "gameplay"],
+  "keywords": [
+    "tool",
+    "weapon",
+    "equip",
+    "Handle",
+    "Activated",
+    "equipped",
+    "backpack item",
+    "held item"
+  ],
+  "tags": [
+    "classes",
+    "tools",
+    "gameplay"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,16 +28,48 @@
   },
   "reference": {
     "properties": [
-      { "name": "RequiresHandle", "type": "boolean", "description": "Default true: the tool needs a part named 'Handle' to be holdable. Set false for handle-less tools." },
-      { "name": "CanBeDropped", "type": "boolean", "description": "Whether players can drop it (backspace key)." },
-      { "name": "Enabled", "type": "boolean", "description": "Toggles Activated input while equipped." },
-      { "name": "TextureId", "type": "Content", "description": "Icon shown in the backpack bar." }
+      {
+        "name": "RequiresHandle",
+        "type": "boolean",
+        "description": "Default true: the tool needs a part named 'Handle' to be holdable. Set false for handle-less tools."
+      },
+      {
+        "name": "CanBeDropped",
+        "type": "boolean",
+        "description": "Whether players can drop it (backspace key)."
+      },
+      {
+        "name": "Enabled",
+        "type": "boolean",
+        "description": "Toggles Activated input while equipped."
+      },
+      {
+        "name": "TextureId",
+        "type": "Content",
+        "description": "Icon shown in the backpack bar."
+      }
     ],
     "events": [
-      { "name": "Equipped", "signature": "Tool.Equipped:Connect(function() end)", "description": "Fires when a player equips the tool. Locally, mouse input objects can be obtained here." },
-      { "name": "Unequipped", "signature": "Tool.Unequipped:Connect(function() end)", "description": "Fires when unequipped (swapped away or dropped)." },
-      { "name": "Activated", "signature": "Tool.Activated:Connect(function() end)", "description": "Fires on click/tap while equipped — the main 'use' hook." },
-      { "name": "Deactivated", "signature": "Tool.Deactivated:Connect(function() end)", "description": "Mouse/touch release after an Activated." }
+      {
+        "name": "Equipped",
+        "signature": "Tool.Equipped:Connect(function() end)",
+        "description": "Fires when a player equips the tool. Locally, mouse input objects can be obtained here."
+      },
+      {
+        "name": "Unequipped",
+        "signature": "Tool.Unequipped:Connect(function() end)",
+        "description": "Fires when unequipped (swapped away or dropped)."
+      },
+      {
+        "name": "Activated",
+        "signature": "Tool.Activated:Connect(function() end)",
+        "description": "Fires on click/tap while equipped — the main 'use' hook."
+      },
+      {
+        "name": "Deactivated",
+        "signature": "Tool.Deactivated:Connect(function() end)",
+        "description": "Mouse/touch release after an Activated."
+      }
     ],
     "details": [
       {
@@ -64,9 +109,17 @@
   "examples": [
     {
       "title": "Sword with server-side damage",
-      "code": "-- Script inside the Tool (server-side authority)\nlocal tool = script.Parent\nlocal DAMAGE = 25\nlocal canDamage = false\n\ntool.Activated:Connect(function()\n    canDamage = true\n    task.delay(0.3, function() canDamage = false end)\nend)\n\ntool.Handle.Touched:Connect(function(hit)\n    if not canDamage then return end\n    local humanoid = hit.Parent:FindFirstChildOfClass(\"Humanoid\")\n    local owner = tool.Parent and tool.Parent.Parent\n    if humanoid and hit.Parent ~= owner then\n        canDamage = false\n        humanoid:TakeDamage(DAMAGE)\n    end\nend)"
+      "code": "-- Script inside the Tool (server-side authority)\nlocal tool = script.Parent\nlocal DAMAGE = 25\nlocal canDamage = false\n\ntool.Activated:Connect(function()\n    canDamage = true\n    task.delay(0.3, function() canDamage = false end)\nend)\n\ntool.Handle.Touched:Connect(function(hit)\n    if not canDamage then return end\n    local humanoid = hit.Parent:FindFirstChildOfClass(\"Humanoid\")\n    local owner = tool.Parent and tool.Parent.Parent\n    if humanoid and hit.Parent ~= owner then\n        canDamage = false\n        humanoid:TakeDamage(DAMAGE)\n    end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["starter-pack", "tool-requires-handle", "tool-spawning", "click-detector", "humanoid", "client-vs-server"],
+  "related": [
+    "starter-pack",
+    "tool-requires-handle",
+    "tool-spawning",
+    "click-detector",
+    "humanoid",
+    "client-vs-server"
+  ],
   "added": "2026-10-04"
 }

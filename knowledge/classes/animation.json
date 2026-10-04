@@ -4,8 +4,16 @@
   "category": "classes",
   "type": "class",
   "summary": "A reference object pointing to an animation asset by AnimationId. You don't play it directly — Animator:LoadAnimation turns it into an AnimationTrack you control.",
-  "keywords": ["AnimationId", "animation asset", "animation reference", "emotes"],
-  "tags": ["classes", "animation"],
+  "keywords": [
+    "AnimationId",
+    "animation asset",
+    "animation reference",
+    "emotes"
+  ],
+  "tags": [
+    "classes",
+    "animation"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,7 +23,11 @@
   },
   "reference": {
     "properties": [
-      { "name": "AnimationId", "type": "Content", "description": "The asset: \"rbxassetid://507770239\". Must be owned/usable by your experience." }
+      {
+        "name": "AnimationId",
+        "type": "Content",
+        "description": "The asset: \"rbxassetid://507770239\". Must be owned/usable by your experience."
+      }
     ]
   },
   "explanation": {
@@ -43,9 +55,14 @@
   "examples": [
     {
       "title": "From asset to playing track",
-      "code": "local animation = Instance.new(\"Animation\")\nanimation.AnimationId = \"rbxassetid://507770239\"\n\nlocal animator = character:WaitForChild(\"Humanoid\"):WaitForChild(\"Animator\")\nlocal track = animator:LoadAnimation(animation)\ntrack.Looped = false\ntrack:Play()\n\ntrack.Stopped:Connect(function()\n    print(\"Animation finished\")\nend)"
+      "code": "local animation = Instance.new(\"Animation\")\nanimation.AnimationId = \"rbxassetid://507770239\"\n\nlocal animator = character:WaitForChild(\"Humanoid\"):WaitForChild(\"Animator\")\nlocal track = animator:LoadAnimation(animation)\ntrack.Looped = false\ntrack:Play()\n\ntrack.Stopped:Connect(function()\n    print(\"Animation finished\")\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["animator", "humanoid", "motor6d"],
+  "related": [
+    "animator",
+    "humanoid",
+    "motor6d"
+  ],
   "added": "2026-10-04"
 }

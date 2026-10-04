@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "concept",
   "summary": "A function that remembers the local variables from where it was created. Callbacks, private state, and per-player data all rely on closures.",
-  "keywords": ["upvalue", "captured variables", "function remembers", "lexical scope"],
-  "tags": ["functions", "scope", "intermediate"],
+  "keywords": [
+    "upvalue",
+    "captured variables",
+    "function remembers",
+    "lexical scope"
+  ],
+  "tags": [
+    "functions",
+    "scope",
+    "intermediate"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -52,14 +61,22 @@
   "examples": [
     {
       "title": "A private counter (no globals)",
-      "code": "local function makeCounter(start)\n    local count = start or 0\n    return {\n        add = function(n) count += (n or 1) end,\n        get = function() return count end,\n    }\nend\n\nlocal score = makeCounter(100)\nscore.add(25)\nprint(score.get())   --> 125\n-- `count` itself is unreachable from outside — private!"
+      "code": "local function makeCounter(start)\n    local count = start or 0\n    return {\n        add = function(n) count += (n or 1) end,\n        get = function() return count end,\n    }\nend\n\nlocal score = makeCounter(100)\nscore.add(25)\nprint(score.get())   --> 125\n-- `count` itself is unreachable from outside — private!",
+      "language": "lua"
     },
     {
       "title": "Callbacks capturing locals",
       "code": "local function setupButton(button, reward)\n    local claimed = false    -- captured by the closure below\n    button.Activated:Connect(function(player)\n        if claimed then return end\n        claimed = true\n        print(player.Name .. \" claimed \" .. reward)\n    end)\nend\n\nsetupButton(script.Parent, \"100 coins\")",
-      "whyItWorks": "The connected callback runs much later, but still sees `claimed` and `reward` — they were captured when the closure was made."
+      "whyItWorks": "The connected callback runs much later, but still sees `claimed` and `reward` — they were captured when the closure was made.",
+      "language": "lua"
     }
   ],
-  "related": ["functions", "anonymous-functions", "scope", "debounce", "cooldown-pattern"],
+  "related": [
+    "functions",
+    "anonymous-functions",
+    "scope",
+    "debounce",
+    "cooldown-pattern"
+  ],
   "added": "2026-10-04"
 }

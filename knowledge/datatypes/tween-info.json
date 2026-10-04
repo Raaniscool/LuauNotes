@@ -4,8 +4,20 @@
   "category": "datatypes",
   "type": "datatype",
   "summary": "The recipe for a tween: duration, easing style/direction, repeat count, reverses, and delay. TweenInfo.new(time, EasingStyle, EasingDirection, repeatCount, reverses, delayTime).",
-  "keywords": ["tween config", "easing", "EasingStyle", "EasingDirection", "repeat", "reverses", "duration"],
-  "tags": ["datatypes", "animation", "tweening"],
+  "keywords": [
+    "tween config",
+    "easing",
+    "EasingStyle",
+    "EasingDirection",
+    "repeat",
+    "reverses",
+    "duration"
+  ],
+  "tags": [
+    "datatypes",
+    "animation",
+    "tweening"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -16,12 +28,42 @@
   "reference": {
     "signature": "TweenInfo.new(time?, easingStyle?, easingDirection?, repeatCount?, reverses?, delayTime?) --> TweenInfo",
     "parameters": [
-      { "name": "time", "type": "number", "default": "1", "description": "Duration in seconds." },
-      { "name": "easingStyle", "type": "Enum.EasingStyle", "default": "Quad", "description": "Curve shape: Linear, Quad, Cubic, Sine, Bounce, Elastic, Back, Circular, Quart, Quint, Expo." },
-      { "name": "easingDirection", "type": "Enum.EasingDirection", "default": "Out", "description": "In, Out, or InOut — where the curve applies." },
-      { "name": "repeatCount", "type": "number", "default": "0", "description": "Extra repeats; -1 = infinite." },
-      { "name": "reverses", "type": "boolean", "default": "false", "description": "Ping-pong back on each repeat." },
-      { "name": "delayTime", "type": "number", "default": "0", "description": "Wait before starting." }
+      {
+        "name": "time",
+        "type": "number",
+        "default": "1",
+        "description": "Duration in seconds."
+      },
+      {
+        "name": "easingStyle",
+        "type": "Enum.EasingStyle",
+        "default": "Quad",
+        "description": "Curve shape: Linear, Quad, Cubic, Sine, Bounce, Elastic, Back, Circular, Quart, Quint, Expo."
+      },
+      {
+        "name": "easingDirection",
+        "type": "Enum.EasingDirection",
+        "default": "Out",
+        "description": "In, Out, or InOut — where the curve applies."
+      },
+      {
+        "name": "repeatCount",
+        "type": "number",
+        "default": "0",
+        "description": "Extra repeats; -1 = infinite."
+      },
+      {
+        "name": "reverses",
+        "type": "boolean",
+        "default": "false",
+        "description": "Ping-pong back on each repeat."
+      },
+      {
+        "name": "delayTime",
+        "type": "number",
+        "default": "0",
+        "description": "Wait before starting."
+      }
     ]
   },
   "explanation": {
@@ -32,7 +74,9 @@
       "Bounce/Elastic for game-feel pops",
       "reverses=true + repeatCount=-1 for idle bobbing animations"
     ],
-    "whenNotToUse": ["Linear for UI — it feels mechanical (except progress bars)"],
+    "whenNotToUse": [
+      "Linear for UI — it feels mechanical (except progress bars)"
+    ],
     "tips": [
       "Keep a few shared TweenInfo constants (FAST_UI, SLOW_FADE) per project",
       "Bounce.Out on the way down feels like landing; Elastic.Out overshoots"
@@ -45,9 +89,15 @@
   "examples": [
     {
       "title": "A menu of feels",
-      "code": "local TweenService = game:GetService(\"TweenService\")\n\nlocal snappy   = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)\nlocal gentle   = TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)\nlocal bouncy   = TweenInfo.new(0.5, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out)\nlocal forever  = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)\n\nTweenService:Create(frame, snappy, { Position = target }):Play()\nTweenService:Create(part, forever, { Position = part.Position + Vector3.new(0, 2, 0) }):Play()"
+      "code": "local TweenService = game:GetService(\"TweenService\")\n\nlocal snappy   = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)\nlocal gentle   = TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)\nlocal bouncy   = TweenInfo.new(0.5, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out)\nlocal forever  = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)\n\nTweenService:Create(frame, snappy, { Position = target }):Play()\nTweenService:Create(part, forever, { Position = part.Position + Vector3.new(0, 2, 0) }):Play()",
+      "language": "lua"
     }
   ],
-  "related": ["tween-service", "tween-create", "tweening", "enum"],
+  "related": [
+    "tween-service",
+    "tween-create",
+    "tweening",
+    "enum"
+  ],
   "added": "2026-10-04"
 }

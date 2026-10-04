@@ -4,8 +4,18 @@
   "category": "methods",
   "type": "method",
   "summary": "Yields until a child with the given name exists (or a timeout passes). The standard cure for 'replication hasn't arrived yet' nil errors, especially on the client.",
-  "keywords": ["wait for replication", "child not found yet", "nil because not replicated", "waitforchild timeout", "loading order"],
-  "tags": ["instance", "replication", "essential"],
+  "keywords": [
+    "wait for replication",
+    "child not found yet",
+    "nil because not replicated",
+    "waitforchild timeout",
+    "loading order"
+  ],
+  "tags": [
+    "instance",
+    "replication",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -16,8 +26,16 @@
   "reference": {
     "signature": "Instance:WaitForChild(childName: string, timeLimit: number?) --> Instance",
     "parameters": [
-      { "name": "childName", "type": "string", "description": "Name of the child to wait for." },
-      { "name": "timeLimit", "type": "number?", "description": "Max seconds to wait. Without it, waits forever (and warns after ~5s). With it, returns nil on timeout." }
+      {
+        "name": "childName",
+        "type": "string",
+        "description": "Name of the child to wait for."
+      },
+      {
+        "name": "timeLimit",
+        "type": "number?",
+        "description": "Max seconds to wait. Without it, waits forever (and warns after ~5s). With it, returns nil on timeout."
+      }
     ],
     "returns": "The child instance — or nil if the time limit expired.",
     "details": [
@@ -55,9 +73,16 @@
     {
       "title": "Safe client startup",
       "code": "-- LocalScript\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\n\nlocal remotes = ReplicatedStorage:WaitForChild(\"Remotes\", 10)\nif not remotes then\n    error(\"Remotes folder never replicated — check server setup\")\nend\n\nlocal buyEvent = remotes:WaitForChild(\"Buy\", 5)\nif buyEvent then\n    print(\"Ready to shop\")\nend",
-      "whyItWorks": "Timeouts convert 'hang forever' into 'nil you can handle' — and the error message tells you exactly what's missing."
+      "whyItWorks": "Timeouts convert 'hang forever' into 'nil you can handle' — and the error message tells you exactly what's missing.",
+      "language": "lua"
     }
   ],
-  "related": ["find-first-child", "waitforchild-vs-findfirstchild", "instance", "replication", "replicated-storage", "replication-timing"],
+  "related": [
+    "find-first-child",
+    "instance",
+    "replication",
+    "replicated-storage",
+    "replication-timing"
+  ],
   "added": "2026-10-04"
 }

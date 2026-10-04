@@ -4,8 +4,18 @@
   "category": "methods",
   "type": "method",
   "summary": "Client asks the server a question and YIELDS until answered: returns whatever the server's OnServerInvoke returns. Use sparingly — it blocks your thread for a network round trip.",
-  "keywords": ["ask server", "request response", "get data from server", "yielding call", "wait for answer"],
-  "tags": ["remotes", "networking", "client-server"],
+  "keywords": [
+    "ask server",
+    "request response",
+    "get data from server",
+    "yielding call",
+    "wait for answer"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -16,7 +26,11 @@
   "reference": {
     "signature": "RemoteFunction:InvokeServer(...args: any) --> ...any",
     "parameters": [
-      { "name": "...args", "type": "serializable values", "description": "Sent to the server; OnServerInvoke receives them after the automatic Player parameter." }
+      {
+        "name": "...args",
+        "type": "serializable values",
+        "description": "Sent to the server; OnServerInvoke receives them after the automatic Player parameter."
+      }
     ],
     "returns": "Whatever the server's OnServerInvoke handler returns (serialized back). Errors if no handler is assigned; propagate handler errors to the caller.",
     "details": [
@@ -52,9 +66,16 @@
   "examples": [
     {
       "title": "Fetch shop prices on menu open",
-      "code": "-- Server:\nlocal rf = game.ReplicatedStorage.Remotes.GetShop\nrf.OnServerInvoke = function(player)\n    return { Sword = 250, Potion = 50 }   -- could vary per player\nend\n\n-- Client:\nlocal rf = game.ReplicatedStorage:WaitForChild(\"Remotes\"):WaitForChild(\"GetShop\")\n\nlocal ok, prices = pcall(function()\n    return rf:InvokeServer()\nend)\nif ok and prices then\n    for item, price in prices do\n        print(item, price)\n    end\nend"
+      "code": "-- Server:\nlocal rf = game.ReplicatedStorage.Remotes.GetShop\nrf.OnServerInvoke = function(player)\n    return { Sword = 250, Potion = 50 }   -- could vary per player\nend\n\n-- Client:\nlocal rf = game.ReplicatedStorage:WaitForChild(\"Remotes\"):WaitForChild(\"GetShop\")\n\nlocal ok, prices = pcall(function()\n    return rf:InvokeServer()\nend)\nif ok and prices then\n    for item, price in prices do\n        print(item, price)\n    end\nend",
+      "language": "lua"
     }
   ],
-  "related": ["remote-function", "on-server-invoke", "invoke-client", "fire-server", "yielding"],
+  "related": [
+    "remote-function",
+    "on-server-invoke",
+    "invoke-client",
+    "fire-server",
+    "yielding"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,20 @@
   "category": "classes",
   "type": "class",
   "summary": "The basic rectangular GUI container: colored box for panels, cards, and layout groups. Combined with UIListLayout/UIGridLayout for automatic arrangement of children.",
-  "keywords": ["gui box", "panel", "container", "UIListLayout", "UIGridLayout", "UIPadding", "layout"],
-  "tags": ["classes", "gui", "layout"],
+  "keywords": [
+    "gui box",
+    "panel",
+    "container",
+    "UIListLayout",
+    "UIGridLayout",
+    "UIPadding",
+    "layout"
+  ],
+  "tags": [
+    "classes",
+    "gui",
+    "layout"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,12 +27,36 @@
   },
   "reference": {
     "properties": [
-      { "name": "BackgroundColor3 / BackgroundTransparency", "type": "Color3 / number", "description": "Fill color and opacity (1 = invisible)." },
-      { "name": "Size / Position", "type": "UDim2", "description": "Size/pos as Scale (fraction of parent) + Offset (pixels). UDim2.fromScale/fromOffset helpers." },
-      { "name": "AnchorPoint", "type": "Vector2", "description": "Which point of the frame Position refers to. (0.5, 0.5) = centered." },
-      { "name": "ClipsDescendants", "type": "boolean", "description": "Crop children to this frame's bounds — scroll areas, rounded corners." },
-      { "name": "Visible", "type": "boolean", "description": "Show/hide (and block input when hidden)." },
-      { "name": "ZIndex", "type": "number", "description": "Draw order among siblings (default 1)." }
+      {
+        "name": "BackgroundColor3 / BackgroundTransparency",
+        "type": "Color3 / number",
+        "description": "Fill color and opacity (1 = invisible)."
+      },
+      {
+        "name": "Size / Position",
+        "type": "UDim2",
+        "description": "Size/pos as Scale (fraction of parent) + Offset (pixels). UDim2.fromScale/fromOffset helpers."
+      },
+      {
+        "name": "AnchorPoint",
+        "type": "Vector2",
+        "description": "Which point of the frame Position refers to. (0.5, 0.5) = centered."
+      },
+      {
+        "name": "ClipsDescendants",
+        "type": "boolean",
+        "description": "Crop children to this frame's bounds — scroll areas, rounded corners."
+      },
+      {
+        "name": "Visible",
+        "type": "boolean",
+        "description": "Show/hide (and block input when hidden)."
+      },
+      {
+        "name": "ZIndex",
+        "type": "number",
+        "description": "Draw order among siblings (default 1)."
+      }
     ],
     "details": [
       {
@@ -56,9 +92,17 @@
   "examples": [
     {
       "title": "A centered card",
-      "code": "local frame = Instance.new(\"Frame\")\nframe.Size = UDim2.fromOffset(320, 200)\nframe.AnchorPoint = Vector2.new(0.5, 0.5)\nframe.Position = UDim2.fromScale(0.5, 0.5)   -- center of screen\nframe.BackgroundColor3 = Color3.fromRGB(30, 30, 40)\nframe.Parent = script.Parent\n\nlocal corner = Instance.new(\"UICorner\")\ncorner.CornerRadius = UDim.new(0, 12)\ncorner.Parent = frame\n\nlocal list = Instance.new(\"UIListLayout\")\nlist.Padding = UDim.new(0, 8)\nlist.HorizontalAlignment = Enum.HorizontalAlignment.Center\nlist.Parent = frame"
+      "code": "local frame = Instance.new(\"Frame\")\nframe.Size = UDim2.fromOffset(320, 200)\nframe.AnchorPoint = Vector2.new(0.5, 0.5)\nframe.Position = UDim2.fromScale(0.5, 0.5)   -- center of screen\nframe.BackgroundColor3 = Color3.fromRGB(30, 30, 40)\nframe.Parent = script.Parent\n\nlocal corner = Instance.new(\"UICorner\")\ncorner.CornerRadius = UDim.new(0, 12)\ncorner.Parent = frame\n\nlocal list = Instance.new(\"UIListLayout\")\nlist.Padding = UDim.new(0, 8)\nlist.HorizontalAlignment = Enum.HorizontalAlignment.Center\nlist.Parent = frame",
+      "language": "lua"
     }
   ],
-  "related": ["screengui", "textlabel", "scrollingframe", "udim2", "gui-toggle", "gui-hierarchy-requirements"],
+  "related": [
+    "screengui",
+    "textlabel",
+    "scrollingframe",
+    "udim2",
+    "gui-toggle",
+    "gui-hierarchy-requirements"
+  ],
   "added": "2026-10-04"
 }

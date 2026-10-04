@@ -4,8 +4,19 @@
   "category": "concepts",
   "type": "concept",
   "summary": "Everything in Roblox is an Instance parented in one giant tree rooted at game (the DataModel). Services are children of game; your content lives in their subtrees. Paths through this tree are how code finds anything.",
-  "keywords": ["datamodel", "game object", "tree structure", "parent child tree", "explorer", "object paths"],
-  "tags": ["concepts", "architecture", "essential"],
+  "keywords": [
+    "datamodel",
+    "game object",
+    "tree structure",
+    "parent child tree",
+    "explorer",
+    "object paths"
+  ],
+  "tags": [
+    "concepts",
+    "architecture",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -41,9 +52,18 @@
   "examples": [
     {
       "title": "Paths and guards",
-      "code": "-- Direct (only when existence is guaranteed):\nlocal lighting = game.Lighting\n\n-- Guarded hops:\nlocal map = workspace:FindFirstChild(\"Map\")\nlocal boss = map and map:FindFirstChild(\"Boss\")\nif boss then\n    print(\"Boss found at\", boss:GetFullName())\nend\n\n-- From inside a script:\nlocal tool = script.Parent          -- if script sits in a Tool\nprint(tool:GetFullName())           -- e.g. \"Workspace.Raani.Wand\" (example)"
+      "code": "-- Direct (only when existence is guaranteed):\nlocal lighting = game.Lighting\n\n-- Guarded hops:\nlocal map = workspace:FindFirstChild(\"Map\")\nlocal boss = map and map:FindFirstChild(\"Boss\")\nif boss then\n    print(\"Boss found at\", boss:GetFullName())\nend\n\n-- From inside a script:\nlocal tool = script.Parent          -- if script sits in a Tool\nprint(tool:GetFullName())           -- e.g. \"Workspace.Raani.Wand\" (example)",
+      "language": "lua"
     }
   ],
-  "related": ["instance", "instance-parent", "replication", "workspace", "wrong-object-paths", "find-first-child", "wait-for-child"],
+  "related": [
+    "instance",
+    "instance-parent",
+    "replication",
+    "workspace",
+    "wrong-object-paths",
+    "find-first-child",
+    "wait-for-child"
+  ],
   "added": "2026-10-04"
 }

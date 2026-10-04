@@ -4,8 +4,20 @@
   "category": "events",
   "type": "event",
   "summary": "Fires once when a character's health hits zero. Death handling belongs here — but remember each respawn brings a NEW Humanoid, so reconnect it on every CharacterAdded.",
-  "keywords": ["death event", "died", "on death", "health zero", "kill feed", "respawn trigger"],
-  "tags": ["characters", "lifecycle", "combat", "essential"],
+  "keywords": [
+    "death event",
+    "died",
+    "on death",
+    "health zero",
+    "kill feed",
+    "respawn trigger"
+  ],
+  "tags": [
+    "characters",
+    "lifecycle",
+    "combat",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -48,9 +60,15 @@
   "examples": [
     {
       "title": "Death counting with proper lifecycle",
-      "code": "local Players = game:GetService(\"Players\")\nlocal deaths = {}\n\nPlayers.PlayerAdded:Connect(function(player)\n    deaths[player.UserId] = 0\n\n    player.CharacterAdded:Connect(function(character)\n        local humanoid = character:WaitForChild(\"Humanoid\")\n        humanoid.Died:Connect(function()\n            deaths[player.UserId] += 1\n            print(`{player.Name} died ({deaths[player.UserId]} total)`)\n        end)\n    end)\nend)"
+      "code": "local Players = game:GetService(\"Players\")\nlocal deaths = {}\n\nPlayers.PlayerAdded:Connect(function(player)\n    deaths[player.UserId] = 0\n\n    player.CharacterAdded:Connect(function(character)\n        local humanoid = character:WaitForChild(\"Humanoid\")\n        humanoid.Died:Connect(function()\n            deaths[player.UserId] += 1\n            print(`{player.Name} died ({deaths[player.UserId]} total)`)\n        end)\n    end)\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["character-added", "humanoid", "player-added", "client-vs-server"],
+  "related": [
+    "character-added",
+    "humanoid",
+    "player-added",
+    "client-vs-server"
+  ],
   "added": "2026-10-04"
 }

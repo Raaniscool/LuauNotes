@@ -4,8 +4,18 @@
   "category": "gotchas",
   "type": "gotcha",
   "summary": "StarterGui is a TEMPLATE folder — clients copy its contents into each Player.PlayerGui at spawn. Code that toggles/reads GUIs must target PlayerGui (the live copy). Edits to StarterGui at runtime don't show.",
-  "keywords": ["gui not showing", "gui not updating", "startergui copy", "playergui live", "ui invisible bug"],
-  "tags": ["gotchas", "gui", "essential"],
+  "keywords": [
+    "gui not showing",
+    "gui not updating",
+    "startergui copy",
+    "playergui live",
+    "ui invisible bug"
+  ],
+  "tags": [
+    "gotchas",
+    "gui",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -34,9 +44,16 @@
   "examples": [
     {
       "title": "Right target",
-      "code": "-- ❌ Blueprint editing (invisible to everyone):\n-- game.StarterGui.Menu.Visible = true\n\n-- ✅ Live copy:\nlocal Players = game:GetService(\"Players\")\nlocal player = Players.LocalPlayer\nlocal playerGui = player:WaitForChild(\"PlayerGui\")\nlocal menu = playerGui:WaitForChild(\"Menu\")\nmenu.Enabled = true"
+      "code": "-- ❌ Blueprint editing (invisible to everyone):\n-- game.StarterGui.Menu.Visible = true\n\n-- ✅ Live copy:\nlocal Players = game:GetService(\"Players\")\nlocal player = Players.LocalPlayer\nlocal playerGui = player:WaitForChild(\"PlayerGui\")\nlocal menu = playerGui:WaitForChild(\"Menu\")\nmenu.Enabled = true",
+      "language": "lua"
     }
   ],
-  "related": ["starter-gui", "player-gui", "screengui", "screen-gui-reset-on-spawn", "gui-hierarchy-requirements"],
+  "related": [
+    "starter-gui",
+    "player-gui",
+    "screengui",
+    "screen-gui-reset-on-spawn",
+    "gui-hierarchy-requirements"
+  ],
   "added": "2026-10-04"
 }

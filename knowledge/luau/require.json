@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "function",
   "summary": "Loads a ModuleScript and returns whatever value the module returns. Modules run once; every later require gets the same cached value.",
-  "keywords": ["load module", "import module", "use ModuleScript", "require module"],
-  "tags": ["modules", "functions", "modulescripts"],
+  "keywords": [
+    "load module",
+    "import module",
+    "use ModuleScript",
+    "require module"
+  ],
+  "tags": [
+    "modules",
+    "functions",
+    "modulescripts"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -16,7 +25,11 @@
   "reference": {
     "signature": "require(moduleScript: ModuleScript | string) --> any",
     "parameters": [
-      { "name": "moduleScript", "type": "ModuleScript | string asset id", "description": "The ModuleScript instance to load. A string in the form `\"path\"` with asset IDs is supported for published modules." }
+      {
+        "name": "moduleScript",
+        "type": "ModuleScript | string asset id",
+        "description": "The ModuleScript instance to load. A string in the form `\"path\"` with asset IDs is supported for published modules."
+      }
     ],
     "returns": "Whatever the module's top-level `return` produced. If the module returns nothing, require gives `true`. If it errors, the error propagates to the caller.",
     "details": [
@@ -67,13 +80,20 @@
     {
       "title": "Standard module usage",
       "code": "-- == ReplicatedStorage/CoinUtils (ModuleScript) ==\nlocal CoinUtils = {}\n\nfunction CoinUtils.spawnAt(position)\n    local coin = Instance.new(\"Part\")\n    coin.Name = \"Coin\"\n    coin.Shape = Enum.PartType.Cylinder\n    coin.Position = position\n    coin.Parent = workspace\n    return coin\nend\n\nreturn CoinUtils\n\n-- == Any Script or LocalScript ==\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal CoinUtils = require(ReplicatedStorage:WaitForChild(\"CoinUtils\"))\n\nCoinUtils.spawnAt(Vector3.new(0, 5, 0))",
-      "whyItWorks": "require runs CoinUtils once, gets the returned table, and every script that requires it shares that same table."
+      "whyItWorks": "require runs CoinUtils once, gets the returned table, and every script that requires it shares that same table.",
+      "language": "lua"
     },
     {
       "title": "Module as a singleton store",
-      "code": "-- == GameState (ModuleScript) ==\nlocal GameState = {\n    phase = \"Lobby\",\n    round = 0,\n}\nreturn GameState\n\n-- Anywhere, client or server (each side gets its own copy):\nlocal GameState = require(script.Parent.GameState)\nGameState.phase = \"Playing\"   -- visible to every requirer on this side"
+      "code": "-- == GameState (ModuleScript) ==\nlocal GameState = {\n    phase = \"Lobby\",\n    round = 0,\n}\nreturn GameState\n\n-- Anywhere, client or server (each side gets its own copy):\nlocal GameState = require(script.Parent.GameState)\nGameState.phase = \"Playing\"   -- visible to every requirer on this side",
+      "language": "lua"
     }
   ],
-  "related": ["modulescript", "modules", "return", "module-return-mistakes", "module-patterns"],
+  "related": [
+    "modulescript",
+    "modules",
+    "return",
+    "module-return-mistakes"
+  ],
   "added": "2026-10-04"
 }

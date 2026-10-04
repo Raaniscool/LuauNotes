@@ -4,8 +4,17 @@
   "category": "events",
   "type": "property",
   "summary": "The server-assigned handler answering InvokeServer calls: OnServerInvoke = function(player, ...) return value end. Assigned like a property (not :Connect'd); must exist before clients invoke.",
-  "keywords": ["server invoke handler", "answer client question", "assigned callback", "invoke response"],
-  "tags": ["remotes", "networking", "client-server"],
+  "keywords": [
+    "server invoke handler",
+    "answer client question",
+    "assigned callback",
+    "invoke response"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -16,8 +25,16 @@
   "reference": {
     "signature": "RemoteFunction.OnServerInvoke = function(player: Player, ...args: any) ... return value end",
     "parameters": [
-      { "name": "player", "type": "Player", "description": "The invoking client — injected automatically, first parameter, unspoofable." },
-      { "name": "...args", "type": "any (serialized)", "description": "The client's InvokeServer arguments. Validate them." }
+      {
+        "name": "player",
+        "type": "Player",
+        "description": "The invoking client — injected automatically, first parameter, unspoofable."
+      },
+      {
+        "name": "...args",
+        "type": "any (serialized)",
+        "description": "The client's InvokeServer arguments. Validate them."
+      }
     ],
     "returns": "Whatever you return is serialized and delivered back to the invoking client.",
     "details": [
@@ -56,9 +73,16 @@
   "examples": [
     {
       "title": "Request-type dispatch",
-      "code": "-- Server:\nrf.OnServerInvoke = function(player, requestType, ...)\n    if requestType == \"Price\" then\n        local item = ...\n        if typeof(item) ~= \"string\" then return nil end\n        return PRICES[item]\n    elseif requestType == \"Level\" then\n        return getLevel(player)\n    end\n    return nil   -- unknown request\nend\n\n-- Client:\nlocal price = rf:InvokeServer(\"Price\", \"Sword\")"
+      "code": "-- Server:\nrf.OnServerInvoke = function(player, requestType, ...)\n    if requestType == \"Price\" then\n        local item = ...\n        if typeof(item) ~= \"string\" then return nil end\n        return PRICES[item]\n    elseif requestType == \"Level\" then\n        return getLevel(player)\n    end\n    return nil   -- unknown request\nend\n\n-- Client:\nlocal price = rf:InvokeServer(\"Price\", \"Sword\")",
+      "language": "lua"
     }
   ],
-  "related": ["remote-function", "invoke-server", "invoke-client", "on-client-invoke", "on-server-event"],
+  "related": [
+    "remote-function",
+    "invoke-server",
+    "invoke-client",
+    "on-client-invoke",
+    "on-server-event"
+  ],
   "added": "2026-10-04"
 }

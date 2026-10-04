@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "function",
   "summary": "Iterates every key/value pair in a table — array part and dictionary part — in no particular order. The workhorse for walking dictionaries.",
-  "keywords": ["iterate dictionary", "for k v in pairs", "all entries"],
-  "tags": ["iteration", "dictionaries", "tables", "functions"],
+  "keywords": [
+    "iterate dictionary",
+    "for k v in pairs",
+    "all entries"
+  ],
+  "tags": [
+    "iteration",
+    "dictionaries",
+    "tables",
+    "functions"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -51,9 +60,15 @@
   "examples": [
     {
       "title": "Ordered walk when you need it",
-      "code": "local inventory = { sword = 1, potion = 5, shield = 2 }\n\n-- Unordered (fine for totals):\nlocal total = 0\nfor _, count in inventory do\n    total += count\nend\nprint(\"Total items:\", total)   --> 8\n\n-- Ordered (when display matters):\nlocal keys = {}\nfor key in pairs(inventory) do table.insert(keys, key) end\ntable.sort(keys)\nfor _, key in keys do\n    print(key, inventory[key])\nend"
+      "code": "local inventory = { sword = 1, potion = 5, shield = 2 }\n\n-- Unordered (fine for totals):\nlocal total = 0\nfor _, count in inventory do\n    total += count\nend\nprint(\"Total items:\", total)   --> 8\n\n-- Ordered (when display matters):\nlocal keys = {}\nfor key in pairs(inventory) do table.insert(keys, key) end\ntable.sort(keys)\nfor _, key in keys do\n    print(key, inventory[key])\nend",
+      "language": "lua"
     }
   ],
-  "related": ["ipairs", "generic-for-loops", "dictionaries", "tables"],
+  "related": [
+    "ipairs",
+    "generic-for-loops",
+    "dictionaries",
+    "tables"
+  ],
   "added": "2026-10-04"
 }

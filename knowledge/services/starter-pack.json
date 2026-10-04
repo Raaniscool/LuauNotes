@@ -4,8 +4,17 @@
   "category": "services",
   "type": "service",
   "summary": "The tool template container: Tools parented here are copied into each player's Backpack on spawn. Runtime inventory changes happen on the Backpack, not here.",
-  "keywords": ["tools on spawn", "backpack", "give tool", "starting tools"],
-  "tags": ["services", "tools", "containers"],
+  "keywords": [
+    "tools on spawn",
+    "backpack",
+    "give tool",
+    "starting tools"
+  ],
+  "tags": [
+    "services",
+    "tools",
+    "containers"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -46,9 +55,15 @@
   "examples": [
     {
       "title": "Giving a tool mid-game",
-      "code": "local ServerStorage = game:GetService(\"ServerStorage\")\n\nlocal function rewardTool(player, toolName)\n    local template = ServerStorage:FindFirstChild(toolName)\n    if not template then return end\n    local tool = template:Clone()\n    tool.Parent = player:WaitForChild(\"Backpack\")   -- appears in inventory\nend"
+      "code": "local ServerStorage = game:GetService(\"ServerStorage\")\n\nlocal function rewardTool(player, toolName)\n    local template = ServerStorage:FindFirstChild(toolName)\n    if not template then return end\n    local tool = template:Clone()\n    tool.Parent = player:WaitForChild(\"Backpack\")   -- appears in inventory\nend",
+      "language": "lua"
     }
   ],
-  "related": ["tool", "tool-requires-handle", "player", "players"],
+  "related": [
+    "tool",
+    "tool-requires-handle",
+    "player",
+    "players"
+  ],
   "added": "2026-10-04"
 }

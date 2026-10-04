@@ -4,8 +4,18 @@
   "category": "gotchas",
   "type": "gotcha",
   "summary": "Legacy wait() rounds up to ~1/30s steps, caps at 10 minutes, and returns three values. task.wait() is precise, has no cap, and returns elapsed time. New code should always use task.wait.",
-  "keywords": ["old wait", "deprecated wait", "imprecise delay", "wait inaccurate", "task.wait better"],
-  "tags": ["gotchas", "timing", "modernization"],
+  "keywords": [
+    "old wait",
+    "deprecated wait",
+    "imprecise delay",
+    "wait inaccurate",
+    "task.wait better"
+  ],
+  "tags": [
+    "gotchas",
+    "timing",
+    "modernization"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -34,9 +44,13 @@
   "examples": [
     {
       "title": "Side by side",
-      "code": "-- ❌ legacy:\nwait(0.5)                    -- may sleep coarser than 0.5\nlocal s = spawn(function() end)\n\n-- ✅ modern:\ntask.wait(0.5)               -- honors 0.5s\nlocal elapsed = task.wait(1) -- returns actual elapsed\nlocal thread = task.spawn(function() end)"
+      "code": "-- ❌ legacy:\nwait(0.5)                    -- may sleep coarser than 0.5\nlocal s = spawn(function() end)\n\n-- ✅ modern:\ntask.wait(0.5)               -- honors 0.5s\nlocal elapsed = task.wait(1) -- returns actual elapsed\nlocal thread = task.spawn(function() end)",
+      "language": "lua"
     }
   ],
-  "related": ["task-library", "yielding", "script-library"],
+  "related": [
+    "task-library",
+    "yielding"
+  ],
   "added": "2026-10-04"
 }

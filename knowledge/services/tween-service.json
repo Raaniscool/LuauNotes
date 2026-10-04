@@ -4,8 +4,22 @@
   "category": "services",
   "type": "service",
   "summary": "Animates properties smoothly over time: TweenService:Create(instance, TweenInfo, goal) builds a Tween you Play — moving parts, fading GUIs, growing HealthBars, without per-frame math.",
-  "keywords": ["tween", "animation", "smooth movement", "lerp", "easing", "TweenInfo", "animate gui", "move part smoothly"],
-  "tags": ["services", "animation", "gui", "essential"],
+  "keywords": [
+    "tween",
+    "animation",
+    "smooth movement",
+    "lerp",
+    "easing",
+    "TweenInfo",
+    "animate gui",
+    "move part smoothly"
+  ],
+  "tags": [
+    "services",
+    "animation",
+    "gui",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,8 +29,16 @@
   },
   "reference": {
     "methods": [
-      { "name": "Create", "signature": "TweenService:Create(instance: Instance, tweenInfo: TweenInfo, goal: { [string]: any }) --> Tween", "description": "Builds a Tween that will animate the listed properties from current values to the goal values. Does NOT start it — call Tween:Play()." },
-      { "name": "GetValue", "signature": "TweenService:GetValue(alpha: number, easingStyle: Enum.EasingStyle, easingDirection: Enum.EasingDirection) --> number", "description": "Easing math helper: normalized progress in → eased value out." }
+      {
+        "name": "Create",
+        "signature": "TweenService:Create(instance: Instance, tweenInfo: TweenInfo, goal: { [string]: any }) --> Tween",
+        "description": "Builds a Tween that will animate the listed properties from current values to the goal values. Does NOT start it — call Tween:Play()."
+      },
+      {
+        "name": "GetValue",
+        "signature": "TweenService:GetValue(alpha: number, easingStyle: Enum.EasingStyle, easingDirection: Enum.EasingDirection) --> number",
+        "description": "Easing math helper: normalized progress in → eased value out."
+      }
     ],
     "details": [
       {
@@ -65,13 +87,23 @@
     {
       "title": "Sliding a GUI frame in",
       "code": "local TweenService = game:GetService(\"TweenService\")\nlocal frame = script.Parent   -- a Frame off-screen to the left\n\nlocal info = TweenInfo.new(\n    0.4,                              -- seconds\n    Enum.EasingStyle.Quad,\n    Enum.EasingDirection.Out\n)\n\nlocal goal = { Position = UDim2.fromScale(0.5, 0.5) }  -- centered\nlocal tween = TweenService:Create(frame, info, goal)\ntween:Play()\n\ntween.Completed:Connect(function()\n    print(\"Menu finished sliding in\")\nend)",
-      "whyItWorks": "The goal table names real properties of a Frame; TweenService drives Position from its current value to center over 0.4s with an ease-out curve."
+      "whyItWorks": "The goal table names real properties of a Frame; TweenService drives Position from its current value to center over 0.4s with an ease-out curve.",
+      "language": "lua"
     },
     {
       "title": "A bouncing coin pickup effect",
-      "code": "local TweenService = game:GetService(\"TweenService\")\n\nlocal function coinPop(coin: Part)\n    local pop = TweenService:Create(coin, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out),\n        { Size = coin.Size * 1.4 })\n    local shrink = TweenService:Create(coin, TweenInfo.new(0.2),\n        { Size = Vector3.new(0.1, 0.1, 0.1), Transparency = 1 })\n\n    pop:Play()\n    pop.Completed:Connect(function()\n        shrink:Play()\n    end)\n    shrink.Completed:Connect(function()\n        coin:Destroy()\n    end)\nend"
+      "code": "local TweenService = game:GetService(\"TweenService\")\n\nlocal function coinPop(coin: Part)\n    local pop = TweenService:Create(coin, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out),\n        { Size = coin.Size * 1.4 })\n    local shrink = TweenService:Create(coin, TweenInfo.new(0.2),\n        { Size = Vector3.new(0.1, 0.1, 0.1), Transparency = 1 })\n\n    pop:Play()\n    pop.Completed:Connect(function()\n        shrink:Play()\n    end)\n    shrink.Completed:Connect(function()\n        coin:Destroy()\n    end)\nend",
+      "language": "lua"
     }
   ],
-  "related": ["tween-create", "tween-play", "tween-info", "tweening", "run-service", "moving-models", "screengui"],
+  "related": [
+    "tween-create",
+    "tween-play",
+    "tween-info",
+    "tweening",
+    "run-service",
+    "moving-models",
+    "screengui"
+  ],
   "added": "2026-10-04"
 }

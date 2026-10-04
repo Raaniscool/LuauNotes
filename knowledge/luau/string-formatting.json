@@ -4,8 +4,19 @@
   "category": "luau",
   "type": "function",
   "summary": "Builds formatted strings from templates: %d integers, %s strings, %f/%.2f floats. Great for timers, prices, and any number-heavy UI text.",
-  "keywords": ["format string", "string.format", "%d", "%s", "template text", "interpolation alternative"],
-  "tags": ["strings", "formatting", "ui"],
+  "keywords": [
+    "format string",
+    "string.format",
+    "%d",
+    "%s",
+    "template text",
+    "interpolation alternative"
+  ],
+  "tags": [
+    "strings",
+    "formatting",
+    "ui"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -50,9 +61,14 @@
   "examples": [
     {
       "title": "Timers and prices",
-      "code": "local seconds = 125\nprint(string.format(\"%02d:%02d\", seconds // 60, seconds % 60))  --> 02:05\n\nlocal price = 19.5\nprint(string.format(\"Price: $%.2f\", price))   --> Price: $19.50\n\nlocal ratio = 0.337\nprint(string.format(\"%.1f%% complete\", ratio * 100))  --> 33.7% complete"
+      "code": "local seconds = 125\nprint(string.format(\"%02d:%02d\", seconds // 60, seconds % 60))  --> 02:05\n\nlocal price = 19.5\nprint(string.format(\"Price: $%.2f\", price))   --> Price: $19.50\n\nlocal ratio = 0.337\nprint(string.format(\"%.1f%% complete\", ratio * 100))  --> 33.7% complete",
+      "language": "lua"
     }
   ],
-  "related": ["strings", "string-operations", "numbers"],
+  "related": [
+    "strings",
+    "string-operations",
+    "numbers"
+  ],
   "added": "2026-10-04"
 }

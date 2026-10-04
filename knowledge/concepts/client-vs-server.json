@@ -4,8 +4,20 @@
   "category": "concepts",
   "type": "concept",
   "summary": "The fundamental split: one authoritative server runs the real game; each player's device runs a client that renders and inputs. They talk only through replication and remotes — and the server never trusts the client.",
-  "keywords": ["client server boundary", "authority", "where code runs", "server authoritative", "client prediction", "two worlds"],
-  "tags": ["concepts", "architecture", "security", "essential"],
+  "keywords": [
+    "client server boundary",
+    "authority",
+    "where code runs",
+    "server authoritative",
+    "client prediction",
+    "two worlds"
+  ],
+  "tags": [
+    "concepts",
+    "architecture",
+    "security",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -42,9 +54,18 @@
   "examples": [
     {
       "title": "Same module, both sides",
-      "code": "-- SharedModule (ReplicatedStorage)\nlocal RunService = game:GetService(\"RunService\")\n\nlocal M = {}\n\nfunction M.init()\n    if RunService:IsServer() then\n        print(\"Server: authoritative systems\")\n    else\n        print(\"Client: UI and input systems\")\n    end\nend\n\nreturn M\n\n-- Required from both a Script and a LocalScript,\n-- each side takes its own branch."
+      "code": "-- SharedModule (ReplicatedStorage)\nlocal RunService = game:GetService(\"RunService\")\n\nlocal M = {}\n\nfunction M.init()\n    if RunService:IsServer() then\n        print(\"Server: authoritative systems\")\n    else\n        print(\"Client: UI and input systems\")\n    end\nend\n\nreturn M\n\n-- Required from both a Script and a LocalScript,\n-- each side takes its own branch.",
+      "language": "lua"
     }
   ],
-  "related": ["replication", "never-trust-the-client", "script", "localscript", "remote-event", "server-validation", "serialization"],
+  "related": [
+    "replication",
+    "never-trust-the-client",
+    "script",
+    "localscript",
+    "remote-event",
+    "server-validation",
+    "serialization"
+  ],
   "added": "2026-10-04"
 }

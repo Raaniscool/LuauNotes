@@ -4,8 +4,19 @@
   "category": "classes",
   "type": "class",
   "summary": "Clickable text GUI element. Activated is the modern cross-device click event (fires for mouse, touch, and gamepad); MouseButton1Click is the mouse-only legacy.",
-  "keywords": ["button", "click", "Activated", "MouseButton1Click", "gui interaction"],
-  "tags": ["classes", "gui", "input", "essential"],
+  "keywords": [
+    "button",
+    "click",
+    "Activated",
+    "MouseButton1Click",
+    "gui interaction"
+  ],
+  "tags": [
+    "classes",
+    "gui",
+    "input",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,14 +26,38 @@
   },
   "reference": {
     "events": [
-      { "name": "Activated", "signature": "TextButton.Activated:Connect(function() end)", "description": "Fires on completed activation across ALL input types (mouse click, touch tap, gamepad). The recommended event." },
-      { "name": "MouseButton1Click", "signature": "TextButton.MouseButton1Click:Connect(function() end)", "description": "Legacy: mouse left-click only. Prefer Activated." },
-      { "name": "MouseEnter / MouseLeave", "signature": "TextButton.MouseEnter:Connect(function() end)", "description": "Hover tracking for effects/tooltips." }
+      {
+        "name": "Activated",
+        "signature": "TextButton.Activated:Connect(function() end)",
+        "description": "Fires on completed activation across ALL input types (mouse click, touch tap, gamepad). The recommended event."
+      },
+      {
+        "name": "MouseButton1Click",
+        "signature": "TextButton.MouseButton1Click:Connect(function() end)",
+        "description": "Legacy: mouse left-click only. Prefer Activated."
+      },
+      {
+        "name": "MouseEnter / MouseLeave",
+        "signature": "TextButton.MouseEnter:Connect(function() end)",
+        "description": "Hover tracking for effects/tooltips."
+      }
     ],
     "properties": [
-      { "name": "AutoButtonColor", "type": "boolean", "description": "Automatic hover/press shading (default true)." },
-      { "name": "Active", "type": "boolean", "description": "Whether the button consumes input." },
-      { "name": "(inherits TextLabel text props)", "type": "—", "description": "Text, TextScaled, Font, colors — same as TextLabel." }
+      {
+        "name": "AutoButtonColor",
+        "type": "boolean",
+        "description": "Automatic hover/press shading (default true)."
+      },
+      {
+        "name": "Active",
+        "type": "boolean",
+        "description": "Whether the button consumes input."
+      },
+      {
+        "name": "(inherits TextLabel text props)",
+        "type": "—",
+        "description": "Text, TextScaled, Font, colors — same as TextLabel."
+      }
     ]
   },
   "explanation": {
@@ -51,9 +86,16 @@
   "examples": [
     {
       "title": "Shop button → server purchase",
-      "code": "-- LocalScript in a TextButton\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal buyEvent = ReplicatedStorage:WaitForChild(\"BuyItem\")\nlocal button = script.Parent\n\nlocal lastClick = 0\nbutton.Activated:Connect(function()\n    local now = os.clock()\n    if now - lastClick < 0.5 then return end   -- debounce\n    lastClick = now\n    buyEvent:FireServer(\"Sword\")\nend)"
+      "code": "-- LocalScript in a TextButton\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal buyEvent = ReplicatedStorage:WaitForChild(\"BuyItem\")\nlocal button = script.Parent\n\nlocal lastClick = 0\nbutton.Activated:Connect(function()\n    local now = os.clock()\n    if now - lastClick < 0.5 then return end   -- debounce\n    lastClick = now\n    buyEvent:FireServer(\"Sword\")\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["textlabel", "gui-toggle", "debounce", "remote-event", "client-vs-server"],
+  "related": [
+    "textlabel",
+    "gui-toggle",
+    "debounce",
+    "remote-event",
+    "client-vs-server"
+  ],
   "added": "2026-10-04"
 }

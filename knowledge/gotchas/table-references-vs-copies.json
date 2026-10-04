@@ -4,8 +4,18 @@
   "category": "gotchas",
   "type": "gotcha",
   "summary": "Assigning or passing a table shares the SAME table: `local b = a` makes two names for one table. Mutations through either name are visible everywhere. Copy explicitly when you need independence.",
-  "keywords": ["table shared", "aliasing", "mutating original", "shallow copy", "table identity"],
-  "tags": ["gotchas", "tables", "essential"],
+  "keywords": [
+    "table shared",
+    "aliasing",
+    "mutating original",
+    "shallow copy",
+    "table identity"
+  ],
+  "tags": [
+    "gotchas",
+    "tables",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -34,9 +44,15 @@
   "examples": [
     {
       "title": "Reference vs copy",
-      "code": "local stats = { hp = 100, mp = 50 }\n\nlocal alias = stats            -- same table!\nalias.hp = 1\nprint(stats.hp)                --> 1  (surprise if you expected 100)\n\n-- Shallow copy:\nlocal copy = table.clone(stats)\ncopy.hp = 200\nprint(stats.hp)                --> 1 (untouched by copy)\n\n-- Nested caveat:\nlocal deep = { pos = { x = 0, y = 0 } }\nlocal shallow = table.clone(deep)\nshallow.pos.x = 9\nprint(deep.pos.x)              --> 9  (nested table still shared!)"
+      "code": "local stats = { hp = 100, mp = 50 }\n\nlocal alias = stats            -- same table!\nalias.hp = 1\nprint(stats.hp)                --> 1  (surprise if you expected 100)\n\n-- Shallow copy:\nlocal copy = table.clone(stats)\ncopy.hp = 200\nprint(stats.hp)                --> 1 (untouched by copy)\n\n-- Nested caveat:\nlocal deep = { pos = { x = 0, y = 0 } }\nlocal shallow = table.clone(deep)\nshallow.pos.x = 9\nprint(deep.pos.x)              --> 9  (nested table still shared!)",
+      "language": "lua"
     }
   ],
-  "related": ["tables", "serialization", "variables", "functions"],
+  "related": [
+    "tables",
+    "serialization",
+    "variables",
+    "functions"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,19 @@
   "category": "classes",
   "type": "class",
   "summary": "Client ↔ server request/response: InvokeServer yields until the server's OnServerInvoke returns a value. Use sparingly — it blocks the calling thread and is deadlock-prone.",
-  "keywords": ["invoke", "request response", "InvokeServer", "OnServerInvoke", "return value from server", "yielding remote"],
-  "tags": ["remotes", "networking", "client-server"],
+  "keywords": [
+    "invoke",
+    "request response",
+    "InvokeServer",
+    "OnServerInvoke",
+    "return value from server",
+    "yielding remote"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,12 +26,28 @@
   },
   "reference": {
     "methods": [
-      { "name": "InvokeServer", "signature": "RemoteFunction:InvokeServer(...: any) --> ...any", "description": "Client only. Yields the calling thread until the server's OnServerInvoke handler returns. Returns whatever the handler returned." },
-      { "name": "InvokeClient", "signature": "RemoteFunction:InvokeClient(player: Player, timeoutSeconds: number?, ...: any) --> ...any", "description": "Server only. Yields until the target client's OnClientInvoke returns. Optional timeout (errors when exceeded). Never trust what comes back." }
+      {
+        "name": "InvokeServer",
+        "signature": "RemoteFunction:InvokeServer(...: any) --> ...any",
+        "description": "Client only. Yields the calling thread until the server's OnServerInvoke handler returns. Returns whatever the handler returned."
+      },
+      {
+        "name": "InvokeClient",
+        "signature": "RemoteFunction:InvokeClient(player: Player, timeoutSeconds: number?, ...: any) --> ...any",
+        "description": "Server only. Yields until the target client's OnClientInvoke returns. Optional timeout (errors when exceeded). Never trust what comes back."
+      }
     ],
     "properties": [
-      { "name": "OnServerInvoke", "type": "function", "description": "Server-assigned callback: `remote.OnServerInvoke = function(player, ...) return value end`. Assigned, not connected. If unset when a client invokes, the client errors." },
-      { "name": "OnClientInvoke", "type": "function", "description": "Client-assigned callback for server→client invokes. Set this before the server might invoke, or the server call fails/times out." }
+      {
+        "name": "OnServerInvoke",
+        "type": "function",
+        "description": "Server-assigned callback: `remote.OnServerInvoke = function(player, ...) return value end`. Assigned, not connected. If unset when a client invokes, the client errors."
+      },
+      {
+        "name": "OnClientInvoke",
+        "type": "function",
+        "description": "Client-assigned callback for server→client invokes. Set this before the server might invoke, or the server call fails/times out."
+      }
     ],
     "details": [
       {
@@ -70,14 +97,27 @@
       "title": "Client asks for the shop price",
       "code": "-- == Script (server) — set up the answerer ONCE at startup ==\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal getPrice = ReplicatedStorage:WaitForChild(\"GetPrice\")\nlocal PRICES = { Sword = 250, Shield = 100 }\n\ngetPrice.OnServerInvoke = function(player, itemName)\n    if typeof(itemName) ~= \"string\" then\n        return nil\n    end\n    return PRICES[itemName]\nend\n\n-- == LocalScript (client) ==\nlocal getPrice = ReplicatedStorage:WaitForChild(\"GetPrice\")\n\nlocal ok, price = pcall(function()\n    return getPrice:InvokeServer(\"Sword\")\nend)\n\nif ok and price then\n    print(\"Sword costs\", price)   --> Sword costs 250\nelse\n    warn(\"Price lookup failed\")\nend",
       "whyItWorks": "The server assigns OnServerInvoke once; each client invoke runs that function with `player` first (same rule as OnServerEvent) and returns the value across the network.",
-      "commonMistake": "Forgetting the server-side assignment (or assigning it AFTER clients start invoking) — invokes then error on the client."
+      "commonMistake": "Forgetting the server-side assignment (or assigning it AFTER clients start invoking) — invokes then error on the client.",
+      "language": "lua"
     },
     {
       "title": "Server → client invoke with timeout",
       "code": "-- Server asks ONE client a question, but never hangs on it:\nlocal ok, answer = pcall(function()\n    return remote:InvokeClient(player, 5, \"Do you accept the trade?\")  -- 5s timeout\nend)\n\nif ok and answer == true then\n    print(player.Name .. \" accepted\")\nelse\n    print(player.Name .. \" did not answer (or said no)\")\nend",
-      "commonMistake": "InvokeClient without a timeout: if the client's OnClientInvoke isn't set (or the client is malicious), the server thread can wait indefinitely."
+      "commonMistake": "InvokeClient without a timeout: if the client's OnClientInvoke isn't set (or the client is malicious), the server thread can wait indefinitely.",
+      "language": "lua"
     }
   ],
-  "related": ["remote-event", "unreliable-remote-event", "invoke-server", "on-server-invoke", "invoke-client", "on-client-invoke", "yielding", "client-vs-server", "request-response", "never-trust-the-client"],
+  "related": [
+    "remote-event",
+    "unreliable-remote-event",
+    "invoke-server",
+    "on-server-invoke",
+    "invoke-client",
+    "on-client-invoke",
+    "yielding",
+    "client-vs-server",
+    "request-response",
+    "never-trust-the-client"
+  ],
   "added": "2026-10-04"
 }

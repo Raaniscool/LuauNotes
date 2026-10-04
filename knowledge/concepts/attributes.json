@@ -4,8 +4,19 @@
   "category": "concepts",
   "type": "concept",
   "summary": "Custom typed key-value data attached to any instance at runtime (or in Studio): SetAttribute/GetAttribute, watched with GetAttributeChangedSignal. They replicate, validate in the Properties window, and often replace child value objects.",
-  "keywords": ["SetAttribute", "GetAttribute", "custom instance data", "attribute changed", "typed properties", "metadata"],
-  "tags": ["concepts", "data", "instance"],
+  "keywords": [
+    "SetAttribute",
+    "GetAttribute",
+    "custom instance data",
+    "attribute changed",
+    "typed properties",
+    "metadata"
+  ],
+  "tags": [
+    "concepts",
+    "data",
+    "instance"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -40,9 +51,16 @@
   "examples": [
     {
       "title": "Trap part with attributes",
-      "code": "-- setup (server):\nlocal trap = workspace.Trap\ntrap:SetAttribute(\"Damage\", 25)\ntrap:SetAttribute(\"Cooldown\", 1.5)\n\n-- use:\nlocal dmg = trap:GetAttribute(\"Damage\") or 10\n\ntrap:GetAttributeChangedSignal(\"Damage\"):Connect(function()\n    print(\"Trap damage is now\", trap:GetAttribute(\"Damage\"))\nend)\n\nprint(trap:GetAttributes())   -- { Damage = 25, Cooldown = 1.5 }"
+      "code": "-- setup (server):\nlocal trap = workspace.Trap\ntrap:SetAttribute(\"Damage\", 25)\ntrap:SetAttribute(\"Cooldown\", 1.5)\n\n-- use:\nlocal dmg = trap:GetAttribute(\"Damage\") or 10\n\ntrap:GetAttributeChangedSignal(\"Damage\"):Connect(function()\n    print(\"Trap damage is now\", trap:GetAttribute(\"Damage\"))\nend)\n\nprint(trap:GetAttributes())   -- { Damage = 25, Cooldown = 1.5 }",
+      "language": "lua"
     }
   ],
-  "related": ["collection-service", "get-tagged", "value-base-value", "instance", "replication"],
+  "related": [
+    "collection-service",
+    "get-tagged",
+    "value-base-value",
+    "instance",
+    "replication"
+  ],
   "added": "2026-10-04"
 }

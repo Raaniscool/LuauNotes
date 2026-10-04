@@ -4,8 +4,20 @@
   "category": "patterns",
   "type": "pattern",
   "summary": "Smooth change over time without per-frame code: TweenService interpolates properties (position, size, color, transparency…) using TweenInfo recipes. Create → Play → (optionally) await Completed.",
-  "keywords": ["smooth animation", "fade", "slide gui", "TweenService pattern", "animated transition", "ease"],
-  "tags": ["patterns", "animation", "gui", "essential"],
+  "keywords": [
+    "smooth animation",
+    "fade",
+    "slide gui",
+    "TweenService pattern",
+    "animated transition",
+    "ease"
+  ],
+  "tags": [
+    "patterns",
+    "animation",
+    "gui",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -41,9 +53,16 @@
   "examples": [
     {
       "title": "Menu slide-in",
-      "code": "local TweenService = game:GetService(\"TweenService\")\nlocal panel = script.Parent.ShopPanel   -- anchored off-screen left\n\nlocal hidden = UDim2.new(-0.4, 0, 0.5, 0)\nlocal shown  = UDim2.new(0.5, 0, 0.5, 0)\nlocal info = TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)\n\npanel.Position = hidden\nlocal slideIn  = TweenService:Create(panel, info, { Position = shown })\nlocal slideOut = TweenService:Create(panel, info, { Position = hidden })\n\nlocal open = false\nscript.Parent.ToggleButton.Activated:Connect(function()\n    open = not open\n    if open then slideIn:Play() else slideOut:Play() end\nend)"
+      "code": "local TweenService = game:GetService(\"TweenService\")\nlocal panel = script.Parent.ShopPanel   -- anchored off-screen left\n\nlocal hidden = UDim2.new(-0.4, 0, 0.5, 0)\nlocal shown  = UDim2.new(0.5, 0, 0.5, 0)\nlocal info = TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)\n\npanel.Position = hidden\nlocal slideIn  = TweenService:Create(panel, info, { Position = shown })\nlocal slideOut = TweenService:Create(panel, info, { Position = hidden })\n\nlocal open = false\nscript.Parent.ToggleButton.Activated:Connect(function()\n    open = not open\n    if open then slideIn:Play() else slideOut:Play() end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["tween-service", "tween-create", "tween-play", "tween-info", "gui-toggle"],
+  "related": [
+    "tween-service",
+    "tween-create",
+    "tween-play",
+    "tween-info",
+    "gui-toggle"
+  ],
   "added": "2026-10-04"
 }

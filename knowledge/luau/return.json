@@ -4,8 +4,18 @@
   "category": "luau",
   "type": "keyword",
   "summary": "Hands values back to the caller and exits the function immediately. Also required at the end of ModuleScripts to define what require() receives.",
-  "keywords": ["return value", "exit function", "module return", "give back"],
-  "tags": ["basics", "functions", "modules", "control-flow"],
+  "keywords": [
+    "return value",
+    "exit function",
+    "module return",
+    "give back"
+  ],
+  "tags": [
+    "basics",
+    "functions",
+    "modules",
+    "control-flow"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -62,14 +72,22 @@
   "examples": [
     {
       "title": "Early returns keep code flat",
-      "code": "local function heal(player, amount)\n    local character = player and player.Character\n    if not character then return end\n\n    local humanoid = character:FindFirstChildOfClass(\"Humanoid\")\n    if not humanoid then return end\n\n    humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + amount)\n    return true\nend\n\n-- No nested pyramids: every failure path exits early."
+      "code": "local function heal(player, amount)\n    local character = player and player.Character\n    if not character then return end\n\n    local humanoid = character:FindFirstChildOfClass(\"Humanoid\")\n    if not humanoid then return end\n\n    humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + amount)\n    return true\nend\n\n-- No nested pyramids: every failure path exits early.",
+      "language": "lua"
     },
     {
       "title": "What require() receives",
       "code": "-- Inside a ModuleScript:\nlocal Tools = {}\nfunction Tools.greet() print(\"hi\") end\nreturn Tools            -- THIS is what require() hands back\n\n-- Elsewhere:\nlocal Tools = require(pathToModule)\nTools.greet()           --> hi",
-      "commonMistake": "Forgetting the final `return Tools` means `require()` returns `true` and every `Tools.something` call errors with 'attempt to index boolean'."
+      "commonMistake": "Forgetting the final `return Tools` means `require()` returns `true` and every `Tools.something` call errors with 'attempt to index boolean'.",
+      "language": "lua"
     }
   ],
-  "related": ["functions", "modulescript", "require", "module-return-mistakes", "return-mistakes"],
+  "related": [
+    "functions",
+    "modulescript",
+    "require",
+    "module-return-mistakes",
+    "return-mistakes"
+  ],
   "added": "2026-10-04"
 }

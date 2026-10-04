@@ -4,8 +4,17 @@
   "category": "classes",
   "type": "class",
   "summary": "Same-side request/response: Invoke() calls another script's OnInvoke and returns its result — like RemoteFunction without the network. Rarely needed; direct function calls usually win.",
-  "keywords": ["bindable function", "Invoke", "OnInvoke", "same side request"],
-  "tags": ["events", "communication", "architecture"],
+  "keywords": [
+    "bindable function",
+    "Invoke",
+    "OnInvoke",
+    "same side request"
+  ],
+  "tags": [
+    "events",
+    "communication",
+    "architecture"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,10 +24,18 @@
   },
   "reference": {
     "methods": [
-      { "name": "Invoke", "signature": "BindableFunction:Invoke(...: any) --> ...any", "description": "Calls the OnInvoke handler assigned on this side and returns its result." }
+      {
+        "name": "Invoke",
+        "signature": "BindableFunction:Invoke(...: any) --> ...any",
+        "description": "Calls the OnInvoke handler assigned on this side and returns its result."
+      }
     ],
     "properties": [
-      { "name": "OnInvoke", "type": "function", "description": "Assigned handler: `bindable.OnInvoke = function(...) return value end`. Must be set before Invoke is called." }
+      {
+        "name": "OnInvoke",
+        "type": "function",
+        "description": "Assigned handler: `bindable.OnInvoke = function(...) return value end`. Must be set before Invoke is called."
+      }
     ],
     "details": [
       {
@@ -50,9 +67,15 @@
   "examples": [
     {
       "title": "Minimal usage",
-      "code": "-- Provider Script:\nlocal bindable = script.Parent.SomeBindableFunction\nbindable.OnInvoke = function(a, b)\n    return a + b\nend\n\n-- Consumer Script:\nlocal bindable = game.ServerScriptService.SomeBindableFunction\nprint(bindable:Invoke(20, 22))   --> 42"
+      "code": "-- Provider Script:\nlocal bindable = script.Parent.SomeBindableFunction\nbindable.OnInvoke = function(a, b)\n    return a + b\nend\n\n-- Consumer Script:\nlocal bindable = game.ServerScriptService.SomeBindableFunction\nprint(bindable:Invoke(20, 22))   --> 42",
+      "language": "lua"
     }
   ],
-  "related": ["bindable-event", "remote-function", "modules", "require"],
+  "related": [
+    "bindable-event",
+    "remote-function",
+    "modules",
+    "require"
+  ],
   "added": "2026-10-04"
 }

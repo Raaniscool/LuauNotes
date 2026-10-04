@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "function",
   "summary": "Guards an assumption: errors with your message if the value is falsy, otherwise returns the value unchanged. Inline nil-guard and invariant check in one.",
-  "keywords": ["invariant", "guard", "assertion", "fail fast"],
-  "tags": ["errors", "functions", "robustness"],
+  "keywords": [
+    "invariant",
+    "guard",
+    "assertion",
+    "fail fast"
+  ],
+  "tags": [
+    "errors",
+    "functions",
+    "robustness"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -48,9 +57,15 @@
     {
       "title": "Inline guards",
       "code": "local function beginRound()\n    local map = assert(workspace:FindFirstChild(\"Map\"), \"Map missing!\")\n    local spawn = assert(map:FindFirstChild(\"Spawn\"), \"Spawn point missing in Map!\")\n    print(\"Round begins at\", spawn.Position)\nend",
-      "whyItWorks": "If either lookup fails, the script halts right there with a message naming the missing piece — no downstream nil mystery."
+      "whyItWorks": "If either lookup fails, the script halts right there with a message naming the missing piece — no downstream nil mystery.",
+      "language": "lua"
     }
   ],
-  "related": ["pcall", "error-handling", "nil", "unexpected-nil"],
+  "related": [
+    "pcall",
+    "error-handling",
+    "nil",
+    "indexing-nil"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,17 @@
   "category": "gotchas",
   "type": "gotcha",
   "summary": "BoolValue is an INSTANCE whose .Value is a boolean. Truthiness bites here: `if boolValue then` is ALWAYS truthy (it's an object!) — you must check boolValue.Value.",
-  "keywords": ["boolvalue always true", "instance truthiness", "check value of boolvalue", "boolean vs boolvalue"],
-  "tags": ["gotchas", "values", "truthiness"],
+  "keywords": [
+    "boolvalue always true",
+    "instance truthiness",
+    "check value of boolvalue",
+    "boolean vs boolvalue"
+  ],
+  "tags": [
+    "gotchas",
+    "values",
+    "truthiness"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -33,9 +42,15 @@
   "examples": [
     {
       "title": "The trap",
-      "code": "local isOpen = Instance.new(\"BoolValue\")\nisOpen.Value = false\n\nif isOpen then\n    print(\"This runs! isOpen is an object — truthy\")\nend\n\nif isOpen.Value then\n    print(\"This correctly does NOT run\")\nelse\n    print(\"False checked properly\")\nend"
+      "code": "local isOpen = Instance.new(\"BoolValue\")\nisOpen.Value = false\n\nif isOpen then\n    print(\"This runs! isOpen is an object — truthy\")\nend\n\nif isOpen.Value then\n    print(\"This correctly does NOT run\")\nelse\n    print(\"False checked properly\")\nend",
+      "language": "lua"
     }
   ],
-  "related": ["value-base-value", "truthiness", "forgetting-dot-value", "attributes"],
+  "related": [
+    "value-base-value",
+    "truthiness",
+    "forgetting-dot-value",
+    "attributes"
+  ],
   "added": "2026-10-04"
 }

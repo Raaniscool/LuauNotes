@@ -4,8 +4,21 @@
   "category": "luau",
   "type": "concept",
   "summary": "The mechanism that lets tables customize behavior: __index for fallback lookups (the backbone of OOP), __newindex, __tostring, __add, __eq and friends.",
-  "keywords": ["metatable", "__index", "__newindex", "setmetatable", "getmetatable", "operator overloading", "classes"],
-  "tags": ["intermediate", "tables", "oop", "metatables"],
+  "keywords": [
+    "metatable",
+    "__index",
+    "__newindex",
+    "setmetatable",
+    "getmetatable",
+    "operator overloading",
+    "classes"
+  ],
+  "tags": [
+    "intermediate",
+    "tables",
+    "oop",
+    "metatables"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -16,8 +29,16 @@
   "reference": {
     "signature": "setmetatable(table, metatable) --> table",
     "methods": [
-      { "name": "setmetatable", "signature": "setmetatable(t, mt) --> t", "description": "Assigns mt as t's metatable and returns t (so `setmetatable({}, mt)` is a constructor idiom)." },
-      { "name": "getmetatable", "signature": "getmetatable(t) --> table?", "description": "Returns the metatable or nil." }
+      {
+        "name": "setmetatable",
+        "signature": "setmetatable(t, mt) --> t",
+        "description": "Assigns mt as t's metatable and returns t (so `setmetatable({}, mt)` is a constructor idiom)."
+      },
+      {
+        "name": "getmetatable",
+        "signature": "getmetatable(t) --> table?",
+        "description": "Returns the metatable or nil."
+      }
     ],
     "details": [
       {
@@ -58,13 +79,20 @@
   "examples": [
     {
       "title": "Defaults via __index",
-      "code": "local DEFAULTS = { Speed = 16, Jump = 50, Health = 100 }\n\nlocal function withDefaults(overrides)\n    return setmetatable(overrides or {}, { __index = DEFAULTS })\nend\n\nlocal config = withDefaults({ Speed = 20 })\nprint(config.Speed)    --> 20  (overridden)\nprint(config.Jump)     --> 50  (falls back to default)"
+      "code": "local DEFAULTS = { Speed = 16, Jump = 50, Health = 100 }\n\nlocal function withDefaults(overrides)\n    return setmetatable(overrides or {}, { __index = DEFAULTS })\nend\n\nlocal config = withDefaults({ Speed = 20 })\nprint(config.Speed)    --> 20  (overridden)\nprint(config.Jump)     --> 50  (falls back to default)",
+      "language": "lua"
     },
     {
       "title": "A minimal class",
-      "code": "local BankAccount = {}\nBankAccount.__index = BankAccount\n\nfunction BankAccount.new(owner, balance)\n    return setmetatable({ owner = owner, balance = balance or 0 }, BankAccount)\nend\n\nfunction BankAccount:deposit(amount)\n    self.balance += amount\nend\n\nlocal acc = BankAccount.new(\"Raanis\", 100)\nacc:deposit(50)\nprint(acc.owner, acc.balance)   --> Raanis 150"
+      "code": "local BankAccount = {}\nBankAccount.__index = BankAccount\n\nfunction BankAccount.new(owner, balance)\n    return setmetatable({ owner = owner, balance = balance or 0 }, BankAccount)\nend\n\nfunction BankAccount:deposit(amount)\n    self.balance += amount\nend\n\nlocal acc = BankAccount.new(\"Raanis\", 100)\nacc:deposit(50)\nprint(acc.owner, acc.balance)   --> Raanis 150",
+      "language": "lua"
     }
   ],
-  "related": ["object-oriented-programming", "tables", "modules", "type-checking"],
+  "related": [
+    "object-oriented-programming",
+    "tables",
+    "modules",
+    "type-checking"
+  ],
   "added": "2026-10-04"
 }

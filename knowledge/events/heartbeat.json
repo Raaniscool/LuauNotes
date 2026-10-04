@@ -4,8 +4,19 @@
   "category": "events",
   "type": "event",
   "summary": "Fires every frame AFTER physics, on both client and server, passing deltaTime (seconds since last frame). The default home for per-frame logic: timers, custom movement, throttling.",
-  "keywords": ["every frame", "delta time", "game loop", "per-frame", "dt", "update loop"],
-  "tags": ["loop", "timing", "essential"],
+  "keywords": [
+    "every frame",
+    "delta time",
+    "game loop",
+    "per-frame",
+    "dt",
+    "update loop"
+  ],
+  "tags": [
+    "loop",
+    "timing",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -50,9 +61,17 @@
   "examples": [
     {
       "title": "Cooldown timer with dt",
-      "code": "local RunService = game:GetService(\"RunService\")\n\nlocal cooldown = 0\n\nlocal function useAbility()\n    if cooldown > 0 then return false end\n    cooldown = 5   -- seconds\n    return true\nend\n\nRunService.Heartbeat:Connect(function(dt)\n    if cooldown > 0 then\n        cooldown = math.max(0, cooldown - dt)\n    end\nend)"
+      "code": "local RunService = game:GetService(\"RunService\")\n\nlocal cooldown = 0\n\nlocal function useAbility()\n    if cooldown > 0 then return false end\n    cooldown = 5   -- seconds\n    return true\nend\n\nRunService.Heartbeat:Connect(function(dt)\n    if cooldown > 0 then\n        cooldown = math.max(0, cooldown - dt)\n    end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["run-service", "render-stepped", "task-library", "cooldown-pattern", "event-cleanup", "frame-budgets"],
+  "related": [
+    "run-service",
+    "render-stepped",
+    "task-library",
+    "cooldown-pattern",
+    "event-cleanup",
+    "frame-budgets"
+  ],
   "added": "2026-10-04"
 }

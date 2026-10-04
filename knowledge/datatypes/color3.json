@@ -4,8 +4,18 @@
   "category": "datatypes",
   "type": "datatype",
   "summary": "An RGB color with 0–1 float channels. Build with Color3.new(r, g, b), Color3.fromRGB(0-255), or Color3.fromHSV. Lerp for gradients and smooth transitions.",
-  "keywords": ["color", "rgb", "fromRGB", "color value", "lerp color", "tint"],
-  "tags": ["datatypes", "visuals"],
+  "keywords": [
+    "color",
+    "rgb",
+    "fromRGB",
+    "color value",
+    "lerp color",
+    "tint"
+  ],
+  "tags": [
+    "datatypes",
+    "visuals"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,10 +25,26 @@
   },
   "reference": {
     "methods": [
-      { "name": "Color3.new", "signature": "Color3.new(r, g, b)", "description": "Channels as floats 0–1." },
-      { "name": "Color3.fromRGB", "signature": "Color3.fromRGB(r, g, b)", "description": "Channels as 0–255 ints — matches most design tools." },
-      { "name": "Color3.fromHSV / toHSV", "signature": "Color3.fromHSV(h, s, v) --> Color3", "description": "Hue/saturation/value conversions (rainbow effects)." },
-      { "name": "Lerp", "signature": "c:Lerp(goal: Color3, alpha: number) --> Color3", "description": "Blend toward another color." }
+      {
+        "name": "Color3.new",
+        "signature": "Color3.new(r, g, b)",
+        "description": "Channels as floats 0–1."
+      },
+      {
+        "name": "Color3.fromRGB",
+        "signature": "Color3.fromRGB(r, g, b)",
+        "description": "Channels as 0–255 ints — matches most design tools."
+      },
+      {
+        "name": "Color3.fromHSV / toHSV",
+        "signature": "Color3.fromHSV(h, s, v) --> Color3",
+        "description": "Hue/saturation/value conversions (rainbow effects)."
+      },
+      {
+        "name": "Lerp",
+        "signature": "c:Lerp(goal: Color3, alpha: number) --> Color3",
+        "description": "Blend toward another color."
+      }
     ]
   },
   "explanation": {
@@ -29,7 +55,9 @@
       "Health bars: red→green Lerp by percentage",
       "Rainbows via fromHSV(os.clock() % 1, 1, 1)"
     ],
-    "whenNotToUse": ["Hex strings — convert first (write a #RRGGBB parser or use fromRGB)"],
+    "whenNotToUse": [
+      "Hex strings — convert first (write a #RRGGBB parser or use fromRGB)"
+    ],
     "tips": [
       "fromRGB matches Studio's color picker — easiest mental bridge",
       "Lerp for damage flashes and progress colors"
@@ -42,9 +70,15 @@
   "examples": [
     {
       "title": "Health-colored bar",
-      "code": "local function healthColor(fraction)\n    return Color3.new(1, 0, 0):Lerp(Color3.new(0, 1, 0), math.clamp(fraction, 0, 1))\nend\n\nbar.BackgroundColor3 = healthColor(0.7)   -- yellow-green\n\n-- Rainbow part:\ntask.spawn(function()\n    while true do\n        script.Parent.Color = Color3.fromHSV(os.clock() % 1, 1, 1)\n        task.wait(0.05)\n    end\nend)"
+      "code": "local function healthColor(fraction)\n    return Color3.new(1, 0, 0):Lerp(Color3.new(0, 1, 0), math.clamp(fraction, 0, 1))\nend\n\nbar.BackgroundColor3 = healthColor(0.7)   -- yellow-green\n\n-- Rainbow part:\ntask.spawn(function()\n    while true do\n        script.Parent.Color = Color3.fromHSV(os.clock() % 1, 1, 1)\n        task.wait(0.05)\n    end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["part", "textlabel", "lighting", "tween-service"],
+  "related": [
+    "part",
+    "textlabel",
+    "lighting",
+    "tween-service"
+  ],
   "added": "2026-10-04"
 }

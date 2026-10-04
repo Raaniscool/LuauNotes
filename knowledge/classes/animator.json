@@ -4,8 +4,19 @@
   "category": "classes",
   "type": "class",
   "summary": "The animation player inside a Humanoid: LoadAnimation(animation) returns an AnimationTrack you Play/Stop, with priority, speed adjustment, weight fading, and events.",
-  "keywords": ["LoadAnimation", "AnimationTrack", "play animation", "Priority", "AdjustSpeed", "KeyframeReached"],
-  "tags": ["classes", "animation", "characters"],
+  "keywords": [
+    "LoadAnimation",
+    "AnimationTrack",
+    "play animation",
+    "Priority",
+    "AdjustSpeed",
+    "KeyframeReached"
+  ],
+  "tags": [
+    "classes",
+    "animation",
+    "characters"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,8 +26,16 @@
   },
   "reference": {
     "methods": [
-      { "name": "LoadAnimation", "signature": "Animator:LoadAnimation(animation: Animation) --> AnimationTrack", "description": "Loads the animation asset into a track. Errors if the asset can't be used by this experience." },
-      { "name": "GetPlayingAnimationTracks", "signature": "Animator:GetPlayingAnimationTracks() --> { AnimationTrack }", "description": "Currently playing tracks." }
+      {
+        "name": "LoadAnimation",
+        "signature": "Animator:LoadAnimation(animation: Animation) --> AnimationTrack",
+        "description": "Loads the animation asset into a track. Errors if the asset can't be used by this experience."
+      },
+      {
+        "name": "GetPlayingAnimationTracks",
+        "signature": "Animator:GetPlayingAnimationTracks() --> { AnimationTrack }",
+        "description": "Currently playing tracks."
+      }
     ],
     "details": [
       {
@@ -55,9 +74,14 @@
   "examples": [
     {
       "title": "Play an emote with priority",
-      "code": "local humanoid = character:WaitForChild(\"Humanoid\")\nlocal animator = humanoid:WaitForChild(\"Animator\")\n\nlocal wave = Instance.new(\"Animation\")\nwave.AnimationId = \"rbxassetid://507770239\"\n\nlocal track = animator:LoadAnimation(wave)\ntrack.Priority = Enum.AnimationPriority.Action\ntrack.Looped = false\n\nlocal function playWave()\n    track:Play(0.2)   -- 0.2s fade in\nend"
+      "code": "local humanoid = character:WaitForChild(\"Humanoid\")\nlocal animator = humanoid:WaitForChild(\"Animator\")\n\nlocal wave = Instance.new(\"Animation\")\nwave.AnimationId = \"rbxassetid://507770239\"\n\nlocal track = animator:LoadAnimation(wave)\ntrack.Priority = Enum.AnimationPriority.Action\ntrack.Looped = false\n\nlocal function playWave()\n    track:Play(0.2)   -- 0.2s fade in\nend",
+      "language": "lua"
     }
   ],
-  "related": ["animation", "humanoid", "motor6d"],
+  "related": [
+    "animation",
+    "humanoid",
+    "motor6d"
+  ],
   "added": "2026-10-04"
 }

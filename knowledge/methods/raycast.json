@@ -4,8 +4,20 @@
   "category": "methods",
   "type": "method",
   "summary": "The modern raycasting API: cast from an origin along a direction vector (its magnitude = range), get back a RaycastResult with Instance/Position/Normal/Distance — or nil. Filter with RaycastParams.",
-  "keywords": ["ray", "hitscan", "line of sight", "shooting", "raycastresult", "raycastparams", "bullet detection"],
-  "tags": ["physics", "combat", "essential"],
+  "keywords": [
+    "ray",
+    "hitscan",
+    "line of sight",
+    "shooting",
+    "raycastresult",
+    "raycastparams",
+    "bullet detection"
+  ],
+  "tags": [
+    "physics",
+    "combat",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -16,9 +28,21 @@
   "reference": {
     "signature": "Workspace:Raycast(origin: Vector3, direction: Vector3, raycastParams: RaycastParams?) --> RaycastResult?",
     "parameters": [
-      { "name": "origin", "type": "Vector3", "description": "Where the ray starts." },
-      { "name": "direction", "type": "Vector3", "description": "Direction AND range: the vector's magnitude is the ray's length. (lookVector * 300 = 300 studs)" },
-      { "name": "raycastParams", "type": "RaycastParams?", "description": "Optional filter: FilterDescendantsInstances list + FilterType (Exclude/Include), IgnoreWater." }
+      {
+        "name": "origin",
+        "type": "Vector3",
+        "description": "Where the ray starts."
+      },
+      {
+        "name": "direction",
+        "type": "Vector3",
+        "description": "Direction AND range: the vector's magnitude is the ray's length. (lookVector * 300 = 300 studs)"
+      },
+      {
+        "name": "raycastParams",
+        "type": "RaycastParams?",
+        "description": "Optional filter: FilterDescendantsInstances list + FilterType (Exclude/Include), IgnoreWater."
+      }
     ],
     "returns": "RaycastResult { Instance, Position, Normal, Distance, Material } or nil if nothing was hit.",
     "details": [
@@ -59,9 +83,15 @@
   "examples": [
     {
       "title": "Hitscan shot with validation pattern",
-      "code": "-- Client: fires ray from camera through mouse\nlocal camera = workspace.CurrentCamera\nlocal origin = camera.CFrame.Position\nlocal direction = camera.CFrame.LookVector * 300\n\nlocal params = RaycastParams.new()\nparams.FilterDescendantsInstances = { character }\nparams.FilterType = Enum.RaycastFilterType.Exclude\nparams.IgnoreWater = true\n\nlocal result = workspace:Raycast(origin, direction, params)\n\n-- Tell the server; the server RE-CASTS or validates distance/plausibility\nshootRemote:FireServer(origin, direction.Unit * 300)"
+      "code": "-- Client: fires ray from camera through mouse\nlocal camera = workspace.CurrentCamera\nlocal origin = camera.CFrame.Position\nlocal direction = camera.CFrame.LookVector * 300\n\nlocal params = RaycastParams.new()\nparams.FilterDescendantsInstances = { character }\nparams.FilterType = Enum.RaycastFilterType.Exclude\nparams.IgnoreWater = true\n\nlocal result = workspace:Raycast(origin, direction, params)\n\n-- Tell the server; the server RE-CASTS or validates distance/plausibility\nshootRemote:FireServer(origin, direction.Unit * 300)",
+      "language": "lua"
     }
   ],
-  "related": ["workspace", "client-vs-server", "never-trust-the-client", "camera"],
+  "related": [
+    "workspace",
+    "client-vs-server",
+    "never-trust-the-client",
+    "camera"
+  ],
   "added": "2026-10-04"
 }

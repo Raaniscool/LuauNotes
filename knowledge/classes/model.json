@@ -4,8 +4,22 @@
   "category": "classes",
   "type": "class",
   "summary": "A container that groups parts and other instances into one named object — characters, buildings, vehicles. Has its own CFrame via PivotTo/GetPivot, and PrimaryPart as its reference point.",
-  "keywords": ["group", "container", "PrimaryPart", "PivotTo", "GetPivot", "MoveTo", "character model", "group parts"],
-  "tags": ["classes", "world", "containers", "essential"],
+  "keywords": [
+    "group",
+    "container",
+    "PrimaryPart",
+    "PivotTo",
+    "GetPivot",
+    "MoveTo",
+    "character model",
+    "group parts"
+  ],
+  "tags": [
+    "classes",
+    "world",
+    "containers",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,15 +29,43 @@
   },
   "reference": {
     "properties": [
-      { "name": "PrimaryPart", "type": "BasePart?", "description": "The model's reference part (must be a direct child). Used by legacy MoveTo and as pivot fallback." },
-      { "name": "WorldPivotData", "type": "CFrame", "description": "The model's pivot for gizmos/PivotTo." }
+      {
+        "name": "PrimaryPart",
+        "type": "BasePart?",
+        "description": "The model's reference part (must be a direct child). Used by legacy MoveTo and as pivot fallback."
+      },
+      {
+        "name": "WorldPivotData",
+        "type": "CFrame",
+        "description": "The model's pivot for gizmos/PivotTo."
+      }
     ],
     "methods": [
-      { "name": "GetPivot", "signature": "Model:GetPivot() --> CFrame", "description": "Current pivot CFrame (primary part, or bounding box center)." },
-      { "name": "PivotTo", "signature": "Model:PivotTo(cframe: CFrame)", "description": "Moves the ENTIRE model so its pivot lands at the given CFrame — the modern way to move models." },
-      { "name": "MoveTo", "signature": "Model:MoveTo(position: Vector3)", "description": "Legacy: moves PrimaryPart to a position. Prefer PivotTo." },
-      { "name": "GetBoundingBox", "signature": "Model:GetBoundingBox() --> (CFrame, Vector3)", "description": "Oriented bounds enclosing all descendants." },
-      { "name": "BreakJoints / MakeJoints", "signature": "Model:BreakJoints()", "description": "Disconnect/connect joints between the model's parts and the outside world." }
+      {
+        "name": "GetPivot",
+        "signature": "Model:GetPivot() --> CFrame",
+        "description": "Current pivot CFrame (primary part, or bounding box center)."
+      },
+      {
+        "name": "PivotTo",
+        "signature": "Model:PivotTo(cframe: CFrame)",
+        "description": "Moves the ENTIRE model so its pivot lands at the given CFrame — the modern way to move models."
+      },
+      {
+        "name": "MoveTo",
+        "signature": "Model:MoveTo(position: Vector3)",
+        "description": "Legacy: moves PrimaryPart to a position. Prefer PivotTo."
+      },
+      {
+        "name": "GetBoundingBox",
+        "signature": "Model:GetBoundingBox() --> (CFrame, Vector3)",
+        "description": "Oriented bounds enclosing all descendants."
+      },
+      {
+        "name": "BreakJoints / MakeJoints",
+        "signature": "Model:BreakJoints()",
+        "description": "Disconnect/connect joints between the model's parts and the outside world."
+      }
     ],
     "events": [],
     "details": [
@@ -61,13 +103,23 @@
   "examples": [
     {
       "title": "Moving a model correctly",
-      "code": "local car = workspace.Car\n\n-- Move the whole car 20 studs up, keeping orientation:\ncar:PivotTo(car:GetPivot() + Vector3.new(0, 20, 0))\n\n-- Teleport to a spawn pad with orientation:\nlocal pad = workspace.CarSpawn\ncar:PivotTo(pad.CFrame + Vector3.new(0, 3, 0))"
+      "code": "local car = workspace.Car\n\n-- Move the whole car 20 studs up, keeping orientation:\ncar:PivotTo(car:GetPivot() + Vector3.new(0, 20, 0))\n\n-- Teleport to a spawn pad with orientation:\nlocal pad = workspace.CarSpawn\ncar:PivotTo(pad.CFrame + Vector3.new(0, 3, 0))",
+      "language": "lua"
     },
     {
       "title": "Character detection via model + humanoid",
-      "code": "local function isCharacter(model)\n    return model:IsA(\"Model\") and model:FindFirstChildOfClass(\"Humanoid\") ~= nil\nend\n\nfor _, child in workspace:GetChildren() do\n    if isCharacter(child) then\n        print(\"Character found:\", child.Name)\n    end\nend"
+      "code": "local function isCharacter(model)\n    return model:IsA(\"Model\") and model:FindFirstChildOfClass(\"Humanoid\") ~= nil\nend\n\nfor _, child in workspace:GetChildren() do\n    if isCharacter(child) then\n        print(\"Character found:\", child.Name)\n    end\nend",
+      "language": "lua"
     }
   ],
-  "related": ["model-vs-basepart", "part", "folder", "moving-models", "humanoid", "weldconstraint", "player"],
+  "related": [
+    "model-vs-basepart",
+    "part",
+    "folder",
+    "moving-models",
+    "humanoid",
+    "weldconstraint",
+    "player"
+  ],
   "added": "2026-10-04"
 }

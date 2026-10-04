@@ -4,8 +4,17 @@
   "category": "services",
   "type": "service",
   "summary": "Server-only container: nothing here replicates to clients. Safe home for secret logic, server-only modules, and prefabs you spawn into the world later.",
-  "keywords": ["server only", "no replication", "secret storage", "spawn prefabs"],
-  "tags": ["services", "containers", "security"],
+  "keywords": [
+    "server only",
+    "no replication",
+    "secret storage",
+    "spawn prefabs"
+  ],
+  "tags": [
+    "services",
+    "containers",
+    "security"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -46,9 +55,16 @@
   "examples": [
     {
       "title": "Prefab spawning from ServerStorage",
-      "code": "local ServerStorage = game:GetService(\"ServerStorage\")\n\nlocal function spawnEnemy(name, position)\n    local template = ServerStorage:FindFirstChild(name)\n    if not template then\n        warn(\"No enemy template:\", name)\n        return\n    end\n    local enemy = template:Clone()\n    enemy:PivotTo(CFrame.new(position))\n    enemy.Parent = workspace   -- NOW it replicates and simulates\n    return enemy\nend"
+      "code": "local ServerStorage = game:GetService(\"ServerStorage\")\n\nlocal function spawnEnemy(name, position)\n    local template = ServerStorage:FindFirstChild(name)\n    if not template then\n        warn(\"No enemy template:\", name)\n        return\n    end\n    local enemy = template:Clone()\n    enemy:PivotTo(CFrame.new(position))\n    enemy.Parent = workspace   -- NOW it replicates and simulates\n    return enemy\nend",
+      "language": "lua"
     }
   ],
-  "related": ["replicated-storage", "server-script-service", "replication", "client-vs-server", "clone"],
+  "related": [
+    "replicated-storage",
+    "server-script-service",
+    "replication",
+    "client-vs-server",
+    "clone"
+  ],
   "added": "2026-10-04"
 }

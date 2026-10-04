@@ -4,8 +4,18 @@
   "category": "methods",
   "type": "method",
   "summary": "Permanently removes an instance and disconnects its events. The instance becomes unusable: Parent is locked nil forever. For timed cleanup use Debris:AddItem instead of manual delays.",
-  "keywords": ["remove", "delete instance", "cleanup", "lifetime", "leak prevention"],
-  "tags": ["instance", "cleanup", "essential"],
+  "keywords": [
+    "remove",
+    "delete instance",
+    "cleanup",
+    "lifetime",
+    "leak prevention"
+  ],
+  "tags": [
+    "instance",
+    "cleanup",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -52,9 +62,16 @@
   "examples": [
     {
       "title": "Clean projectile lifecycle",
-      "code": "local Debris = game:GetService(\"Debris\")\n\nlocal bullet = Instance.new(\"Part\")\nbullet.Parent = workspace\n-- …fly…\nDebris:AddItem(bullet, 5)      -- auto-Destroy after 5s\n\n-- Manual equivalent:\n-- task.delay(5, function() bullet:Destroy() end)"
+      "code": "local Debris = game:GetService(\"Debris\")\n\nlocal bullet = Instance.new(\"Part\")\nbullet.Parent = workspace\n-- …fly…\nDebris:AddItem(bullet, 5)      -- auto-Destroy after 5s\n\n-- Manual equivalent:\n-- task.delay(5, function() bullet:Destroy() end)",
+      "language": "lua"
     }
   ],
-  "related": ["debris", "clone", "object-lifetime", "event-cleanup", "instance"],
+  "related": [
+    "debris",
+    "clone",
+    "object-lifetime",
+    "event-cleanup",
+    "instance"
+  ],
   "added": "2026-10-04"
 }

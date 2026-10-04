@@ -4,8 +4,18 @@
   "category": "luau",
   "type": "concept",
   "summary": "The one container type in Luau. A table maps keys to values — used as arrays, dictionaries, objects, inventories, config files, and module namespaces.",
-  "keywords": ["container", "table value", "create a table", "{}", "key value"],
-  "tags": ["basics", "tables", "data-structures"],
+  "keywords": [
+    "container",
+    "table value",
+    "create a table",
+    "{}",
+    "key value"
+  ],
+  "tags": [
+    "basics",
+    "tables",
+    "data-structures"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -64,14 +74,25 @@
   "examples": [
     {
       "title": "An inventory as a dictionary",
-      "code": "local inventory = {\n    sword = 1,\n    potion = 5,\n}\n\ninventory.potion = inventory.potion - 1     -- use one\ninventory.shield = 1                        -- add new key\n\nfor item, count in inventory do   -- Luau: pairs is optional in generic for\n    print(item, count)\nend"
+      "code": "local inventory = {\n    sword = 1,\n    potion = 5,\n}\n\ninventory.potion = inventory.potion - 1     -- use one\ninventory.shield = 1                        -- add new key\n\nfor item, count in inventory do   -- Luau: pairs is optional in generic for\n    print(item, count)\nend",
+      "language": "lua"
     },
     {
       "title": "Tables are references",
       "code": "local original = { coins = 100 }\nlocal alias = original        -- NOT a copy!\n\nalias.coins = 0\nprint(original.coins)         --> 0  (same table)\n\nlocal copy = table.clone(original)\ncopy.coins = 999\nprint(original.coins)         --> 0  (clone is independent... shallowly)",
-      "commonMistake": "`table.clone` is shallow: nested tables inside are still shared. Deep-copy manually when needed."
+      "commonMistake": "`table.clone` is shallow: nested tables inside are still shared. Deep-copy manually when needed.",
+      "language": "lua"
     }
   ],
-  "related": ["arrays", "dictionaries", "table-operations", "table-references-vs-copies", "ipairs", "pairs", "metatables", "one-based-indexing"],
+  "related": [
+    "arrays",
+    "dictionaries",
+    "table-operations",
+    "table-references-vs-copies",
+    "ipairs",
+    "pairs",
+    "metatables",
+    "one-based-indexing"
+  ],
   "added": "2026-10-04"
 }

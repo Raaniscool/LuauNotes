@@ -4,8 +4,22 @@
   "category": "classes",
   "type": "class",
   "summary": "One-way client ↔ server messaging. Fire-and-forget: FireServer sends to the server, FireClient/FireAllClients send to players, OnServerEvent/OnClientEvent receive. Reliable and ordered, but no return values.",
-  "keywords": ["remote", "client to server", "server to client", "FireServer", "OnServerEvent", "communication", "fire and forget", "remote arguments"],
-  "tags": ["remotes", "networking", "client-server", "essential"],
+  "keywords": [
+    "remote",
+    "client to server",
+    "server to client",
+    "FireServer",
+    "OnServerEvent",
+    "communication",
+    "fire and forget",
+    "remote arguments"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,13 +29,33 @@
   },
   "reference": {
     "methods": [
-      { "name": "FireServer", "signature": "RemoteEvent:FireServer(...: any)", "description": "Client only. Sends a message to the server with any serializable arguments." },
-      { "name": "FireClient", "signature": "RemoteEvent:FireClient(player: Player, ...: any)", "description": "Server only. Sends a message to one specific player." },
-      { "name": "FireAllClients", "signature": "RemoteEvent:FireAllClients(...: any)", "description": "Server only. Broadcasts a message to every connected player." }
+      {
+        "name": "FireServer",
+        "signature": "RemoteEvent:FireServer(...: any)",
+        "description": "Client only. Sends a message to the server with any serializable arguments."
+      },
+      {
+        "name": "FireClient",
+        "signature": "RemoteEvent:FireClient(player: Player, ...: any)",
+        "description": "Server only. Sends a message to one specific player."
+      },
+      {
+        "name": "FireAllClients",
+        "signature": "RemoteEvent:FireAllClients(...: any)",
+        "description": "Server only. Broadcasts a message to every connected player."
+      }
     ],
     "events": [
-      { "name": "OnServerEvent", "signature": "RemoteEvent.OnServerEvent:Connect(function(player: Player, ...: any) end)", "description": "Server only. Fires when any client calls FireServer. The firing Player is ALWAYS the first parameter — supplied by Roblox, and impossible for clients to fake." },
-      { "name": "OnClientEvent", "signature": "RemoteEvent.OnClientEvent:Connect(function(...: any) end)", "description": "Client only. Fires when the server calls FireClient/FireAllClients targeting this client. No player parameter here." }
+      {
+        "name": "OnServerEvent",
+        "signature": "RemoteEvent.OnServerEvent:Connect(function(player: Player, ...: any) end)",
+        "description": "Server only. Fires when any client calls FireServer. The firing Player is ALWAYS the first parameter — supplied by Roblox, and impossible for clients to fake."
+      },
+      {
+        "name": "OnClientEvent",
+        "signature": "RemoteEvent.OnClientEvent:Connect(function(...: any) end)",
+        "description": "Client only. Fires when the server calls FireClient/FireAllClients targeting this client. No player parameter here."
+      }
     ],
     "properties": [],
     "details": [
@@ -73,18 +107,36 @@
       "description": "A LocalScript fires the intent; a Script validates and applies it.",
       "code": "-- == LocalScript (in a TextButton) ==\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal buyEvent = ReplicatedStorage:WaitForChild(\"BuyItem\")\n\nscript.Parent.Activated:Connect(function()\n    buyEvent:FireServer(\"Sword\")   -- client says WHAT it wants\nend)\n\n-- == Script (ServerScriptService) ==\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal buyEvent = ReplicatedStorage:WaitForChild(\"BuyItem\")\nlocal PRICES = { Sword = 100, Shield = 50 }\n\nbuyEvent.OnServerEvent:Connect(function(player, itemName)\n    -- 1) VALIDATE: never trust the client\n    if typeof(itemName) ~= \"string\" then return end\n    local price = PRICES[itemName]\n    if not price then return end\n\n    -- 2) apply authoritatively on the server\n    print(player.Name .. \" bought \" .. itemName .. \" for \" .. price)\nend)",
       "whyItWorks": "Roblox supplies `player` as the first OnServerEvent parameter — the server always knows WHO fired, and that identity can't be faked. The server still validates the itemName argument.",
-      "commonMistake": "Beginners often write `FireServer(player, \"Sword\")` trying to send the player themselves. Don't — the engine adds the player automatically."
+      "commonMistake": "Beginners often write `FireServer(player, \"Sword\")` trying to send the player themselves. Don't — the engine adds the player automatically.",
+      "language": "lua"
     },
     {
       "title": "Server → Client: broadcast round start",
       "code": "-- == Script (server) ==\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal roundEvent = ReplicatedStorage:WaitForChild(\"RoundUpdate\")\n\nroundEvent:FireAllClients(\"RoundStart\", 120)   -- message + seconds\n\n-- == LocalScript (StarterGui) ==\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal roundEvent = ReplicatedStorage:WaitForChild(\"RoundUpdate\")\n\nroundEvent.OnClientEvent:Connect(function(message, seconds)\n    if message == \"RoundStart\" then\n        print(\"Round starts! Time:\", seconds)\n    end\nend)",
-      "whyItWorks": "FireAllClients reaches every player at once. OnClientEvent receives exactly the arguments the server sent — no player parameter on the client side."
+      "whyItWorks": "FireAllClients reaches every player at once. OnClientEvent receives exactly the arguments the server sent — no player parameter on the client side.",
+      "language": "lua"
     },
     {
       "title": "One remote, many commands (dispatch pattern)",
-      "code": "-- Server: one handler table beats 20 remotes\nlocal handlers = {\n    Buy   = function(player, item) print(\"buy\", item) end,\n    Equip = function(player, item) print(\"equip\", item) end,\n    Sell  = function(player, item) print(\"sell\", item) end,\n}\n\nremote.OnServerEvent:Connect(function(player, command, ...)\n    local fn = handlers[command]\n    if fn then fn(player, ...) end   -- unknown commands ignored\nend)\n\n-- Client:\n-- remote:FireServer(\"Buy\", \"Sword\")"
+      "code": "-- Server: one handler table beats 20 remotes\nlocal handlers = {\n    Buy   = function(player, item) print(\"buy\", item) end,\n    Equip = function(player, item) print(\"equip\", item) end,\n    Sell  = function(player, item) print(\"sell\", item) end,\n}\n\nremote.OnServerEvent:Connect(function(player, command, ...)\n    local fn = handlers[command]\n    if fn then fn(player, ...) end   -- unknown commands ignored\nend)\n\n-- Client:\n-- remote:FireServer(\"Buy\", \"Sword\")",
+      "language": "lua"
     }
   ],
-  "related": ["unreliable-remote-event", "remote-function", "fire-server", "on-server-event", "fire-client", "fire-all-clients", "on-client-event", "client-vs-server", "never-trust-the-client", "remote-parameter-rules", "bindable-event", "replication", "serialization", "server-validation"],
+  "related": [
+    "unreliable-remote-event",
+    "remote-function",
+    "fire-server",
+    "on-server-event",
+    "fire-client",
+    "fire-all-clients",
+    "on-client-event",
+    "client-vs-server",
+    "never-trust-the-client",
+    "remote-parameter-rules",
+    "bindable-event",
+    "replication",
+    "serialization",
+    "server-validation"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,18 @@
   "category": "methods",
   "type": "method",
   "summary": "Client → server message. Sends any serializable arguments to the server; Roblox automatically prepends the firing Player when the server's OnServerEvent receives it.",
-  "keywords": ["client to server", "send to server", "FireServer arguments", "player parameter automatic"],
-  "tags": ["remotes", "networking", "client-server", "essential"],
+  "keywords": [
+    "client to server",
+    "send to server",
+    "FireServer arguments",
+    "player parameter automatic"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -16,7 +26,11 @@
   "reference": {
     "signature": "RemoteEvent:FireServer(...args: any)",
     "parameters": [
-      { "name": "...args", "type": "serializable values", "description": "Any number of serializable arguments: numbers, strings, booleans, tables, Instances, Vector3s… No functions/threads. Total payload limited (~64KB)." }
+      {
+        "name": "...args",
+        "type": "serializable values",
+        "description": "Any number of serializable arguments: numbers, strings, booleans, tables, Instances, Vector3s… No functions/threads. Total payload limited (~64KB)."
+      }
     ],
     "returns": "None. Fire-and-forget: no confirmation, no return value. For responses, use RemoteFunction.",
     "details": [
@@ -58,9 +72,19 @@
       "title": "Request with arguments",
       "code": "-- Client (LocalScript):\nlocal remote = game.ReplicatedStorage:WaitForChild(\"Remotes\"):WaitForChild(\"Buy\")\nremote:FireServer(\"Sword\", 2)   -- item, quantity\n\n-- Server (Script):\nremote.OnServerEvent:Connect(function(player, itemName, quantity)\n    --   ↑ injected!     ↑ client's 1st arg   ↑ client's 2nd arg\n    if typeof(itemName) ~= \"string\" or typeof(quantity) ~= \"number\" then return end\n    print(player.Name, \"wants\", quantity, itemName)\nend)",
       "whyItWorks": "Roblox supplies `player` automatically and it can't be spoofed — the server always knows who fired.",
-      "commonMistake": "Writing OnServerEvent handlers without the leading player parameter shifts every argument."
+      "commonMistake": "Writing OnServerEvent handlers without the leading player parameter shifts every argument.",
+      "language": "lua"
     }
   ],
-  "related": ["remote-event", "on-server-event", "fire-client", "fire-all-clients", "remote-parameter-rules", "never-trust-the-client", "invoke-server", "serialization"],
+  "related": [
+    "remote-event",
+    "on-server-event",
+    "fire-client",
+    "fire-all-clients",
+    "remote-parameter-rules",
+    "never-trust-the-client",
+    "invoke-server",
+    "serialization"
+  ],
   "added": "2026-10-04"
 }

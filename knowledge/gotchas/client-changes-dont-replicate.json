@@ -4,8 +4,18 @@
   "category": "gotchas",
   "type": "gotcha",
   "summary": "When a LocalScript modifies instances or leaderstats, only THAT client sees it. Other players — and the server — keep the old state. Gameplay mutations must flow through the server.",
-  "keywords": ["changes only for me", "other players don't see", "client side only", "stats not replicating", "single player sees change"],
-  "tags": ["gotchas", "networking", "essential"],
+  "keywords": [
+    "changes only for me",
+    "other players don't see",
+    "client side only",
+    "stats not replicating",
+    "single player sees change"
+  ],
+  "tags": [
+    "gotchas",
+    "networking",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -34,9 +44,16 @@
   "examples": [
     {
       "title": "Intent, not edit",
-      "code": "-- ❌ LocalScript (only you see it):\n-- player.leaderstats.Coins.Value += 100\n\n-- ✅ LocalScript sends intent:\nlocal remote = game.ReplicatedStorage.Remotes.AddCoins\nremote:FireServer(100)\n\n-- ✅ Server Script validates + applies for everyone:\nremote.OnServerEvent:Connect(function(player, amount)\n    if typeof(amount) ~= \"number\" or amount <= 0 then return end\n    -- …validate the source (earned it?) then:\n    player.leaderstats.Coins.Value += math.floor(amount)\nend)"
+      "code": "-- ❌ LocalScript (only you see it):\n-- player.leaderstats.Coins.Value += 100\n\n-- ✅ LocalScript sends intent:\nlocal remote = game.ReplicatedStorage.Remotes.AddCoins\nremote:FireServer(100)\n\n-- ✅ Server Script validates + applies for everyone:\nremote.OnServerEvent:Connect(function(player, amount)\n    if typeof(amount) ~= \"number\" or amount <= 0 then return end\n    -- …validate the source (earned it?) then:\n    player.leaderstats.Coins.Value += math.floor(amount)\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["client-vs-server", "replication", "never-trust-the-client", "fire-server", "server-validation"],
+  "related": [
+    "client-vs-server",
+    "replication",
+    "never-trust-the-client",
+    "fire-server",
+    "server-validation"
+  ],
   "added": "2026-10-04"
 }

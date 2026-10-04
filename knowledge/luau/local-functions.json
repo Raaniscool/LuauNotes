@@ -4,8 +4,16 @@
   "category": "luau",
   "type": "keyword",
   "summary": "`local function name()` declares a function scoped to its block — faster to call and invisible outside. The default way to write helper functions in Roblox scripts.",
-  "keywords": ["local function", "helper function", "scoped function"],
-  "tags": ["functions", "scope", "local"],
+  "keywords": [
+    "local function",
+    "helper function",
+    "scoped function"
+  ],
+  "tags": [
+    "functions",
+    "scope",
+    "local"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -47,9 +55,16 @@
   "examples": [
     {
       "title": "Private helper in a module",
-      "code": "local CoinSpawner = {}\n\n-- private: only this module can see it\nlocal function randomPosition()\n    return Vector3.new(math.random(-50, 50), 10, math.random(-50, 50))\nend\n\n-- public: exported in the returned table\nfunction CoinSpawner.spawn(count)\n    for i = 1, count do\n        local coin = Instance.new(\"Part\")\n        coin.Name = \"Coin\"\n        coin.Position = randomPosition()\n        coin.Parent = workspace\n    end\nend\n\nreturn CoinSpawner"
+      "code": "local CoinSpawner = {}\n\n-- private: only this module can see it\nlocal function randomPosition()\n    return Vector3.new(math.random(-50, 50), 10, math.random(-50, 50))\nend\n\n-- public: exported in the returned table\nfunction CoinSpawner.spawn(count)\n    for i = 1, count do\n        local coin = Instance.new(\"Part\")\n        coin.Name = \"Coin\"\n        coin.Position = randomPosition()\n        coin.Parent = workspace\n    end\nend\n\nreturn CoinSpawner",
+      "language": "lua"
     }
   ],
-  "related": ["functions", "anonymous-functions", "scope", "modules", "recursion"],
+  "related": [
+    "functions",
+    "anonymous-functions",
+    "scope",
+    "modules",
+    "recursion"
+  ],
   "added": "2026-10-04"
 }

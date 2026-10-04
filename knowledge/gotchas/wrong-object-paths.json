@@ -4,8 +4,18 @@
   "category": "gotchas",
   "type": "gotcha",
   "summary": "The object exists — just not where your code looks. Misplaced services, renamed objects, wrong containers (workspace vs ReplicatedStorage), and dot-paths that don't match Explorer reality all produce nils.",
-  "keywords": ["path wrong", "object not found", "wrong container", "explorer mismatch", "nil but exists"],
-  "tags": ["gotchas", "hierarchy", "essential"],
+  "keywords": [
+    "path wrong",
+    "object not found",
+    "wrong container",
+    "explorer mismatch",
+    "nil but exists"
+  ],
+  "tags": [
+    "gotchas",
+    "hierarchy",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -36,9 +46,16 @@
   "examples": [
     {
       "title": "Path debugging",
-      "code": "-- You believe it's here:\nlocal part = workspace.Map:FindFirstChild(\"Key\")\n\n-- But maybe it's actually:\n-- ReplicatedStorage.Items.Key  (moved during a refactor!)\n\n-- Debug helper:\nlocal function where(name)\n    for _, obj in workspace:GetDescendants() do\n        if obj.Name == name then\n            print(\"Found at:\", obj:GetFullName())\n        end\n    end\nend\nwhere(\"Key\")"
+      "code": "-- You believe it's here:\nlocal part = workspace.Map:FindFirstChild(\"Key\")\n\n-- But maybe it's actually:\n-- ReplicatedStorage.Items.Key  (moved during a refactor!)\n\n-- Debug helper:\nlocal function where(name)\n    for _, obj in workspace:GetDescendants() do\n        if obj.Name == name then\n            print(\"Found at:\", obj:GetFullName())\n        end\n    end\nend\nwhere(\"Key\")",
+      "language": "lua"
     }
   ],
-  "related": ["indexing-nil", "instance-hierarchy", "find-first-child", "instance-name", "collection-service"],
+  "related": [
+    "indexing-nil",
+    "instance-hierarchy",
+    "find-first-child",
+    "instance-name",
+    "collection-service"
+  ],
   "added": "2026-10-04"
 }

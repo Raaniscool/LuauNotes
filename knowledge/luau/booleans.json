@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "concept",
   "summary": "The two truth values `true` and `false`. They drive every `if`, every loop condition, and every logical check.",
-  "keywords": ["true", "false", "boolean value", "truth value"],
-  "tags": ["basics", "types", "booleans"],
+  "keywords": [
+    "true",
+    "false",
+    "boolean value",
+    "truth value"
+  ],
+  "tags": [
+    "basics",
+    "types",
+    "booleans"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -52,9 +61,16 @@
   "examples": [
     {
       "title": "A boolean flag controlling behavior",
-      "code": "local doorOpen = false\n\nlocal function openDoor()\n    doorOpen = true\nend\n\nlocal function tryWalkThrough()\n    if doorOpen then\n        print(\"You walk through.\")\n    else\n        print(\"Bonk. The door is closed.\")\n    end\nend\n\ntryWalkThrough()   --> Bonk.\nopenDoor()\ntryWalkThrough()   --> You walk through."
+      "code": "local doorOpen = false\n\nlocal function openDoor()\n    doorOpen = true\nend\n\nlocal function tryWalkThrough()\n    if doorOpen then\n        print(\"You walk through.\")\n    else\n        print(\"Bonk. The door is closed.\")\n    end\nend\n\ntryWalkThrough()   --> Bonk.\nopenDoor()\ntryWalkThrough()   --> You walk through.",
+      "language": "lua"
     }
   ],
-  "related": ["truthiness", "comparisons", "logical-operators", "boolvalue-vs-boolean", "if-statements"],
+  "related": [
+    "truthiness",
+    "comparisons",
+    "logical-operators",
+    "boolvalue-vs-boolean",
+    "if-statements"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,20 @@
   "category": "luau",
   "type": "library",
   "summary": "The table library: insert, remove, find, sort, concat, move, create, clone, freeze — the standard toolkit for working with arrays and tables.",
-  "keywords": ["table.insert", "table.remove", "table.sort", "table.find", "table.concat", "table.clone", "table.freeze"],
-  "tags": ["tables", "library", "arrays"],
+  "keywords": [
+    "table.insert",
+    "table.remove",
+    "table.sort",
+    "table.find",
+    "table.concat",
+    "table.clone",
+    "table.freeze"
+  ],
+  "tags": [
+    "tables",
+    "library",
+    "arrays"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -15,17 +27,61 @@
   },
   "reference": {
     "methods": [
-      { "name": "table.insert", "signature": "table.insert(t, [pos,] value)", "description": "Append value at the end, or insert at position pos (shifting later elements up)." },
-      { "name": "table.remove", "signature": "table.remove(t, pos?) --> any", "description": "Remove and return the element at pos (default: last). Later elements shift down." },
-      { "name": "table.find", "signature": "table.find(t, value, init?) --> number?", "description": "Luau addition. First index whose element == value, or nil." },
-      { "name": "table.sort", "signature": "table.sort(t, comp?)", "description": "Sort the array part in place. Optional comparator(a, b) returns true if a comes first." },
-      { "name": "table.concat", "signature": "table.concat(t, sep?, i?, j?) --> string", "description": "Join array elements into one string — the fast way to build big strings." },
-      { "name": "table.move", "signature": "table.move(a1, f, e, t, a2?) --> table", "description": "Copy elements a1[f..e] into positions starting at t (in a2, or a1 itself)." },
-      { "name": "table.create", "signature": "table.create(n, value?) --> table", "description": "Luau addition. Pre-sized array, optionally filled with value." },
-      { "name": "table.clone", "signature": "table.clone(t) --> table", "description": "Luau addition. Shallow copy of a table." },
-      { "name": "table.freeze", "signature": "table.freeze(t) --> table", "description": "Luau addition. Makes t read-only; writes error. Freezes recursively for typed tables." },
-      { "name": "table.clear", "signature": "table.clear(t)", "description": "Luau addition. Empties a table in place, keeping its capacity." },
-      { "name": "table.pack / unpack", "signature": "table.pack(...) / table.unpack(t, i?, j?)", "description": "Convert between varargs and arrays." }
+      {
+        "name": "table.insert",
+        "signature": "table.insert(t, [pos,] value)",
+        "description": "Append value at the end, or insert at position pos (shifting later elements up)."
+      },
+      {
+        "name": "table.remove",
+        "signature": "table.remove(t, pos?) --> any",
+        "description": "Remove and return the element at pos (default: last). Later elements shift down."
+      },
+      {
+        "name": "table.find",
+        "signature": "table.find(t, value, init?) --> number?",
+        "description": "Luau addition. First index whose element == value, or nil."
+      },
+      {
+        "name": "table.sort",
+        "signature": "table.sort(t, comp?)",
+        "description": "Sort the array part in place. Optional comparator(a, b) returns true if a comes first."
+      },
+      {
+        "name": "table.concat",
+        "signature": "table.concat(t, sep?, i?, j?) --> string",
+        "description": "Join array elements into one string — the fast way to build big strings."
+      },
+      {
+        "name": "table.move",
+        "signature": "table.move(a1, f, e, t, a2?) --> table",
+        "description": "Copy elements a1[f..e] into positions starting at t (in a2, or a1 itself)."
+      },
+      {
+        "name": "table.create",
+        "signature": "table.create(n, value?) --> table",
+        "description": "Luau addition. Pre-sized array, optionally filled with value."
+      },
+      {
+        "name": "table.clone",
+        "signature": "table.clone(t) --> table",
+        "description": "Luau addition. Shallow copy of a table."
+      },
+      {
+        "name": "table.freeze",
+        "signature": "table.freeze(t) --> table",
+        "description": "Luau addition. Makes t read-only; writes error. Freezes recursively for typed tables."
+      },
+      {
+        "name": "table.clear",
+        "signature": "table.clear(t)",
+        "description": "Luau addition. Empties a table in place, keeping its capacity."
+      },
+      {
+        "name": "table.pack / unpack",
+        "signature": "table.pack(...) / table.unpack(t, i?, j?)",
+        "description": "Convert between varargs and arrays."
+      }
     ]
   },
   "explanation": {
@@ -55,14 +111,21 @@
   "examples": [
     {
       "title": "Leaderboard sorting",
-      "code": "local scores = {\n    { name = \"Alice\", points = 90 },\n    { name = \"Bob\", points = 120 },\n    { name = \"Cara\", points = 75 },\n}\n\ntable.sort(scores, function(a, b)\n    return a.points > b.points   -- highest first\nend)\n\nfor rank, entry in scores do\n    print(rank, entry.name, entry.points)\nend\n--> 1 Bob 120 / 2 Alice 90 / 3 Cara 75"
+      "code": "local scores = {\n    { name = \"Alice\", points = 90 },\n    { name = \"Bob\", points = 120 },\n    { name = \"Cara\", points = 75 },\n}\n\ntable.sort(scores, function(a, b)\n    return a.points > b.points   -- highest first\nend)\n\nfor rank, entry in scores do\n    print(rank, entry.name, entry.points)\nend\n--> 1 Bob 120 / 2 Alice 90 / 3 Cara 75",
+      "language": "lua"
     },
     {
       "title": "Building chat text fast",
       "code": "local words = {\"Welcome\", \"to\", \"the\", \"server!\"}\nlocal sentence = table.concat(words, \" \")\nprint(sentence)   --> Welcome to the server!",
-      "whyItWorks": "One allocation instead of N string concatenations. Matters in loops."
+      "whyItWorks": "One allocation instead of N string concatenations. Matters in loops.",
+      "language": "lua"
     }
   ],
-  "related": ["tables", "arrays", "dictionaries", "ipairs"],
+  "related": [
+    "tables",
+    "arrays",
+    "dictionaries",
+    "ipairs"
+  ],
   "added": "2026-10-04"
 }

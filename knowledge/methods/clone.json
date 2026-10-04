@@ -4,8 +4,17 @@
   "category": "methods",
   "type": "method",
   "summary": "Creates a full copy of an instance and its descendants — unparented. Archivable=false instances are skipped. The returned copy must be parented to appear.",
-  "keywords": ["copy", "duplicate", "instantiate prefab", "spawn from template", "Archivable"],
-  "tags": ["instance", "creation"],
+  "keywords": [
+    "copy",
+    "duplicate",
+    "instantiate prefab",
+    "spawn from template",
+    "Archivable"
+  ],
+  "tags": [
+    "instance",
+    "creation"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -53,9 +62,16 @@
   "examples": [
     {
       "title": "Template spawner",
-      "code": "local ServerStorage = game:GetService(\"ServerStorage\")\nlocal template = ServerStorage:WaitForChild(\"EnemyGoblin\")\n\nlocal function spawnEnemy(position: Vector3)\n    local enemy = template:Clone()\n    enemy.Name = \"Goblin_\" .. tostring(task.getId())\n    enemy:PivotTo(CFrame.new(position))\n    enemy.Parent = workspace.Enemies     -- appears NOW\n    return enemy\nend"
+      "code": "local ServerStorage = game:GetService(\"ServerStorage\")\nlocal template = ServerStorage:WaitForChild(\"EnemyGoblin\")\n\nlocal function spawnEnemy(position: Vector3)\n    local enemy = template:Clone()\n    enemy.Name = \"Goblin_\" .. tostring(task.getId())\n    enemy:PivotTo(CFrame.new(position))\n    enemy.Parent = workspace.Enemies     -- appears NOW\n    return enemy\nend",
+      "language": "lua"
     }
   ],
-  "related": ["destroy", "instance", "server-storage", "debris", "object-lifetime"],
+  "related": [
+    "destroy",
+    "instance",
+    "server-storage",
+    "debris",
+    "object-lifetime"
+  ],
   "added": "2026-10-04"
 }

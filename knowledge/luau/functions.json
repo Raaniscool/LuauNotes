@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "concept",
   "summary": "Reusable blocks of code with a name, parameters, and optional return values. Functions are values in Luau — you can store them in variables, tables, and pass them around.",
-  "keywords": ["define function", "call function", "arguments", "return value", "function declaration"],
-  "tags": ["basics", "functions"],
+  "keywords": [
+    "define function",
+    "call function",
+    "arguments",
+    "return value",
+    "function declaration"
+  ],
+  "tags": [
+    "basics",
+    "functions"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -60,13 +69,22 @@
     {
       "title": "Defining and calling",
       "code": "local function applyDamage(target, amount)\n    if not target or not target:FindFirstChild(\"Humanoid\") then\n        return false   -- guard: no humanoid, no damage\n    end\n    target.Humanoid:TakeDamage(amount)\n    return true\nend\n\nlocal ok = applyDamage(character, 25)\nif ok then print(\"Hit!\") end",
-      "whyItWorks": "The guard clause exits early when the target is invalid, keeping the happy path un-nested."
+      "whyItWorks": "The guard clause exits early when the target is invalid, keeping the happy path un-nested.",
+      "language": "lua"
     },
     {
       "title": "Multiple return values",
-      "code": "local function splitName(fullName)\n    local first, last = fullName:match(\"^(%S+)%s+(%S+)$\")\n    return first, last\nend\n\nlocal first, last = splitName(\"Ada Lovelace\")\nprint(first, last)   --> Ada  Lovelace"
+      "code": "local function splitName(fullName)\n    local first, last = fullName:match(\"^(%S+)%s+(%S+)$\")\n    return first, last\nend\n\nlocal first, last = splitName(\"Ada Lovelace\")\nprint(first, last)   --> Ada  Lovelace",
+      "language": "lua"
     }
   ],
-  "related": ["local-functions", "anonymous-functions", "return", "closures", "scope", "recursion"],
+  "related": [
+    "local-functions",
+    "anonymous-functions",
+    "return",
+    "closures",
+    "scope",
+    "recursion"
+  ],
   "added": "2026-10-04"
 }

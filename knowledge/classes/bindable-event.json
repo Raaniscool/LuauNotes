@@ -4,8 +4,18 @@
   "category": "classes",
   "type": "class",
   "summary": "Same-side messaging between scripts: Fire() and .Event let Scripts talk to Scripts (or LocalScripts to LocalScripts). It does NOT cross the client/server boundary — use RemoteEvent for that.",
-  "keywords": ["bindable", "script to script", "Fire", "same side communication", "Event"],
-  "tags": ["events", "communication", "architecture"],
+  "keywords": [
+    "bindable",
+    "script to script",
+    "Fire",
+    "same side communication",
+    "Event"
+  ],
+  "tags": [
+    "events",
+    "communication",
+    "architecture"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,10 +25,18 @@
   },
   "reference": {
     "methods": [
-      { "name": "Fire", "signature": "BindableEvent:Fire(...: any)", "description": "Fires the event to all connections on THIS side (no network involved)." }
+      {
+        "name": "Fire",
+        "signature": "BindableEvent:Fire(...: any)",
+        "description": "Fires the event to all connections on THIS side (no network involved)."
+      }
     ],
     "events": [
-      { "name": "Event", "signature": "BindableEvent.Event:Connect(function(...) end)", "description": "Receives whatever Fire sent. Note: the event member is literally named Event." }
+      {
+        "name": "Event",
+        "signature": "BindableEvent.Event:Connect(function(...) end)",
+        "description": "Receives whatever Fire sent. Note: the event member is literally named Event."
+      }
     ],
     "details": [
       {
@@ -54,9 +72,15 @@
   "examples": [
     {
       "title": "Round system broadcasting phases",
-      "code": "-- == ServerScriptService/Signals/RoundEvents (BindableEvent) ==\n\n-- RoundManager Script:\nlocal roundEvents = script.Parent.Parent.Signals.RoundEvents\nroundEvents:Fire(\"PhaseChanged\", \"Intermission\", 15)\n\n-- Some other Script that cares:\nlocal roundEvents = game:GetService(\"ServerScriptService\").Signals.RoundEvents\nroundEvents.Event:Connect(function(message, phase, duration)\n    if message == \"PhaseChanged\" then\n        print(\"New phase:\", phase, \"for\", duration, \"seconds\")\n    end\nend)"
+      "code": "-- == ServerScriptService/Signals/RoundEvents (BindableEvent) ==\n\n-- RoundManager Script:\nlocal roundEvents = script.Parent.Parent.Signals.RoundEvents\nroundEvents:Fire(\"PhaseChanged\", \"Intermission\", 15)\n\n-- Some other Script that cares:\nlocal roundEvents = game:GetService(\"ServerScriptService\").Signals.RoundEvents\nroundEvents.Event:Connect(function(message, phase, duration)\n    if message == \"PhaseChanged\" then\n        print(\"New phase:\", phase, \"for\", duration, \"seconds\")\n    end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["bindable-function", "remote-event", "client-vs-server", "event-connections"],
+  "related": [
+    "bindable-function",
+    "remote-event",
+    "client-vs-server",
+    "event-connections"
+  ],
   "added": "2026-10-04"
 }

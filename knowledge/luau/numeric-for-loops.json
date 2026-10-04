@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "keyword",
   "summary": "`for i = start, finish, step do ... end` counts from start to finish (inclusive) with an optional step. The loop variable is local and read-only.",
-  "keywords": ["count loop", "for i", "iterate n times", "loop range"],
-  "tags": ["basics", "loops", "control-flow"],
+  "keywords": [
+    "count loop",
+    "for i",
+    "iterate n times",
+    "loop range"
+  ],
+  "tags": [
+    "basics",
+    "loops",
+    "control-flow"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -59,13 +68,20 @@
     {
       "title": "Countdown + backwards removal",
       "code": "-- Classic countdown\nfor t = 5, 1, -1 do\n    print(t)\n    task.wait(1)\nend\nprint(\"GO!\")\n\n-- Safe removal while iterating (backwards!)\nlocal items = {\"keep\", \"drop\", \"keep\", \"drop\"}\nfor i = #items, 1, -1 do\n    if items[i] == \"drop\" then\n        table.remove(items, i)\n    end\nend",
-      "whyItWorks": "Walking backwards means removing item i never shifts the items you still need to visit (1..i-1)."
+      "whyItWorks": "Walking backwards means removing item i never shifts the items you still need to visit (1..i-1).",
+      "language": "lua"
     },
     {
       "title": "Spawning a grid of parts",
-      "code": "for x = -2, 2 do\n    for z = -2, 2 do\n        local part = Instance.new(\"Part\")\n        part.Size = Vector3.new(1, 1, 1)\n        part.Position = Vector3.new(x * 4, 0.5, z * 4)\n        part.Parent = workspace\n    end\nend\n-- 25 parts in a 5x5 grid"
+      "code": "for x = -2, 2 do\n    for z = -2, 2 do\n        local part = Instance.new(\"Part\")\n        part.Size = Vector3.new(1, 1, 1)\n        part.Position = Vector3.new(x * 4, 0.5, z * 4)\n        part.Parent = workspace\n    end\nend\n-- 25 parts in a 5x5 grid",
+      "language": "lua"
     }
   ],
-  "related": ["generic-for-loops", "while-loops", "arrays", "break-continue"],
+  "related": [
+    "generic-for-loops",
+    "while-loops",
+    "arrays",
+    "break-continue"
+  ],
   "added": "2026-10-04"
 }

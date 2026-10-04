@@ -4,8 +4,17 @@
   "category": "services",
   "type": "service",
   "summary": "The container whose contents replicate before anything else. LocalScripts here run earliest on the client — ideal for loading screens and bootstrapping before the world streams in.",
-  "keywords": ["loading screen", "first to replicate", "early client script", "bootstrapping"],
-  "tags": ["services", "containers", "loading"],
+  "keywords": [
+    "loading screen",
+    "first to replicate",
+    "early client script",
+    "bootstrapping"
+  ],
+  "tags": [
+    "services",
+    "containers",
+    "loading"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -51,9 +60,15 @@
   "examples": [
     {
       "title": "Minimal loading screen",
-      "code": "-- ReplicatedFirst/Loading (LocalScript)\nlocal Players = game:GetService(\"Players\")\nlocal player = Players.LocalPlayer\nlocal playerGui = player:WaitForChild(\"PlayerGui\")\n\nlocal gui = Instance.new(\"ScreenGui\")\ngui.IgnoreGuiInset = true\nlocal label = Instance.new(\"TextLabel\")\nlabel.Size = UDim2.fromScale(1, 1)\nlabel.BackgroundColor3 = Color3.fromRGB(20, 20, 25)\nlabel.TextColor3 = Color3.new(1, 1, 1)\nlabel.Text = \"Loading…\"\nlabel.Parent = gui\ngui.Parent = playerGui\n\n-- Wait for the world to be reasonably ready:\ntask.wait(3)   -- or a proper readiness check for your game\ngui:Destroy()\nprint(\"Loading complete\")"
+      "code": "-- ReplicatedFirst/Loading (LocalScript)\nlocal Players = game:GetService(\"Players\")\nlocal player = Players.LocalPlayer\nlocal playerGui = player:WaitForChild(\"PlayerGui\")\n\nlocal gui = Instance.new(\"ScreenGui\")\ngui.IgnoreGuiInset = true\nlocal label = Instance.new(\"TextLabel\")\nlabel.Size = UDim2.fromScale(1, 1)\nlabel.BackgroundColor3 = Color3.fromRGB(20, 20, 25)\nlabel.TextColor3 = Color3.new(1, 1, 1)\nlabel.Text = \"Loading…\"\nlabel.Parent = gui\ngui.Parent = playerGui\n\n-- Wait for the world to be reasonably ready:\ntask.wait(3)   -- or a proper readiness check for your game\ngui:Destroy()\nprint(\"Loading complete\")",
+      "language": "lua"
     }
   ],
-  "related": ["replicated-storage", "starter-gui", "localscript", "replication"],
+  "related": [
+    "replicated-storage",
+    "starter-gui",
+    "localscript",
+    "replication"
+  ],
   "added": "2026-10-04"
 }

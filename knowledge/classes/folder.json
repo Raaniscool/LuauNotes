@@ -4,8 +4,17 @@
   "category": "classes",
   "type": "class",
   "summary": "A bare organizational container with no behavior — the 'plain box' for grouping anything: remotes, effects, config objects, workspace clutter.",
-  "keywords": ["container", "organization", "group objects", "empty container"],
-  "tags": ["classes", "containers", "organization"],
+  "keywords": [
+    "container",
+    "organization",
+    "group objects",
+    "empty container"
+  ],
+  "tags": [
+    "classes",
+    "containers",
+    "organization"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -45,9 +54,15 @@
   "examples": [
     {
       "title": "Effects container pattern",
-      "code": "local effects = Instance.new(\"Folder\")\neffects.Name = \"Effects\"\neffects.Parent = workspace\n\nlocal function spawnExplosion(position)\n    local part = Instance.new(\"Part\")\n    part.Anchored = true\n    part.CanCollide = false\n    part.Position = position\n    part.Parent = effects   -- all effects live in one tidy place\n    game:GetService(\"Debris\"):AddItem(part, 2)\nend"
+      "code": "local effects = Instance.new(\"Folder\")\neffects.Name = \"Effects\"\neffects.Parent = workspace\n\nlocal function spawnExplosion(position)\n    local part = Instance.new(\"Part\")\n    part.Anchored = true\n    part.CanCollide = false\n    part.Position = position\n    part.Parent = effects   -- all effects live in one tidy place\n    game:GetService(\"Debris\"):AddItem(part, 2)\nend",
+      "language": "lua"
     }
   ],
-  "related": ["model", "instance", "leaderstats", "replicated-storage"],
+  "related": [
+    "model",
+    "instance",
+    "leaderstats",
+    "replicated-storage"
+  ],
   "added": "2026-10-04"
 }

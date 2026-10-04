@@ -4,8 +4,18 @@
   "category": "methods",
   "type": "method",
   "summary": "Server → every connected client at once. The standard broadcast: round state, announcements, shared effects.",
-  "keywords": ["broadcast", "to all players", "announce", "round start", "server to everyone"],
-  "tags": ["remotes", "networking", "client-server"],
+  "keywords": [
+    "broadcast",
+    "to all players",
+    "announce",
+    "round start",
+    "server to everyone"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -16,7 +26,11 @@
   "reference": {
     "signature": "RemoteEvent:FireAllClients(...args: any)",
     "parameters": [
-      { "name": "...args", "type": "serializable values", "description": "Delivered to every player's OnClientEvent." }
+      {
+        "name": "...args",
+        "type": "serializable values",
+        "description": "Delivered to every player's OnClientEvent."
+      }
     ],
     "returns": "None."
   },
@@ -44,9 +58,16 @@
   "examples": [
     {
       "title": "Round countdown broadcast",
-      "code": "-- Server:\nlocal remote = game.ReplicatedStorage.Remotes.GameState\n\nfor t = 5, 1, -1 do\n    remote:FireAllClients(\"Countdown\", t)\n    task.wait(1)\nend\nremote:FireAllClients(\"RoundStart\")\n\n-- Client:\nremote.OnClientEvent:Connect(function(kind, value)\n    if kind == \"Countdown\" then\n        print(\"Starting in\", value)\n    elseif kind == \"RoundStart\" then\n        print(\"GO!\")\n    end\nend)"
+      "code": "-- Server:\nlocal remote = game.ReplicatedStorage.Remotes.GameState\n\nfor t = 5, 1, -1 do\n    remote:FireAllClients(\"Countdown\", t)\n    task.wait(1)\nend\nremote:FireAllClients(\"RoundStart\")\n\n-- Client:\nremote.OnClientEvent:Connect(function(kind, value)\n    if kind == \"Countdown\" then\n        print(\"Starting in\", value)\n    elseif kind == \"RoundStart\" then\n        print(\"GO!\")\n    end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["remote-event", "fire-client", "on-client-event", "replication", "players"],
+  "related": [
+    "remote-event",
+    "fire-client",
+    "on-client-event",
+    "replication",
+    "players"
+  ],
   "added": "2026-10-04"
 }

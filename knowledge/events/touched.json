@@ -4,8 +4,19 @@
   "category": "events",
   "type": "event",
   "summary": "Fires when another part makes physical contact with this part — passes the OTHER part. The trigger behind kill bricks, pads, pickups; fires multiple times per character (each touching limb), so debounce.",
-  "keywords": ["touch event", "collision event", "stepped on", "hit detection", "part contact", "TouchEnded"],
-  "tags": ["physics", "interaction", "essential"],
+  "keywords": [
+    "touch event",
+    "collision event",
+    "stepped on",
+    "hit detection",
+    "part contact",
+    "TouchEnded"
+  ],
+  "tags": [
+    "physics",
+    "interaction",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -16,7 +27,11 @@
   "reference": {
     "signature": "BasePart.Touched:Connect(function(otherPart: BasePart) end)",
     "parameters": [
-      { "name": "otherPart", "type": "BasePart", "description": "The part that touched this one — often a character limb. Check its Parent for the character/model." }
+      {
+        "name": "otherPart",
+        "type": "BasePart",
+        "description": "The part that touched this one — often a character limb. Check its Parent for the character/model."
+      }
     ],
     "details": [
       {
@@ -58,9 +73,18 @@
       "title": "Debounced bounce pad",
       "code": "local pad = script.Parent\nlocal lastTouch = {}\n\npad.Touched:Connect(function(otherPart)\n    local character = otherPart.Parent\n    local humanoid = character and character:FindFirstChildOfClass(\"Humanoid\")\n    if not humanoid then return end\n\n    local now = os.clock()\n    if lastTouch[character] and now - lastTouch[character] < 1 then\n        return   -- debounce: one bounce per second per character\n    end\n    lastTouch[character] = now\n\n    local root = character:FindFirstChild(\"HumanoidRootPart\")\n    if root then\n        root.AssemblyLinearVelocity = Vector3.new(0, 120, 0)\n    end\nend)",
       "whyItWorks": "The table tracks last-bounce time per character, collapsing the multiple limb touches into one action.",
-      "commonMistake": "Without the debounce table, every limb contact re-launches the player mid-air."
+      "commonMistake": "Without the debounce table, every limb contact re-launches the player mid-air.",
+      "language": "lua"
     }
   ],
-  "related": ["part", "debounce", "get-player-from-character", "humanoid", "cooldown-pattern", "click-detector", "proximity-prompt"],
+  "related": [
+    "part",
+    "debounce",
+    "get-player-from-character",
+    "humanoid",
+    "cooldown-pattern",
+    "click-detector",
+    "proximity-prompt"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,18 @@
   "category": "gotchas",
   "type": "gotcha",
   "summary": "InvokeServer pauses the calling thread until the server's OnServerInvoke returns. If that handler errors, yields forever, or is unset, your client thread is stuck — often silently. Wrap in pcall, set expectations.",
-  "keywords": ["invoke hangs", "frozen client", "remote yield", "pcall invoke", "blocked thread"],
-  "tags": ["gotchas", "remotes", "timing"],
+  "keywords": [
+    "invoke hangs",
+    "frozen client",
+    "remote yield",
+    "pcall invoke",
+    "blocked thread"
+  ],
+  "tags": [
+    "gotchas",
+    "remotes",
+    "timing"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -35,9 +45,15 @@
   "examples": [
     {
       "title": "Defensive invoke",
-      "code": "-- ❌ Silent hang risk:\n-- local data = remote:InvokeServer()\n-- setupUI(data)   ← never runs if invoke hangs\n\n-- ✅ Guarded:\nlocal ok, data = pcall(function()\n    return remote:InvokeServer()\nend)\n\nif ok and data then\n    setupUI(data)\nelse\n    warn(\"Data fetch failed — using defaults\")\n    setupUI(getDefaultData())\nend"
+      "code": "-- ❌ Silent hang risk:\n-- local data = remote:InvokeServer()\n-- setupUI(data)   ← never runs if invoke hangs\n\n-- ✅ Guarded:\nlocal ok, data = pcall(function()\n    return remote:InvokeServer()\nend)\n\nif ok and data then\n    setupUI(data)\nelse\n    warn(\"Data fetch failed — using defaults\")\n    setupUI(getDefaultData())\nend",
+      "language": "lua"
     }
   ],
-  "related": ["invoke-server", "remote-function", "yielding", "request-response"],
+  "related": [
+    "invoke-server",
+    "remote-function",
+    "yielding",
+    "request-response"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,23 @@
   "category": "classes",
   "type": "class",
   "summary": "The player's viewpoint: workspace.CurrentCamera. Controlled via CFrame, CameraType (Custom default; Scriptable for full control), FieldOfView, and CameraSubject for following.",
-  "keywords": ["CurrentCamera", "camera control", "CameraType", "Scriptable", "FieldOfView", "cutscene", "CameraSubject", "first person", "camera cframe"],
-  "tags": ["classes", "camera", "visuals", "essential"],
+  "keywords": [
+    "CurrentCamera",
+    "camera control",
+    "CameraType",
+    "Scriptable",
+    "FieldOfView",
+    "cutscene",
+    "CameraSubject",
+    "first person",
+    "camera cframe"
+  ],
+  "tags": [
+    "classes",
+    "camera",
+    "visuals",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,15 +30,43 @@
   },
   "reference": {
     "properties": [
-      { "name": "CFrame", "type": "CFrame", "description": "Camera position and orientation. Writing it moves the camera (fully effective when CameraType = Scriptable)." },
-      { "name": "CameraType", "type": "Enum.CameraType", "description": "Custom (default player camera), Scriptable (your code owns the CFrame), Follow, Track, Watch, Attach." },
-      { "name": "CameraSubject", "type": "Instance", "description": "What the default camera follows (usually the Humanoid)." },
-      { "name": "FieldOfView / FieldOfViewMode", "type": "number / Enum", "description": "FOV in degrees (default 70) and interpretation axis." },
-      { "name": "Focus", "type": "CFrame", "description": "Where the camera looks/renders with priority." },
-      { "name": "NearPlaneZ / FarPlaneZ", "type": "number", "description": "Clip planes (advanced)." }
+      {
+        "name": "CFrame",
+        "type": "CFrame",
+        "description": "Camera position and orientation. Writing it moves the camera (fully effective when CameraType = Scriptable)."
+      },
+      {
+        "name": "CameraType",
+        "type": "Enum.CameraType",
+        "description": "Custom (default player camera), Scriptable (your code owns the CFrame), Follow, Track, Watch, Attach."
+      },
+      {
+        "name": "CameraSubject",
+        "type": "Instance",
+        "description": "What the default camera follows (usually the Humanoid)."
+      },
+      {
+        "name": "FieldOfView / FieldOfViewMode",
+        "type": "number / Enum",
+        "description": "FOV in degrees (default 70) and interpretation axis."
+      },
+      {
+        "name": "Focus",
+        "type": "CFrame",
+        "description": "Where the camera looks/renders with priority."
+      },
+      {
+        "name": "NearPlaneZ / FarPlaneZ",
+        "type": "number",
+        "description": "Clip planes (advanced)."
+      }
     ],
     "events": [
-      { "name": "FirstPersonTransition", "signature": "Camera.FirstPersonTransition:Connect(function(isEnteringFirstPerson: boolean) end)", "description": "Fires on first-person enter/exit." }
+      {
+        "name": "FirstPersonTransition",
+        "signature": "Camera.FirstPersonTransition:Connect(function(isEnteringFirstPerson: boolean) end)",
+        "description": "Fires on first-person enter/exit."
+      }
     ],
     "details": [
       {
@@ -64,13 +107,21 @@
   "examples": [
     {
       "title": "Smooth cutscene pan",
-      "code": "-- LocalScript\nlocal camera = workspace.CurrentCamera\nlocal startCF = camera.CFrame\nlocal endCF = CFrame.new(0, 50, 0, 1, 0, 0, 0, -1, 0, 0, 0, -1)\n\ncamera.CameraType = Enum.CameraType.Scriptable\n\ntask.spawn(function()\n    local DURATION = 3\n    local t0 = os.clock()\n    while true do\n        local alpha = math.min(1, (os.clock() - t0) / DURATION)\n        camera.CFrame = startCF:Lerp(endCF, alpha)\n        if alpha >= 1 then break end\n        task.wait()   -- yields to next frame\n    end\n    camera.CameraType = Enum.CameraType.Custom   -- hand it back\nend)"
+      "code": "-- LocalScript\nlocal camera = workspace.CurrentCamera\nlocal startCF = camera.CFrame\nlocal endCF = CFrame.new(0, 50, 0, 1, 0, 0, 0, -1, 0, 0, 0, -1)\n\ncamera.CameraType = Enum.CameraType.Scriptable\n\ntask.spawn(function()\n    local DURATION = 3\n    local t0 = os.clock()\n    while true do\n        local alpha = math.min(1, (os.clock() - t0) / DURATION)\n        camera.CFrame = startCF:Lerp(endCF, alpha)\n        if alpha >= 1 then break end\n        task.wait()   -- yields to next frame\n    end\n    camera.CameraType = Enum.CameraType.Custom   -- hand it back\nend)",
+      "language": "lua"
     },
     {
       "title": "Simple screen shake",
-      "code": "-- LocalScript, e.g. on explosion\nlocal RunService = game:GetService(\"RunService\")\nlocal camera = workspace.CurrentCamera\nlocal trauma = 1\n\nlocal conn\nconn = RunService.RenderStepped:Connect(function()\n    trauma = math.max(0, trauma - 0.03)\n    if trauma == 0 then conn:Disconnect() return end\n    local shake = trauma * trauma * 1.5\n    camera.CFrame *= CFrame.new(\n        math.random(-100, 100) / 100 * shake,\n        math.random(-100, 100) / 100 * shake,\n        math.random(-100, 100) / 100 * shake\n    )\nend)"
+      "code": "-- LocalScript, e.g. on explosion\nlocal RunService = game:GetService(\"RunService\")\nlocal camera = workspace.CurrentCamera\nlocal trauma = 1\n\nlocal conn\nconn = RunService.RenderStepped:Connect(function()\n    trauma = math.max(0, trauma - 0.03)\n    if trauma == 0 then conn:Disconnect() return end\n    local shake = trauma * trauma * 1.5\n    camera.CFrame *= CFrame.new(\n        math.random(-100, 100) / 100 * shake,\n        math.random(-100, 100) / 100 * shake,\n        math.random(-100, 100) / 100 * shake\n    )\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["cframe", "tween-service", "render-stepped", "workspace", "lighting"],
+  "related": [
+    "cframe",
+    "tween-service",
+    "render-stepped",
+    "workspace",
+    "lighting"
+  ],
   "added": "2026-10-04"
 }

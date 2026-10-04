@@ -4,8 +4,19 @@
   "category": "events",
   "type": "event",
   "summary": "Fires just BEFORE a player leaves the server — the standard save hook. Pair with periodic saves and BindToClose; don't rely on it alone (crashes skip it).",
-  "keywords": ["player left", "leave event", "save on leave", "disconnect handling", "cleanup player"],
-  "tags": ["players", "lifecycle", "data", "essential"],
+  "keywords": [
+    "player left",
+    "leave event",
+    "save on leave",
+    "disconnect handling",
+    "cleanup player"
+  ],
+  "tags": [
+    "players",
+    "lifecycle",
+    "data",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -47,9 +58,16 @@
   "examples": [
     {
       "title": "Save-on-leave with BindToClose",
-      "code": "local Players = game:GetService(\"Players\")\n\nlocal function savePlayer(player)\n    local data = sessionCache[player.UserId]\n    if not data then return end\n    local ok, err = pcall(function()\n        dataStore:SetAsync(\"Player_\" .. player.UserId, data)\n    end)\n    if not ok then warn(\"Save failed for \" .. player.Name .. \": \" .. err) end\nend\n\nPlayers.PlayerRemoving:Connect(savePlayer)\n\ngame:BindToClose(function()\n    for _, player in Players:GetPlayers() do\n        savePlayer(player)\n    end\nend)"
+      "code": "local Players = game:GetService(\"Players\")\n\nlocal function savePlayer(player)\n    local data = sessionCache[player.UserId]\n    if not data then return end\n    local ok, err = pcall(function()\n        dataStore:SetAsync(\"Player_\" .. player.UserId, data)\n    end)\n    if not ok then warn(\"Save failed for \" .. player.Name .. \": \" .. err) end\nend\n\nPlayers.PlayerRemoving:Connect(savePlayer)\n\ngame:BindToClose(function()\n    for _, player in Players:GetPlayers() do\n        savePlayer(player)\n    end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["player-added", "players", "datastore-save-load", "pcall", "datastore-service"],
+  "related": [
+    "player-added",
+    "players",
+    "datastore-save-load",
+    "pcall",
+    "datastore-service"
+  ],
   "added": "2026-10-04"
 }

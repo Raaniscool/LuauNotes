@@ -4,8 +4,17 @@
   "category": "methods",
   "type": "method",
   "summary": "Server → one specific client. First argument is the target Player, followed by any serializable values. The client's OnClientEvent receives only the values (no player parameter).",
-  "keywords": ["server to client", "send to player", "targeted message", "private message"],
-  "tags": ["remotes", "networking", "client-server"],
+  "keywords": [
+    "server to client",
+    "send to player",
+    "targeted message",
+    "private message"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -16,8 +25,16 @@
   "reference": {
     "signature": "RemoteEvent:FireClient(player: Player, ...args: any)",
     "parameters": [
-      { "name": "player", "type": "Player", "description": "The single recipient." },
-      { "name": "...args", "type": "serializable values", "description": "Payload delivered to that client's OnClientEvent." }
+      {
+        "name": "player",
+        "type": "Player",
+        "description": "The single recipient."
+      },
+      {
+        "name": "...args",
+        "type": "serializable values",
+        "description": "Payload delivered to that client's OnClientEvent."
+      }
     ],
     "returns": "None.",
     "details": [
@@ -52,9 +69,16 @@
   "examples": [
     {
       "title": "Reply to one player",
-      "code": "-- Server:\nremote.OnServerEvent:Connect(function(player, request)\n    if request == \"GetCoins\" then\n        local coins = getCoinsFor(player)   -- your server data\n        remote:FireClient(player, \"CoinsResult\", coins)\n    end\nend)\n\n-- Client:\nremote.OnClientEvent:Connect(function(kind, value)\n    if kind == \"CoinsResult\" then\n        print(\"I have\", value, \"coins\")\n    end\nend)"
+      "code": "-- Server:\nremote.OnServerEvent:Connect(function(player, request)\n    if request == \"GetCoins\" then\n        local coins = getCoinsFor(player)   -- your server data\n        remote:FireClient(player, \"CoinsResult\", coins)\n    end\nend)\n\n-- Client:\nremote.OnClientEvent:Connect(function(kind, value)\n    if kind == \"CoinsResult\" then\n        print(\"I have\", value, \"coins\")\n    end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["remote-event", "fire-all-clients", "on-client-event", "fire-server", "client-vs-server"],
+  "related": [
+    "remote-event",
+    "fire-all-clients",
+    "on-client-event",
+    "fire-server",
+    "client-vs-server"
+  ],
   "added": "2026-10-04"
 }

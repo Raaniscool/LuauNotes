@@ -4,8 +4,18 @@
   "category": "luau",
   "type": "concept",
   "summary": "Luau's optional static type system: annotate variables, parameters, and returns (`local x: number`) and the analyzer catches mismatches before you run. The backbone of large Roblox codebases.",
-  "keywords": ["type annotations", "strict mode", "type errors", "static types", "typed luau"],
-  "tags": ["types", "intermediate", "type-checking"],
+  "keywords": [
+    "type annotations",
+    "strict mode",
+    "type errors",
+    "static types",
+    "typed luau"
+  ],
+  "tags": [
+    "types",
+    "intermediate",
+    "type-checking"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -64,9 +74,16 @@
     {
       "title": "Typed save data",
       "code": "--!strict\n\nexport type SaveData = {\n    coins: number,\n    level: number,\n    inventory: { string },\n}\n\nlocal function loadDefault(): SaveData\n    return {\n        coins = 0,\n        level = 1,\n        inventory = {},\n    }\nend\n\nlocal data: SaveData = loadDefault()\ndata.coins += 10\n-- data.coinss += 1   -- ✗ typo caught by the type checker",
-      "whyItWorks": "The SaveData alias describes the exact shape; any deviation — typos, missing fields, wrong types — becomes an editor error."
+      "whyItWorks": "The SaveData alias describes the exact shape; any deviation — typos, missing fields, wrong types — becomes an editor error.",
+      "language": "lua"
     }
   ],
-  "related": ["generics", "data-types", "typeof-function", "metatables", "functions"],
+  "related": [
+    "generics",
+    "data-types",
+    "typeof-function",
+    "metatables",
+    "functions"
+  ],
   "added": "2026-10-04"
 }

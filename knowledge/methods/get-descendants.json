@@ -4,8 +4,18 @@
   "category": "methods",
   "type": "method",
   "summary": "Returns an array of EVERY instance beneath this one — children, grandchildren, and deeper. The workhorse for whole-tree operations (and the thing hand-rolled recursion usually imitates).",
-  "keywords": ["all descendants", "whole tree", "deep search", "every part in model", "subtree"],
-  "tags": ["instance", "iteration", "essential"],
+  "keywords": [
+    "all descendants",
+    "whole tree",
+    "deep search",
+    "every part in model",
+    "subtree"
+  ],
+  "tags": [
+    "instance",
+    "iteration",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -50,13 +60,22 @@
   "examples": [
     {
       "title": "Find every Sound under a model",
-      "code": "local map = workspace.Map\n\nlocal sounds = {}\nfor _, descendant in map:GetDescendants() do\n    if descendant:IsA(\"Sound\") then\n        table.insert(sounds, descendant)\n    end\nend\nprint(`Map contains {#sounds} sounds`)"
+      "code": "local map = workspace.Map\n\nlocal sounds = {}\nfor _, descendant in map:GetDescendants() do\n    if descendant:IsA(\"Sound\") then\n        table.insert(sounds, descendant)\n    end\nend\nprint(`Map contains {#sounds} sounds`)",
+      "language": "lua"
     },
     {
       "title": "React to new descendants",
-      "code": "workspace.Map.DescendantAdded:Connect(function(instance)\n    if instance:IsA(\"BasePart\") then\n        instance:SetAttribute(\"MapPart\", true)\n    end\nend)"
+      "code": "workspace.Map.DescendantAdded:Connect(function(instance)\n    if instance:IsA(\"BasePart\") then\n        instance:SetAttribute(\"MapPart\", true)\n    end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["get-children", "find-first-child", "instance", "recursion", "collection-service", "frame-budgets"],
+  "related": [
+    "get-children",
+    "find-first-child",
+    "instance",
+    "recursion",
+    "collection-service",
+    "frame-budgets"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,21 @@
   "category": "services",
   "type": "service",
   "summary": "Client-only input hub: keyboard, mouse, touch, and gamepad events (InputBegan/Changed/Ended), plus device capability checks like TouchEnabled and GetMouseLocation.",
-  "keywords": ["input", "keyboard", "KeyCode", "InputBegan", "touch", "gamepad", "mouse location", "key pressed"],
-  "tags": ["services", "input", "client"],
+  "keywords": [
+    "input",
+    "keyboard",
+    "KeyCode",
+    "InputBegan",
+    "touch",
+    "gamepad",
+    "mouse location",
+    "key pressed"
+  ],
+  "tags": [
+    "services",
+    "input",
+    "client"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,19 +28,55 @@
   },
   "reference": {
     "events": [
-      { "name": "InputBegan", "signature": "UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessed: boolean) end)", "description": "Fires when any input starts (key press, touch, button). gameProcessed=true means the engine already used it (e.g. chat box open, controls)." },
-      { "name": "InputChanged", "signature": "UserInputService.InputChanged:Connect(function(input: InputObject, gameProcessed: boolean) end)", "description": "Fires while input continues/moves (mouse movement, thumbstick)." },
-      { "name": "InputEnded", "signature": "UserInputService.InputEnded:Connect(function(input: InputObject, gameProcessed: boolean) end)", "description": "Fires when input is released." }
+      {
+        "name": "InputBegan",
+        "signature": "UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessed: boolean) end)",
+        "description": "Fires when any input starts (key press, touch, button). gameProcessed=true means the engine already used it (e.g. chat box open, controls)."
+      },
+      {
+        "name": "InputChanged",
+        "signature": "UserInputService.InputChanged:Connect(function(input: InputObject, gameProcessed: boolean) end)",
+        "description": "Fires while input continues/moves (mouse movement, thumbstick)."
+      },
+      {
+        "name": "InputEnded",
+        "signature": "UserInputService.InputEnded:Connect(function(input: InputObject, gameProcessed: boolean) end)",
+        "description": "Fires when input is released."
+      }
     ],
     "properties": [
-      { "name": "TouchEnabled", "type": "boolean", "description": "Device supports touch." },
-      { "name": "GamepadEnabled / KeyboardEnabled / MouseEnabled", "type": "boolean", "description": "Device capability flags." },
-      { "name": "MouseDeltaSensitivity", "type": "number", "description": "Scales mouse delta values." }
+      {
+        "name": "TouchEnabled",
+        "type": "boolean",
+        "description": "Device supports touch."
+      },
+      {
+        "name": "GamepadEnabled / KeyboardEnabled / MouseEnabled",
+        "type": "boolean",
+        "description": "Device capability flags."
+      },
+      {
+        "name": "MouseDeltaSensitivity",
+        "type": "number",
+        "description": "Scales mouse delta values."
+      }
     ],
     "methods": [
-      { "name": "GetMouseLocation", "signature": "UserInputService:GetMouseLocation() --> Vector2", "description": "Current mouse position in screen pixels (client)." },
-      { "name": "IsKeyDown", "signature": "UserInputService:IsKeyDown(keyCode: Enum.KeyCode) --> boolean", "description": "Poll whether a key is currently held." },
-      { "name": "IsGamepadButtonDown", "signature": "UserInputService:IsGamepadButtonDown(gamepad: Enum.UserInputType, button: Enum.KeyCode) --> boolean", "description": "Poll gamepad buttons." }
+      {
+        "name": "GetMouseLocation",
+        "signature": "UserInputService:GetMouseLocation() --> Vector2",
+        "description": "Current mouse position in screen pixels (client)."
+      },
+      {
+        "name": "IsKeyDown",
+        "signature": "UserInputService:IsKeyDown(keyCode: Enum.KeyCode) --> boolean",
+        "description": "Poll whether a key is currently held."
+      },
+      {
+        "name": "IsGamepadButtonDown",
+        "signature": "UserInputService:IsGamepadButtonDown(gamepad: Enum.UserInputType, button: Enum.KeyCode) --> boolean",
+        "description": "Poll gamepad buttons."
+      }
     ]
   },
   "explanation": {
@@ -58,13 +107,21 @@
   "examples": [
     {
       "title": "Keybind with gameProcessed guard",
-      "code": "local UserInputService = game:GetService(\"UserInputService\")\n\nUserInputService.InputBegan:Connect(function(input, gameProcessed)\n    if gameProcessed then return end   -- chat/controls already used it\n\n    if input.KeyCode == Enum.KeyCode.E then\n        print(\"E pressed — interact!\")\n    elseif input.UserInputType == Enum.UserInputType.MouseButton1 then\n        print(\"Left click!\")\n    end\nend)"
+      "code": "local UserInputService = game:GetService(\"UserInputService\")\n\nUserInputService.InputBegan:Connect(function(input, gameProcessed)\n    if gameProcessed then return end   -- chat/controls already used it\n\n    if input.KeyCode == Enum.KeyCode.E then\n        print(\"E pressed — interact!\")\n    elseif input.UserInputType == Enum.UserInputType.MouseButton1 then\n        print(\"Left click!\")\n    end\nend)",
+      "language": "lua"
     },
     {
       "title": "Device-aware UI",
-      "code": "local UserInputService = game:GetService(\"UserInputService\")\n\nif UserInputService.TouchEnabled then\n    print(\"Mobile layout: show big touch buttons\")\nelse\n    print(\"Desktop layout: show keybind hints\")\nend"
+      "code": "local UserInputService = game:GetService(\"UserInputService\")\n\nif UserInputService.TouchEnabled then\n    print(\"Mobile layout: show big touch buttons\")\nelse\n    print(\"Desktop layout: show keybind hints\")\nend",
+      "language": "lua"
     }
   ],
-  "related": ["context-action-service", "input-began", "localscript", "client-vs-server", "proximity-prompt-interaction"],
+  "related": [
+    "context-action-service",
+    "input-began",
+    "localscript",
+    "client-vs-server",
+    "proximity-prompt-interaction"
+  ],
   "added": "2026-10-04"
 }

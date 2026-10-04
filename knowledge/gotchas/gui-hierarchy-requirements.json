@@ -4,8 +4,18 @@
   "category": "gotchas",
   "type": "gotcha",
   "summary": "A Frame floating in Workspace or a random Folder will never render. ScreenGuis must live in PlayerGui/StarterGui; GuiObjects must be descendants of a ScreenGui (or SurfaceGui/BillboardGui).",
-  "keywords": ["gui invisible", "frame not rendering", "screengui parent", "where guis live", "ui not showing"],
-  "tags": ["gotchas", "gui", "essential"],
+  "keywords": [
+    "gui invisible",
+    "frame not rendering",
+    "screengui parent",
+    "where guis live",
+    "ui not showing"
+  ],
+  "tags": [
+    "gotchas",
+    "gui",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -35,9 +45,16 @@
   "examples": [
     {
       "title": "Valid chains",
-      "code": "-- ✅ Renders:\n-- Players.You.PlayerGui.MenuScreen (ScreenGui).Title (TextLabel)\n\n-- ❌ Invisible:\n-- workspace.MenuScreen.Title\n-- Players.You.PlayerGui.StuffFolder… wait, that one ALSO fails:\n-- PlayerGui → Folder → Frame   ✘ (Folder is not a GUI container)\n\nlocal playerGui = game.Players.LocalPlayer:WaitForChild(\"PlayerGui\")\nlocal screen = Instance.new(\"ScreenGui\")\nscreen.Parent = playerGui          -- GUI container ✔\n\nlocal label = Instance.new(\"TextLabel\")\nlabel.Parent = screen              -- directly under ScreenGui ✔\nlabel.Size = UDim2.fromOffset(200, 50)"
+      "code": "-- ✅ Renders:\n-- Players.You.PlayerGui.MenuScreen (ScreenGui).Title (TextLabel)\n\n-- ❌ Invisible:\n-- workspace.MenuScreen.Title\n-- Players.You.PlayerGui.StuffFolder… wait, that one ALSO fails:\n-- PlayerGui → Folder → Frame   ✘ (Folder is not a GUI container)\n\nlocal playerGui = game.Players.LocalPlayer:WaitForChild(\"PlayerGui\")\nlocal screen = Instance.new(\"ScreenGui\")\nscreen.Parent = playerGui          -- GUI container ✔\n\nlocal label = Instance.new(\"TextLabel\")\nlabel.Parent = screen              -- directly under ScreenGui ✔\nlabel.Size = UDim2.fromOffset(200, 50)",
+      "language": "lua"
     }
   ],
-  "related": ["screengui", "player-gui", "startergui-vs-playergui", "surfacegui", "billboardgui"],
+  "related": [
+    "screengui",
+    "player-gui",
+    "startergui-vs-playergui",
+    "surfacegui",
+    "billboardgui"
+  ],
   "added": "2026-10-04"
 }

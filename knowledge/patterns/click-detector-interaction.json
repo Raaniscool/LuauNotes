@@ -4,8 +4,17 @@
   "category": "patterns",
   "type": "pattern",
   "summary": "The classic click-to-interact: ClickDetector inside a part gives MouseClick (server+client) and hover events. Great for simple clickable objects; ProximityPrompt is preferred for new work.",
-  "keywords": ["click part", "MouseClick", "clickable object", "hover cursor", "ClickDetector pattern"],
-  "tags": ["patterns", "interaction"],
+  "keywords": [
+    "click part",
+    "MouseClick",
+    "clickable object",
+    "hover cursor",
+    "ClickDetector pattern"
+  ],
+  "tags": [
+    "patterns",
+    "interaction"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -39,9 +48,15 @@
   "examples": [
     {
       "title": "Clickable button part",
-      "code": "local button = workspace.BigRedButton\nlocal cd = Instance.new(\"ClickDetector\")\ncd.MaxActivationDistance = 32\ncd.Parent = button\n\ncd.MouseClick:Connect(function(player)\n    print(player.Name, \"pressed the button\")\n    -- authoritative effect here\nend)\n\ncd.MouseHoverEnter:Connect(function()\n    button.Color = Color3.fromRGB(255, 80, 80)\nend)\ncd.MouseHoverLeave:Connect(function()\n    button.Color = Color3.fromRGB(200, 40, 40)\nend)"
+      "code": "local button = workspace.BigRedButton\nlocal cd = Instance.new(\"ClickDetector\")\ncd.MaxActivationDistance = 32\ncd.Parent = button\n\ncd.MouseClick:Connect(function(player)\n    print(player.Name, \"pressed the button\")\n    -- authoritative effect here\nend)\n\ncd.MouseHoverEnter:Connect(function()\n    button.Color = Color3.fromRGB(255, 80, 80)\nend)\ncd.MouseHoverLeave:Connect(function()\n    button.Color = Color3.fromRGB(200, 40, 40)\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["click-detector", "proximity-prompt-interaction", "debounce", "client-vs-server"],
+  "related": [
+    "click-detector",
+    "proximity-prompt-interaction",
+    "debounce",
+    "client-vs-server"
+  ],
   "added": "2026-10-04"
 }

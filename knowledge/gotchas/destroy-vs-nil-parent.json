@@ -4,8 +4,17 @@
   "category": "gotchas",
   "type": "gotcha",
   "summary": "Setting Parent = nil hides an instance but keeps it alive and reusable. Destroy() kills it and all descendants PERMANENTLY — Parent is locked, re-parenting errors. Choose deliberately.",
-  "keywords": ["destroy permanent", "reusing destroyed", "parent locked", "soft delete", "hide vs destroy"],
-  "tags": ["gotchas", "lifecycle"],
+  "keywords": [
+    "destroy permanent",
+    "reusing destroyed",
+    "parent locked",
+    "soft delete",
+    "hide vs destroy"
+  ],
+  "tags": [
+    "gotchas",
+    "lifecycle"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -35,9 +44,15 @@
   "examples": [
     {
       "title": "Pool vs burn",
-      "code": "-- Soft-hide for reuse:\nlocal bullet = spawnBullet()\nbullet.Parent = nil            -- parked\n-- later:\nbullet.Parent = workspace      -- back! (still configured)\n\n-- Permanent:\nlocal trash = Instance.new(\"Part\")\ntrash.Parent = workspace\ntrash:Destroy()\n-- trash.Parent = workspace     ← ERROR: locked\n\n-- Pooling pattern:\nlocal pool = {}\nlocal function release(obj)\n    obj.Parent = nil\n    table.insert(pool, obj)\nend\nlocal function acquire()\n    return table.remove(pool) or createNew()\nend"
+      "code": "-- Soft-hide for reuse:\nlocal bullet = spawnBullet()\nbullet.Parent = nil            -- parked\n-- later:\nbullet.Parent = workspace      -- back! (still configured)\n\n-- Permanent:\nlocal trash = Instance.new(\"Part\")\ntrash.Parent = workspace\ntrash:Destroy()\n-- trash.Parent = workspace     ← ERROR: locked\n\n-- Pooling pattern:\nlocal pool = {}\nlocal function release(obj)\n    obj.Parent = nil\n    table.insert(pool, obj)\nend\nlocal function acquire()\n    return table.remove(pool) or createNew()\nend",
+      "language": "lua"
     }
   ],
-  "related": ["destroy", "clone", "instance-parent", "object-lifetime"],
+  "related": [
+    "destroy",
+    "clone",
+    "instance-parent",
+    "object-lifetime"
+  ],
   "added": "2026-10-04"
 }

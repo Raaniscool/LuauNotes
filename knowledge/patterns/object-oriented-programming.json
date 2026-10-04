@@ -4,8 +4,21 @@
   "category": "patterns",
   "type": "pattern",
   "summary": "Build classes with metatables: a class table with __index pointing at itself, a .new() constructor returning setmetatable'd instances, and methods defined with colon syntax.",
-  "keywords": ["class", "oop", "self", "constructor", "new()", "inheritance", "objects in luau"],
-  "tags": ["oop", "metatables", "architecture", "intermediate"],
+  "keywords": [
+    "class",
+    "oop",
+    "self",
+    "constructor",
+    "new()",
+    "inheritance",
+    "objects in luau"
+  ],
+  "tags": [
+    "oop",
+    "metatables",
+    "architecture",
+    "intermediate"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -59,9 +72,16 @@
       "title": "A complete Enemy class",
       "code": "local Enemy = {}\nEnemy.__index = Enemy\n\nfunction Enemy.new(model)\n    local self = setmetatable({}, Enemy)\n    self.model = model\n    self.health = 100\n    self.connection = model.PrimaryPart.Touched:Connect(function(hit)\n        self:onTouched(hit)\n    end)\n    return self\nend\n\nfunction Enemy:onTouched(hit)\n    local humanoid = hit.Parent and hit.Parent:FindFirstChildOfClass(\"Humanoid\")\n    if humanoid then\n        humanoid:TakeDamage(10)\n    end\nend\n\nfunction Enemy:takeDamage(amount)\n    self.health -= amount\n    if self.health <= 0 then\n        self:destroy()\n    end\nend\n\nfunction Enemy:destroy()\n    if self.connection then self.connection:Disconnect() end\n    self.model:Destroy()\nend\n\nreturn Enemy\n\n-- Usage (server Script):\n-- local Enemy = require(script.Parent.Enemy)\n-- local goblin = Enemy.new(workspace.Goblin)",
       "whyItWorks": "Each Enemy instance owns its model, health, and touch connection. Behavior (onTouched, takeDamage) lives once on the class.",
-      "commonMistake": "Skipping destroy() leaks the Touched connection forever — always pair constructors with cleanup."
+      "commonMistake": "Skipping destroy() leaks the Touched connection forever — always pair constructors with cleanup.",
+      "language": "lua"
     }
   ],
-  "related": ["metatables", "modules", "tables", "type-checking", "event-cleanup"],
+  "related": [
+    "metatables",
+    "modules",
+    "tables",
+    "type-checking",
+    "event-cleanup"
+  ],
   "added": "2026-10-04"
 }

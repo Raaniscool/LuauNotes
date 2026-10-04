@@ -4,8 +4,17 @@
   "category": "events",
   "type": "property",
   "summary": "The client-assigned handler answering InvokeClient calls from the server. Set it BEFORE the server might invoke; keep responses honest-but-untrusted from the server's perspective.",
-  "keywords": ["client invoke handler", "server asks client", "answer server question"],
-  "tags": ["remotes", "networking", "client-server", "advanced"],
+  "keywords": [
+    "client invoke handler",
+    "server asks client",
+    "answer server question"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server",
+    "advanced"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -29,12 +38,16 @@
   "explanation": {
     "whatItIs": "The client's side of the rare server→client question.",
     "whyItExists": "Completes the InvokeClient contract.",
-    "whenToUse": ["Answering genuinely client-known facts the server asks for (with server-side timeouts)"],
+    "whenToUse": [
+      "Answering genuinely client-known facts the server asks for (with server-side timeouts)"
+    ],
     "whenNotToUse": [
       "As a security channel — the server should never depend on client answers for authority",
       "If the flow can be inverted to client-initiated (usually it can)"
     ],
-    "tips": ["Set it in client boot before gameplay begins"],
+    "tips": [
+      "Set it in client boot before gameplay begins"
+    ],
     "commonMistakes": [
       "Never setting it while the server invokes → server errors/timeouts",
       "Returning heavy tables every time — keep responses small"
@@ -43,9 +56,15 @@
   "examples": [
     {
       "title": "Answering the server",
-      "code": "-- LocalScript:\nlocal rf = game.ReplicatedStorage:WaitForChild(\"Remotes\"):WaitForChild(\"ClientQuery\")\n\nrf.OnClientInvoke = function(question)\n    if question == \"SelectedSlot\" then\n        return selectedSlot or 1\n    end\n    return nil\nend"
+      "code": "-- LocalScript:\nlocal rf = game.ReplicatedStorage:WaitForChild(\"Remotes\"):WaitForChild(\"ClientQuery\")\n\nrf.OnClientInvoke = function(question)\n    if question == \"SelectedSlot\" then\n        return selectedSlot or 1\n    end\n    return nil\nend",
+      "language": "lua"
     }
   ],
-  "related": ["remote-function", "invoke-client", "on-server-invoke", "never-trust-the-client"],
+  "related": [
+    "remote-function",
+    "invoke-client",
+    "on-server-invoke",
+    "never-trust-the-client"
+  ],
   "added": "2026-10-04"
 }

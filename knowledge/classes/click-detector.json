@@ -4,8 +4,18 @@
   "category": "classes",
   "type": "class",
   "summary": "Makes a part clickable: hovering shows a cursor, and MouseClick fires with the clicking Player. Parent it to any BasePart for simple click interactions.",
-  "keywords": ["clickable part", "MouseClick", "click interaction", "hover", "MaxActivationDistance"],
-  "tags": ["classes", "interaction", "input"],
+  "keywords": [
+    "clickable part",
+    "MouseClick",
+    "click interaction",
+    "hover",
+    "MaxActivationDistance"
+  ],
+  "tags": [
+    "classes",
+    "interaction",
+    "input"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,12 +25,28 @@
   },
   "reference": {
     "properties": [
-      { "name": "MaxActivationDistance", "type": "number", "description": "How close (studs) a player must be to click (default 32)." },
-      { "name": "CursorIcon", "type": "Content", "description": "Cursor shown on hover." }
+      {
+        "name": "MaxActivationDistance",
+        "type": "number",
+        "description": "How close (studs) a player must be to click (default 32)."
+      },
+      {
+        "name": "CursorIcon",
+        "type": "Content",
+        "description": "Cursor shown on hover."
+      }
     ],
     "events": [
-      { "name": "MouseClick", "signature": "ClickDetector.MouseClick:Connect(function(playerWhoClicked: Player) end)", "description": "Fires server-AND-client side when a player within range clicks. Passes the Player who clicked." },
-      { "name": "MouseHoverEnter / MouseHoverLeave", "signature": "ClickDetector.MouseHoverEnter:Connect(function(playerWhoHovered: Player) end)", "description": "Hover tracking." }
+      {
+        "name": "MouseClick",
+        "signature": "ClickDetector.MouseClick:Connect(function(playerWhoClicked: Player) end)",
+        "description": "Fires server-AND-client side when a player within range clicks. Passes the Player who clicked."
+      },
+      {
+        "name": "MouseHoverEnter / MouseHoverLeave",
+        "signature": "ClickDetector.MouseHoverEnter:Connect(function(playerWhoHovered: Player) end)",
+        "description": "Hover tracking."
+      }
     ]
   },
   "explanation": {
@@ -50,9 +76,16 @@
   "examples": [
     {
       "title": "Clickable shop stall",
-      "code": "-- Script inside the Part\nlocal detector = Instance.new(\"ClickDetector\")\ndetector.MaxActivationDistance = 10\ndetector.Parent = script.Parent\n\nlocal cooldown = {}\n\ndetector.MouseClick:Connect(function(player)\n    local now = os.clock()\n    if cooldown[player.UserId] and now - cooldown[player.UserId] < 1 then\n        return\n    end\n    cooldown[player.UserId] = now\n    print(player.Name .. \" clicked the shop\")\n    -- open their shop GUI via RemoteEvent, give item, etc.\nend)"
+      "code": "-- Script inside the Part\nlocal detector = Instance.new(\"ClickDetector\")\ndetector.MaxActivationDistance = 10\ndetector.Parent = script.Parent\n\nlocal cooldown = {}\n\ndetector.MouseClick:Connect(function(player)\n    local now = os.clock()\n    if cooldown[player.UserId] and now - cooldown[player.UserId] < 1 then\n        return\n    end\n    cooldown[player.UserId] = now\n    print(player.Name .. \" clicked the shop\")\n    -- open their shop GUI via RemoteEvent, give item, etc.\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["click-detector-interaction", "proximity-prompt", "debounce", "part", "client-vs-server"],
+  "related": [
+    "click-detector-interaction",
+    "proximity-prompt",
+    "debounce",
+    "part",
+    "client-vs-server"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "concept",
   "summary": "Text values wrapped in quotes: \"hello\". Strings are immutable, support concatenation with `..`, and have a rich string library for searching, splitting, and formatting.",
-  "keywords": ["text", "concatenate", "string value", "quotes"],
-  "tags": ["basics", "types", "strings"],
+  "keywords": [
+    "text",
+    "concatenate",
+    "string value",
+    "quotes"
+  ],
+  "tags": [
+    "basics",
+    "types",
+    "strings"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -56,14 +65,22 @@
   "examples": [
     {
       "title": "Everyday string operations",
-      "code": "local player = \"Raanis\"\n\nprint(\"Hello, \" .. player)          --> Hello, Raanis\nprint(`Hi, {player}!`)              --> Hi, Raanis!  (interpolation)\nprint(#player)                      --> 6\nprint(player:upper())               --> RAANIS\nprint(player:sub(1, 3))             --> Raa\nprint(player:find(\"aan\"))           --> 2  4\nprint(player:gsub(\"a\", \"o\"))        --> Roons  2\nprint(string.split(\"a,b,c\", \",\"))   --> {\"a\", \"b\", \"c\"}"
+      "code": "local player = \"Raanis\"\n\nprint(\"Hello, \" .. player)          --> Hello, Raanis\nprint(`Hi, {player}!`)              --> Hi, Raanis!  (interpolation)\nprint(#player)                      --> 6\nprint(player:upper())               --> RAANIS\nprint(player:sub(1, 3))             --> Raa\nprint(player:find(\"aan\"))           --> 2  4\nprint(player:gsub(\"a\", \"o\"))        --> Roons  2\nprint(string.split(\"a,b,c\", \",\"))   --> {\"a\", \"b\", \"c\"}",
+      "language": "lua"
     },
     {
       "title": "Formatting HUD text",
       "code": "local kills = 7\nlocal timeLeft = 90\n\nlocal label = string.format(\"Kills: %d | Time: %d:%02d\", kills, timeLeft // 60, timeLeft % 60)\nprint(label)   --> Kills: 7 | Time: 1:30",
-      "whyItWorks": "`%d` inserts integers, `%02d` pads to two digits. `string.format` keeps number-heavy UI text readable."
+      "whyItWorks": "`%d` inserts integers, `%02d` pads to two digits. `string.format` keeps number-heavy UI text readable.",
+      "language": "lua"
     }
   ],
-  "related": ["string-operations", "string-formatting", "numbers", "data-types", "one-based-indexing"],
+  "related": [
+    "string-operations",
+    "string-formatting",
+    "numbers",
+    "data-types",
+    "one-based-indexing"
+  ],
   "added": "2026-10-04"
 }

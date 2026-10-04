@@ -4,8 +4,16 @@
   "category": "luau",
   "type": "keyword",
   "summary": "`repeat ... until condition` runs the body first, then checks — guaranteeing at least one iteration, and stopping when the condition becomes true.",
-  "keywords": ["do while", "run at least once", "until loop"],
-  "tags": ["basics", "loops", "control-flow"],
+  "keywords": [
+    "do while",
+    "run at least once",
+    "until loop"
+  ],
+  "tags": [
+    "basics",
+    "loops",
+    "control-flow"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -51,9 +59,14 @@
     {
       "title": "Retry until success",
       "code": "local attempts = 0\nlocal success = false\n\nrepeat\n    attempts += 1\n    -- pretend this sometimes fails\n    success = math.random() > 0.7\n    print(`Attempt {attempts}: {success}`)\n    task.wait(0.5)\nuntil success or attempts >= 10\n\nprint(if success then \"Worked!\" else \"Gave up after 10 tries\")",
-      "whyItWorks": "The loop stops on the first successful attempt, or after the safety cap of 10 — the `or attempts >= 10` is your guard against forever."
+      "whyItWorks": "The loop stops on the first successful attempt, or after the safety cap of 10 — the `or attempts >= 10` is your guard against forever.",
+      "language": "lua"
     }
   ],
-  "related": ["while-loops", "numeric-for-loops", "break-continue"],
+  "related": [
+    "while-loops",
+    "numeric-for-loops",
+    "break-continue"
+  ],
   "added": "2026-10-04"
 }

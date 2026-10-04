@@ -4,8 +4,19 @@
   "category": "luau",
   "type": "overview",
   "summary": "`and`, `or`, `not` combine conditions — with a twist: they return one of their operands, not just true/false. That powers defaults like `speed or 16`.",
-  "keywords": ["and or not", "logical and", "logical or", "ternary", "default value", "short-circuit"],
-  "tags": ["basics", "operators", "conditions"],
+  "keywords": [
+    "and or not",
+    "logical and",
+    "logical or",
+    "ternary",
+    "default value",
+    "short-circuit"
+  ],
+  "tags": [
+    "basics",
+    "operators",
+    "conditions"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -57,13 +68,21 @@
     {
       "title": "Defaults and nil-safety",
       "code": "local config = { Speed = 20 }   -- Jump missing\n\nlocal speed = config.Speed or 16     --> 20 (provided)\nlocal jump  = config.Jump or 50      --> 50 (default used)\n\nlocal player = game.Players.LocalPlayer\nlocal character = player and player.Character   -- safe: no error if nil\nprint(character or \"No character yet\")",
-      "whyItWorks": "`or` returns the first truthy operand — a perfect 'fallback' machine. `and` short-circuits, so `.Character` is only touched when `player` exists."
+      "whyItWorks": "`or` returns the first truthy operand — a perfect 'fallback' machine. `and` short-circuits, so `.Character` is only touched when `player` exists.",
+      "language": "lua"
     },
     {
       "title": "The ternary trap",
-      "code": "local wantsSprint = false\n\n-- BUG: wantsSprint is falsy, so this gives \"walk\" either way:\nlocal mode = wantsSprint and false or \"walk\"\nprint(mode)   --> \"walk\" ... even though 'and false' was the point\n\n-- SAFE: use an if-expression\nlocal safeMode = if wantsSprint then \"sprint\" else \"walk\"\nprint(safeMode)   --> walk (correctly)"
+      "code": "local wantsSprint = false\n\n-- BUG: wantsSprint is falsy, so this gives \"walk\" either way:\nlocal mode = wantsSprint and false or \"walk\"\nprint(mode)   --> \"walk\" ... even though 'and false' was the point\n\n-- SAFE: use an if-expression\nlocal safeMode = if wantsSprint then \"sprint\" else \"walk\"\nprint(safeMode)   --> walk (correctly)",
+      "language": "lua"
     }
   ],
-  "related": ["truthiness", "comparisons", "if-statements", "nil", "or-default"],
+  "related": [
+    "truthiness",
+    "comparisons",
+    "if-statements",
+    "nil",
+    "or-default"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,20 @@
   "category": "concepts",
   "type": "concept",
   "summary": "Data crossing boundaries — remotes, DataStores, HttpService JSON — must be serializable: tables of numbers/strings/booleans/other tables. Functions, threads, and most live objects can't cross; tables are COPIED, not shared.",
-  "keywords": ["serializable", "what can be sent", "datastore limits", "remote argument types", "tables copied", "json compatible"],
-  "tags": ["concepts", "networking", "data", "essential"],
+  "keywords": [
+    "serializable",
+    "what can be sent",
+    "datastore limits",
+    "remote argument types",
+    "tables copied",
+    "json compatible"
+  ],
+  "tags": [
+    "concepts",
+    "networking",
+    "data",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -41,9 +53,17 @@
   "examples": [
     {
       "title": "Safe save shape",
-      "code": "-- ✅ DataStore-friendly:\nlocal saveData = {\n    version = 2,\n    coins = 150,\n    inventory = { \"sword\", \"potion\" },       -- array of strings\n    settings = { music = true, volume = 0.8 }, -- dict of primitives\n}\n\n-- ❌ Not savable:\n-- { pet = workspace.Pets.Fluffy }      -- an Instance\n-- { fn = function() end }              -- a function\n-- { weird = 0/0 }                      -- NaN"
+      "code": "-- ✅ DataStore-friendly:\nlocal saveData = {\n    version = 2,\n    coins = 150,\n    inventory = { \"sword\", \"potion\" },       -- array of strings\n    settings = { music = true, volume = 0.8 }, -- dict of primitives\n}\n\n-- ❌ Not savable:\n-- { pet = workspace.Pets.Fluffy }      -- an Instance\n-- { fn = function() end }              -- a function\n-- { weird = 0/0 }                      -- NaN",
+      "language": "lua"
     }
   ],
-  "related": ["remote-parameter-rules", "datastore-service", "http-service", "fire-server", "tables", "table-references-vs-copies"],
+  "related": [
+    "remote-parameter-rules",
+    "datastore-service",
+    "http-service",
+    "fire-server",
+    "tables",
+    "table-references-vs-copies"
+  ],
   "added": "2026-10-04"
 }

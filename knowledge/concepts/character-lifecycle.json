@@ -4,8 +4,19 @@
   "category": "concepts",
   "type": "concept",
   "summary": "Players join once; CHARACTERS are repeatedly created and destroyed on each spawn/respawn. CharacterAdded/CharacterRemoving + respawns resetting state is the #1 source of 'it broke after I died' bugs.",
-  "keywords": ["respawn", "character recreated", "CharacterAdded", "state lost on death", "spawn cycle"],
-  "tags": ["concepts", "players", "lifecycle", "essential"],
+  "keywords": [
+    "respawn",
+    "character recreated",
+    "CharacterAdded",
+    "state lost on death",
+    "spawn cycle"
+  ],
+  "tags": [
+    "concepts",
+    "players",
+    "lifecycle",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -40,9 +51,17 @@
   "examples": [
     {
       "title": "Per-life setup that survives respawns",
-      "code": "Players.PlayerAdded:Connect(function(player)\n    -- Persistent/session stuff here:\n    setupLeaderstats(player)\n\n    -- Per-life stuff goes in CharacterAdded:\n    player.CharacterAdded:Connect(function(character)\n        local humanoid = character:WaitForChild(\"Humanoid\")\n        humanoid.WalkSpeed = 16 * getSpeedMultiplier(player)\n\n        humanoid.Died:Connect(function()\n            onPlayerDeath(player)\n        end)\n    end)\nend)"
+      "code": "Players.PlayerAdded:Connect(function(player)\n    -- Persistent/session stuff here:\n    setupLeaderstats(player)\n\n    -- Per-life stuff goes in CharacterAdded:\n    player.CharacterAdded:Connect(function(character)\n        local humanoid = character:WaitForChild(\"Humanoid\")\n        humanoid.WalkSpeed = 16 * getSpeedMultiplier(player)\n\n        humanoid.Died:Connect(function()\n            onPlayerDeath(player)\n        end)\n    end)\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["player", "character-added", "humanoid-died", "humanoid", "player-added", "screen-gui-reset-on-spawn"],
+  "related": [
+    "player",
+    "character-added",
+    "humanoid-died",
+    "humanoid",
+    "player-added",
+    "screen-gui-reset-on-spawn"
+  ],
   "added": "2026-10-04"
 }

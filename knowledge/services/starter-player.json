@@ -4,8 +4,18 @@
   "category": "services",
   "type": "service",
   "summary": "Holds per-player defaults and auto-run script containers: StarterPlayerScripts and StarterCharacterScripts run as LocalScripts for every player, plus default character/camera settings.",
-  "keywords": ["StarterPlayerScripts", "StarterCharacterScripts", "client bootstrap", "default character settings"],
-  "tags": ["services", "containers", "client", "gui"],
+  "keywords": [
+    "StarterPlayerScripts",
+    "StarterCharacterScripts",
+    "client bootstrap",
+    "default character settings"
+  ],
+  "tags": [
+    "services",
+    "containers",
+    "client",
+    "gui"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,11 +25,31 @@
   },
   "reference": {
     "properties": [
-      { "name": "StarterPlayerScripts", "type": "Instance", "description": "Container whose LocalScripts run for each player (copied into PlayerScripts)." },
-      { "name": "StarterCharacterScripts", "type": "Instance", "description": "Container whose LocalScripts are copied into each character model on spawn." },
-      { "name": "CharacterWalkSpeed / CharacterJumpHeight", "type": "number", "description": "Defaults applied to new Humanoids." },
-      { "name": "CameraMinZoomDistance / CameraMaxZoomDistance", "type": "number", "description": "Default camera zoom limits." },
-      { "name": "DevEnableMouseLock / DevComputerMovementMode", "type": "boolean / Enum", "description": "Default control scheme settings." }
+      {
+        "name": "StarterPlayerScripts",
+        "type": "Instance",
+        "description": "Container whose LocalScripts run for each player (copied into PlayerScripts)."
+      },
+      {
+        "name": "StarterCharacterScripts",
+        "type": "Instance",
+        "description": "Container whose LocalScripts are copied into each character model on spawn."
+      },
+      {
+        "name": "CharacterWalkSpeed / CharacterJumpHeight",
+        "type": "number",
+        "description": "Defaults applied to new Humanoids."
+      },
+      {
+        "name": "CameraMinZoomDistance / CameraMaxZoomDistance",
+        "type": "number",
+        "description": "Default camera zoom limits."
+      },
+      {
+        "name": "DevEnableMouseLock / DevComputerMovementMode",
+        "type": "boolean / Enum",
+        "description": "Default control scheme settings."
+      }
     ]
   },
   "explanation": {
@@ -48,9 +78,16 @@
   "examples": [
     {
       "title": "Client bootstrap pattern",
-      "code": "-- StarterPlayer/StarterPlayerScripts/ClientMain (LocalScript)\nlocal Modules = script.Parent.Modules\n\nlocal UIManager = require(Modules.UIManager)\nlocal InputManager = require(Modules.Input)\nlocal SoundManager = require(Modules.Sound)\n\nUIManager.init()\nInputManager.init()\nSoundManager.init()\n\nprint(\"Client systems online\")"
+      "code": "-- StarterPlayer/StarterPlayerScripts/ClientMain (LocalScript)\nlocal Modules = script.Parent.Modules\n\nlocal UIManager = require(Modules.UIManager)\nlocal InputManager = require(Modules.Input)\nlocal SoundManager = require(Modules.Sound)\n\nUIManager.init()\nInputManager.init()\nSoundManager.init()\n\nprint(\"Client systems online\")",
+      "language": "lua"
     }
   ],
-  "related": ["localscript", "starter-gui", "starter-pack", "humanoid", "replicated-first"],
+  "related": [
+    "localscript",
+    "starter-gui",
+    "starter-pack",
+    "humanoid",
+    "replicated-first"
+  ],
   "added": "2026-10-04"
 }

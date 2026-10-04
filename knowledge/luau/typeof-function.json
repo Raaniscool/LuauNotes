@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "function",
   "summary": "Returns a value's type as a string — and unlike classic Lua's type(), it recognizes Roblox engine types: \"Instance\", \"Vector3\", \"CFrame\", \"Color3\", \"EnumItem\"…",
-  "keywords": ["typeof", "type check at runtime", "what type is this", "type() vs typeof()"],
-  "tags": ["types", "functions", "roblox-api"],
+  "keywords": [
+    "typeof",
+    "type check at runtime",
+    "what type is this",
+    "type() vs typeof()"
+  ],
+  "tags": [
+    "types",
+    "functions",
+    "roblox-api"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -46,9 +55,14 @@
   "examples": [
     {
       "title": "typeof in action",
-      "code": "print(typeof(5))                       --> number\nprint(typeof(\"hi\"))                    --> string\nprint(typeof(workspace))               --> Instance\nprint(typeof(Vector3.new()))           --> Vector3\nprint(typeof(CFrame.new()))            --> CFrame\nprint(typeof(Enum.PartType.Ball))      --> EnumItem\nprint(typeof(Color3.new(1, 0, 0)))     --> Color3\n\nlocal part = Instance.new(\"Part\")\nprint(typeof(part))                    --> Instance\nprint(part:IsA(\"BasePart\"))            --> true   (class-level check)"
+      "code": "print(typeof(5))                       --> number\nprint(typeof(\"hi\"))                    --> string\nprint(typeof(workspace))               --> Instance\nprint(typeof(Vector3.new()))           --> Vector3\nprint(typeof(CFrame.new()))            --> CFrame\nprint(typeof(Enum.PartType.Ball))      --> EnumItem\nprint(typeof(Color3.new(1, 0, 0)))     --> Color3\n\nlocal part = Instance.new(\"Part\")\nprint(typeof(part))                    --> Instance\nprint(part:IsA(\"BasePart\"))            --> true   (class-level check)",
+      "language": "lua"
     }
   ],
-  "related": ["data-types", "type-checking", "is-a"],
+  "related": [
+    "data-types",
+    "type-checking",
+    "is-a"
+  ],
   "added": "2026-10-04"
 }

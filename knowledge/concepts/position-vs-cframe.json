@@ -1,0 +1,63 @@
+{
+  "id": "position-vs-cframe",
+  "title": "Position vs CFrame",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Position is WHERE (a point); CFrame is WHERE + WHICH WAY (point + orientation). Reading Position loses rotation; writing Position on some properties teleports without facing. Pick by whether orientation matters.",
+  "keywords": [
+    "position vs cframe",
+    "orientation",
+    "facing",
+    "which to use",
+    "part location"
+  ],
+  "tags": [
+    "concepts",
+    "spatial",
+    "essential"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/datatypes/CFrame",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Two answers to 'where is it?': a bare coordinate, or a coordinate with a compass attached.",
+    "whyItExists": "Some systems only care about location (distance checks); others must know facing (cameras, shooting, docking models).",
+    "whenToUse": [
+      "Position: distances, spawning without rotation, math-only contexts",
+      "CFrame: placing/rotating parts, cameras, anything 'facing' a target, relative offsets",
+      "Converting: cf.Position extracts the point; CFrame.new(pos) wraps a point (identity rotation)"
+    ],
+    "whenNotToUse": [
+      "CFrame for pure scalar distance math — wasteful and confusing",
+      "Position when rotation must survive the operation"
+    ],
+    "mentalModel": "```text\nPosition = (x, y, z)            a dot on the map\nCFrame   = (x, y, z) + facing   a dot holding a compass\n\nNeed facing? ─yes→ CFrame\n            └─no─→ Position is fine\n```",
+    "tips": [
+      "part.CFrame writes both; part.Position writes only location (keeps current rotation)",
+      "Vector3 for directions/offsets; promote to CFrame when orienting"
+    ],
+    "commonMistakes": [
+      "Setting Position expecting re-orientation — it doesn't rotate",
+      "Storing CFrames when only a point is needed, then comparing with == (use tolerance)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Choosing the right tool",
+      "code": "local part = workspace.Part\n\n-- Distance only: Position\nlocal d = (part.Position - workspace.Spawn.Position).Magnitude\n\n-- Move without rotating: Position\npart.Position = part.Position + Vector3.new(0, 5, 0)\n\n-- Move AND face the player: CFrame\nlocal target = workspace.Dummy.Position\npart.CFrame = CFrame.lookAt(part.Position, target)\n\n-- Extract point from pose:\nlocal justThePoint = part.CFrame.Position",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "vector3",
+    "cframe",
+    "part",
+    "moving-models",
+    "camera"
+  ],
+  "added": "2026-10-04"
+}

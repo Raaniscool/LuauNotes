@@ -4,8 +4,18 @@
   "category": "services",
   "type": "service",
   "summary": "Controls the audio world: listener setup, ambient reverb, volume rules — plus PlayLocalSound for playing a sound to just the local client.",
-  "keywords": ["audio", "listener", "reverb", "PlayLocalSound", "sound settings", "3d audio"],
-  "tags": ["services", "audio"],
+  "keywords": [
+    "audio",
+    "listener",
+    "reverb",
+    "PlayLocalSound",
+    "sound settings",
+    "3d audio"
+  ],
+  "tags": [
+    "services",
+    "audio"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,14 +25,38 @@
   },
   "reference": {
     "methods": [
-      { "name": "PlayLocalSound", "signature": "SoundService:PlayLocalSound(sound: Sound)", "description": "Client only. Plays a Sound for this client only, regardless of where the Sound object is parented." },
-      { "name": "SetListener", "signature": "SoundService:SetListener(listenerType: Enum.ListenerType, ...)", "description": "Sets the audio listener (default: the player's camera). ListenerType.Camera or Object with an instance." },
-      { "name": "GetListener", "signature": "SoundService:GetListener() --> (Enum.ListenerType, ...)", "description": "Current listener configuration." }
+      {
+        "name": "PlayLocalSound",
+        "signature": "SoundService:PlayLocalSound(sound: Sound)",
+        "description": "Client only. Plays a Sound for this client only, regardless of where the Sound object is parented."
+      },
+      {
+        "name": "SetListener",
+        "signature": "SoundService:SetListener(listenerType: Enum.ListenerType, ...)",
+        "description": "Sets the audio listener (default: the player's camera). ListenerType.Camera or Object with an instance."
+      },
+      {
+        "name": "GetListener",
+        "signature": "SoundService:GetListener() --> (Enum.ListenerType, ...)",
+        "description": "Current listener configuration."
+      }
     ],
     "properties": [
-      { "name": "AmbientReverb", "type": "Enum.ReverbType", "description": "Environmental reverb preset (Cave, Hallway, UnderWater…)." },
-      { "name": "DistanceFactor / DopplerScale / RolloffIntensity", "type": "number", "description": "3D audio tuning: perceived distance scaling, doppler strength, volume falloff intensity." },
-      { "name": "RespectFilteringEnabled", "type": "boolean", "description": "Whether client-created sounds are heard only by their creator (default true)." }
+      {
+        "name": "AmbientReverb",
+        "type": "Enum.ReverbType",
+        "description": "Environmental reverb preset (Cave, Hallway, UnderWater…)."
+      },
+      {
+        "name": "DistanceFactor / DopplerScale / RolloffIntensity",
+        "type": "number",
+        "description": "3D audio tuning: perceived distance scaling, doppler strength, volume falloff intensity."
+      },
+      {
+        "name": "RespectFilteringEnabled",
+        "type": "boolean",
+        "description": "Whether client-created sounds are heard only by their creator (default true)."
+      }
     ]
   },
   "explanation": {
@@ -53,9 +87,15 @@
   "examples": [
     {
       "title": "Client-only UI sound",
-      "code": "-- LocalScript\nlocal SoundService = game:GetService(\"SoundService\")\n\nlocal click = Instance.new(\"Sound\")\nclick.SoundId = \"rbxassetid://12222087\"   -- any valid sound id\nclick.Volume = 0.5\n\nlocal function playClick()\n    SoundService:PlayLocalSound(click)\nend\n\nscript.Parent.Activated:Connect(playClick)"
+      "code": "-- LocalScript\nlocal SoundService = game:GetService(\"SoundService\")\n\nlocal click = Instance.new(\"Sound\")\nclick.SoundId = \"rbxassetid://12222087\"   -- any valid sound id\nclick.Volume = 0.5\n\nlocal function playClick()\n    SoundService:PlayLocalSound(click)\nend\n\nscript.Parent.Activated:Connect(playClick)",
+      "language": "lua"
     }
   ],
-  "related": ["sound", "camera", "localscript", "client-vs-server"],
+  "related": [
+    "sound",
+    "camera",
+    "localscript",
+    "client-vs-server"
+  ],
   "added": "2026-10-04"
 }

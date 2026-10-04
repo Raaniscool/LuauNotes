@@ -4,8 +4,19 @@
   "category": "luau",
   "type": "concept",
   "summary": "Numeric values: integers like 42 and decimals like 3.5. Luau stores them as double-precision floats by default, with `//` floor division and the math library for everything else.",
-  "keywords": ["integer", "float", "decimal", "math", "arithmetic"],
-  "tags": ["basics", "types", "numbers", "math"],
+  "keywords": [
+    "integer",
+    "float",
+    "decimal",
+    "math",
+    "arithmetic"
+  ],
+  "tags": [
+    "basics",
+    "types",
+    "numbers",
+    "math"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -56,9 +67,15 @@
   "examples": [
     {
       "title": "Common number utilities in a game",
-      "code": "local health = 100\n\nlocal function takeDamage(amount)\n    health = math.clamp(health - amount, 0, 100)\n    print(\"Health:\", health)\nend\n\ntakeDamage(30)   --> Health: 70\ntakeDamage(999)  --> Health: 0   (clamped, never negative)\n\n-- Random item from a loot table\nlocal loot = {\"Coin\", \"Gem\", \"Sword\", \"Nothing\"}\nlocal drop = loot[math.random(#loot)]\nprint(\"You got:\", drop)"
+      "code": "local health = 100\n\nlocal function takeDamage(amount)\n    health = math.clamp(health - amount, 0, 100)\n    print(\"Health:\", health)\nend\n\ntakeDamage(30)   --> Health: 70\ntakeDamage(999)  --> Health: 0   (clamped, never negative)\n\n-- Random item from a loot table\nlocal loot = {\"Coin\", \"Gem\", \"Sword\", \"Nothing\"}\nlocal drop = loot[math.random(#loot)]\nprint(\"You got:\", drop)",
+      "language": "lua"
     }
   ],
-  "related": ["arithmetic-operators", "math-library", "strings", "type-checking"],
+  "related": [
+    "arithmetic-operators",
+    "math-library",
+    "strings",
+    "type-checking"
+  ],
   "added": "2026-10-04"
 }

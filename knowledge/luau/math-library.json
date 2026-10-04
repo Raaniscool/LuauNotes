@@ -4,8 +4,19 @@
   "category": "luau",
   "type": "library",
   "summary": "Numeric helpers: clamp, floor/ceil/round, min/max, sqrt, abs, random/randomseed, huge, pi. math.clamp and math.round are Luau additions.",
-  "keywords": ["math.clamp", "math.random", "math.floor", "math.round", "math.min", "math.max"],
-  "tags": ["numbers", "library", "math"],
+  "keywords": [
+    "math.clamp",
+    "math.random",
+    "math.floor",
+    "math.round",
+    "math.min",
+    "math.max"
+  ],
+  "tags": [
+    "numbers",
+    "library",
+    "math"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -15,14 +26,46 @@
   },
   "reference": {
     "methods": [
-      { "name": "math.clamp", "signature": "math.clamp(x, min, max) --> number", "description": "Luau addition. Forces x into [min, max]." },
-      { "name": "math.floor / ceil / round", "signature": "math.floor(x) --> number", "description": "floor: down · ceil: up · round (Luau): nearest integer, half rounds away from zero." },
-      { "name": "math.abs", "signature": "math.abs(x) --> number", "description": "Absolute value." },
-      { "name": "math.min / max", "signature": "math.min(...) --> number", "description": "Smallest/largest of the arguments." },
-      { "name": "math.random", "signature": "math.random() | math.random(n) | math.random(m, n) --> number", "description": "No args: float in [0, 1). One arg: integer 1..n. Two args: integer m..n." },
-      { "name": "math.randomseed", "signature": "math.randomseed(seed)", "description": "Seeds the generator for reproducible sequences." },
-      { "name": "math.sqrt / ^", "signature": "math.sqrt(x) --> number", "description": "Square root; x^0.5 equivalent." },
-      { "name": "math.huge / math.pi", "signature": "math.huge --> number", "description": "Infinity and π ≈ 3.14159." }
+      {
+        "name": "math.clamp",
+        "signature": "math.clamp(x, min, max) --> number",
+        "description": "Luau addition. Forces x into [min, max]."
+      },
+      {
+        "name": "math.floor / ceil / round",
+        "signature": "math.floor(x) --> number",
+        "description": "floor: down · ceil: up · round (Luau): nearest integer, half rounds away from zero."
+      },
+      {
+        "name": "math.abs",
+        "signature": "math.abs(x) --> number",
+        "description": "Absolute value."
+      },
+      {
+        "name": "math.min / max",
+        "signature": "math.min(...) --> number",
+        "description": "Smallest/largest of the arguments."
+      },
+      {
+        "name": "math.random",
+        "signature": "math.random() | math.random(n) | math.random(m, n) --> number",
+        "description": "No args: float in [0, 1). One arg: integer 1..n. Two args: integer m..n."
+      },
+      {
+        "name": "math.randomseed",
+        "signature": "math.randomseed(seed)",
+        "description": "Seeds the generator for reproducible sequences."
+      },
+      {
+        "name": "math.sqrt / ^",
+        "signature": "math.sqrt(x) --> number",
+        "description": "Square root; x^0.5 equivalent."
+      },
+      {
+        "name": "math.huge / math.pi",
+        "signature": "math.huge --> number",
+        "description": "Infinity and π ≈ 3.14159."
+      }
     ]
   },
   "explanation": {
@@ -50,9 +93,14 @@
   "examples": [
     {
       "title": "Everyday math helpers",
-      "code": "local health = 130\nhealth = math.clamp(health, 0, 100)\nprint(health)                        --> 100\n\nprint(math.round(3.7))               --> 4\nprint(math.floor(3.7), math.ceil(3.2)) --> 3  4\n\nlocal loot = {\"Coin\", \"Gem\", \"Sword\"}\nprint(loot[math.random(#loot)])      --> random item\n\nprint(math.max(10, 40, 7))           --> 40\nprint(math.abs(-5))                  --> 5"
+      "code": "local health = 130\nhealth = math.clamp(health, 0, 100)\nprint(health)                        --> 100\n\nprint(math.round(3.7))               --> 4\nprint(math.floor(3.7), math.ceil(3.2)) --> 3  4\n\nlocal loot = {\"Coin\", \"Gem\", \"Sword\"}\nprint(loot[math.random(#loot)])      --> random item\n\nprint(math.max(10, 40, 7))           --> 40\nprint(math.abs(-5))                  --> 5",
+      "language": "lua"
     }
   ],
-  "related": ["numbers", "arithmetic-operators", "random-selection"],
+  "related": [
+    "numbers",
+    "arithmetic-operators",
+    "random-selection"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,19 @@
   "category": "properties",
   "type": "property",
   "summary": "Where an instance lives in the hierarchy. Setting it moves/replicates the object; nil removes it from the world. Destroyed instances have Parent permanently locked to nil.",
-  "keywords": ["parenting", "move object", "remove from world", "set parent", "unparent"],
-  "tags": ["properties", "instance", "replication", "essential"],
+  "keywords": [
+    "parenting",
+    "move object",
+    "remove from world",
+    "set parent",
+    "unparent"
+  ],
+  "tags": [
+    "properties",
+    "instance",
+    "replication",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,10 +26,18 @@
   },
   "reference": {
     "properties": [
-      { "name": "Parent", "type": "Instance?", "description": "Current container. Writing moves the instance (and triggers replication when crossing the server→client boundary rules). Destroy() locks it at nil forever." }
+      {
+        "name": "Parent",
+        "type": "Instance?",
+        "description": "Current container. Writing moves the instance (and triggers replication when crossing the server→client boundary rules). Destroy() locks it at nil forever."
+      }
     ],
     "events": [
-      { "name": "AncestryChanged", "signature": "instance.AncestryChanged", "description": "Observe parenting changes." }
+      {
+        "name": "AncestryChanged",
+        "signature": "instance.AncestryChanged",
+        "description": "Observe parenting changes."
+      }
     ]
   },
   "explanation": {
@@ -47,9 +66,17 @@
   "examples": [
     {
       "title": "Configure-first pattern",
-      "code": "-- ❌ Replicates half-finished state:\n-- local p = Instance.new(\"Part\"); p.Parent = workspace; p.Size = ...; p.Color = ...\n\n-- ✅ One clean arrival:\nlocal p = Instance.new(\"Part\")\np.Size = Vector3.new(4, 1, 4)\np.Anchored = true\np.Color = Color3.fromRGB(200, 50, 50)\np.Position = Vector3.new(0, 10, 0)\np.Parent = workspace   -- last!\n\n-- Soft-hide, keep alive:\np.Parent = nil\n-- Later: p.Parent = workspace   (still configured!)"
+      "code": "-- ❌ Replicates half-finished state:\n-- local p = Instance.new(\"Part\"); p.Parent = workspace; p.Size = ...; p.Color = ...\n\n-- ✅ One clean arrival:\nlocal p = Instance.new(\"Part\")\np.Size = Vector3.new(4, 1, 4)\np.Anchored = true\np.Color = Color3.fromRGB(200, 50, 50)\np.Position = Vector3.new(0, 10, 0)\np.Parent = workspace   -- last!\n\n-- Soft-hide, keep alive:\np.Parent = nil\n-- Later: p.Parent = workspace   (still configured!)",
+      "language": "lua"
     }
   ],
-  "related": ["instance", "destroy", "clone", "replication", "object-lifetime", "instance-hierarchy"],
+  "related": [
+    "instance",
+    "destroy",
+    "clone",
+    "replication",
+    "object-lifetime",
+    "instance-hierarchy"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,18 @@
   "category": "patterns",
   "type": "pattern",
   "summary": "LocalScripts only run in client-owned containers: StarterPlayer/StarterPlayerScripts, StarterCharacterScripts, PlayerGui, PlayerScripts, Backpack/character tools, and ReplicatedFirst. Parked elsewhere (e.g. Workspace or ServerScriptService) they silently never run.",
-  "keywords": ["localscript not running", "where to put localscript", "clientscript locations", "silent never runs"],
-  "tags": ["patterns", "scripts", "gotcha-adjacent", "essential"],
+  "keywords": [
+    "localscript not running",
+    "where to put localscript",
+    "clientscript locations",
+    "silent never runs"
+  ],
+  "tags": [
+    "patterns",
+    "scripts",
+    "gotcha-adjacent",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -39,9 +49,16 @@
   "examples": [
     {
       "title": "Correct homes",
-      "code": "-- ✅ Runs:\n-- StarterPlayer/StarterPlayerScripts/ClientMain.lua  (LocalScript)\n-- StarterGui/HUD/Controller  (LocalScript inside a ScreenGui)\n-- Backpack/Sword/Client  (LocalScript in a Tool)\n\n-- ❌ Never runs:\n-- Workspace/MyLocal  (LocalScript)\n-- ServerScriptService/ClientStuff  (wrong universe)\n-- ReplicatedStorage/AutoRun  (storage only)\n\n-- ✅ The escape hatch — valid home requires anywhere module:\n-- (StarterPlayerScripts) LocalScript:\nlocal MyModule = require(game.ReplicatedStorage.Shared.CoolModule)\nMyModule.start()"
+      "code": "-- ✅ Runs:\n-- StarterPlayer/StarterPlayerScripts/ClientMain.lua  (LocalScript)\n-- StarterGui/HUD/Controller  (LocalScript inside a ScreenGui)\n-- Backpack/Sword/Client  (LocalScript in a Tool)\n\n-- ❌ Never runs:\n-- Workspace/MyLocal  (LocalScript)\n-- ServerScriptService/ClientStuff  (wrong universe)\n-- ReplicatedStorage/AutoRun  (storage only)\n\n-- ✅ The escape hatch — valid home requires anywhere module:\n-- (StarterPlayerScripts) LocalScript:\nlocal MyModule = require(game.ReplicatedStorage.Shared.CoolModule)\nMyModule.start()",
+      "language": "lua"
     }
   ],
-  "related": ["localscript", "script", "modulescript", "client-vs-server", "replicated-storage"],
+  "related": [
+    "localscript",
+    "script",
+    "modulescript",
+    "client-vs-server",
+    "replicated-storage"
+  ],
   "added": "2026-10-04"
 }

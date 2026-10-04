@@ -4,8 +4,18 @@
   "category": "concepts",
   "type": "concept",
   "summary": "Instance lifecycle: create → configure → parent (enter world) → live → destroy (or unparent). Destroy cascades to children, locks Parent forever, but does NOT sever event connections or code references — those are leaks unless you clean them.",
-  "keywords": ["destroy cleanup", "memory leaks", "object lifecycle", "connections leak", "unparent vs destroy"],
-  "tags": ["concepts", "memory", "essential"],
+  "keywords": [
+    "destroy cleanup",
+    "memory leaks",
+    "object lifecycle",
+    "connections leak",
+    "unparent vs destroy"
+  ],
+  "tags": [
+    "concepts",
+    "memory",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -40,9 +50,17 @@
   "examples": [
     {
       "title": "Clean spawn + despawn",
-      "code": "local function spawnMine(position, lifetime)\n    local mine = Instance.new(\"Part\")\n    mine.Size = Vector3.new(1, 1, 1)\n    mine.Anchored = true\n    mine.Position = position\n\n    local connections = {}\n    table.insert(connections, mine.Touched:Connect(function(hit)\n        -- boom\n    end))\n\n    mine.Parent = workspace\n\n    task.delay(lifetime, function()\n        for _, c in connections do c:Disconnect() end\n        mine:Destroy()\n    end)\nend"
+      "code": "local function spawnMine(position, lifetime)\n    local mine = Instance.new(\"Part\")\n    mine.Size = Vector3.new(1, 1, 1)\n    mine.Anchored = true\n    mine.Position = position\n\n    local connections = {}\n    table.insert(connections, mine.Touched:Connect(function(hit)\n        -- boom\n    end))\n\n    mine.Parent = workspace\n\n    task.delay(lifetime, function()\n        for _, c in connections do c:Disconnect() end\n        mine:Destroy()\n    end)\nend",
+      "language": "lua"
     }
   ],
-  "related": ["destroy", "instance-parent", "clone", "event-cleanup", "part", "object-lifetime"],
+  "related": [
+    "destroy",
+    "instance-parent",
+    "clone",
+    "event-cleanup",
+    "part",
+    "object-lifetime"
+  ],
   "added": "2026-10-04"
 }

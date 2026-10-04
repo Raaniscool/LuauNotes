@@ -4,8 +4,19 @@
   "category": "properties",
   "type": "property",
   "summary": "Character movement speed in studs/second (default 16). Change it for sprints, slows, and power-ups — server-side for authority. Pairs with JumpPower/JumpHeight.",
-  "keywords": ["speed boost", "sprint", "slow effect", "movement speed", "WalkSpeed change", "JumpPower"],
-  "tags": ["properties", "characters", "gameplay"],
+  "keywords": [
+    "speed boost",
+    "sprint",
+    "slow effect",
+    "movement speed",
+    "WalkSpeed change",
+    "JumpPower"
+  ],
+  "tags": [
+    "properties",
+    "characters",
+    "gameplay"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,8 +26,18 @@
   },
   "reference": {
     "properties": [
-      { "name": "WalkSpeed", "type": "number", "default": "16", "description": "Studs per second while walking/running." },
-      { "name": "JumpPower / JumpHeight", "type": "number", "default": "50 / 7.2", "description": "Jump strength (mode chosen by UseJumpPower)." }
+      {
+        "name": "WalkSpeed",
+        "type": "number",
+        "default": "16",
+        "description": "Studs per second while walking/running."
+      },
+      {
+        "name": "JumpPower / JumpHeight",
+        "type": "number",
+        "default": "50 / 7.2",
+        "description": "Jump strength (mode chosen by UseJumpPower)."
+      }
     ]
   },
   "explanation": {
@@ -45,9 +66,15 @@
   "examples": [
     {
       "title": "Speed pad with restore",
-      "code": "-- Server Script\nlocal pad = workspace.SpeedPad\nlocal BOOST = 32\n\npad.Touched:Connect(function(hit)\n    local character = hit.Parent\n    local humanoid = character and character:FindFirstChildOfClass(\"Humanoid\")\n    if humanoid and humanoid.WalkSpeed ~= BOOST then\n        humanoid.WalkSpeed = BOOST\n        task.delay(5, function()\n            if humanoid and humanoid.Parent then\n                humanoid.WalkSpeed = 16\n            end\n        end)\n    end\nend)"
+      "code": "-- Server Script\nlocal pad = workspace.SpeedPad\nlocal BOOST = 32\n\npad.Touched:Connect(function(hit)\n    local character = hit.Parent\n    local humanoid = character and character:FindFirstChildOfClass(\"Humanoid\")\n    if humanoid and humanoid.WalkSpeed ~= BOOST then\n        humanoid.WalkSpeed = BOOST\n        task.delay(5, function()\n            if humanoid and humanoid.Parent then\n                humanoid.WalkSpeed = 16\n            end\n        end)\n    end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["humanoid", "character-added", "touched", "client-vs-server"],
+  "related": [
+    "humanoid",
+    "character-added",
+    "touched",
+    "client-vs-server"
+  ],
   "added": "2026-10-04"
 }

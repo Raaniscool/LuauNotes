@@ -4,8 +4,19 @@
   "category": "events",
   "type": "event",
   "summary": "Client-only event firing just before each rendered frame — the only place guaranteed to sync with what the player sees. Camera updates and aim smoothing live here. Never on the server.",
-  "keywords": ["before render", "camera update", "client frame", "smooth aim", "render loop"],
-  "tags": ["loop", "timing", "client", "camera"],
+  "keywords": [
+    "before render",
+    "camera update",
+    "client frame",
+    "smooth aim",
+    "render loop"
+  ],
+  "tags": [
+    "loop",
+    "timing",
+    "client",
+    "camera"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -54,9 +65,15 @@
   "examples": [
     {
       "title": "Camera look-at smoothing",
-      "code": "local RunService = game:GetService(\"RunService\")\nlocal camera = workspace.CurrentCamera\nlocal target = workspace.Beacon\n\nlocal conn\nconn = RunService.RenderStepped:Connect(function(dt)\n    local current = camera.CFrame\n    local goal = CFrame.lookAt(current.Position, target.Position)\n    camera.CFrame = current:Lerp(goal, math.min(1, dt * 5))\nend)\n\n-- later: conn:Disconnect()"
+      "code": "local RunService = game:GetService(\"RunService\")\nlocal camera = workspace.CurrentCamera\nlocal target = workspace.Beacon\n\nlocal conn\nconn = RunService.RenderStepped:Connect(function(dt)\n    local current = camera.CFrame\n    local goal = CFrame.lookAt(current.Position, target.Position)\n    camera.CFrame = current:Lerp(goal, math.min(1, dt * 5))\nend)\n\n-- later: conn:Disconnect()",
+      "language": "lua"
     }
   ],
-  "related": ["run-service", "heartbeat", "camera", "event-cleanup"],
+  "related": [
+    "run-service",
+    "heartbeat",
+    "camera",
+    "event-cleanup"
+  ],
   "added": "2026-10-04"
 }

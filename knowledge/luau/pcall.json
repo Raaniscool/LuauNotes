@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "function",
   "summary": "Protected call: runs a function and catches any error it raises, returning (success, resultOrError) instead of crashing your script. Essential around DataStores, HTTP, and anything that can fail.",
-  "keywords": ["protected call", "catch error", "try catch", "safe call"],
-  "tags": ["errors", "robustness", "functions"],
+  "keywords": [
+    "protected call",
+    "catch error",
+    "try catch",
+    "safe call"
+  ],
+  "tags": [
+    "errors",
+    "robustness",
+    "functions"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -51,9 +60,15 @@
   "examples": [
     {
       "title": "The two correct forms",
-      "code": "-- Form 1: wrapper function (clearest)\nlocal ok, err = pcall(function()\n    error(\"boom\")\nend)\nprint(ok, err)   --> false  ...boom...\n\n-- Form 2: function + arguments\nlocal DataStoreService = game:GetService(\"DataStoreService\")\nlocal store = DataStoreService:GetDataStore(\"Data\")\n\nlocal ok2, data = pcall(function()\n    return store:GetAsync(\"player_123\")\nend)\nif ok2 then\n    print(\"Loaded:\", data)\nelse\n    warn(\"Load failed:\", data)   -- data holds the error message here\nend"
+      "code": "-- Form 1: wrapper function (clearest)\nlocal ok, err = pcall(function()\n    error(\"boom\")\nend)\nprint(ok, err)   --> false  ...boom...\n\n-- Form 2: function + arguments\nlocal DataStoreService = game:GetService(\"DataStoreService\")\nlocal store = DataStoreService:GetDataStore(\"Data\")\n\nlocal ok2, data = pcall(function()\n    return store:GetAsync(\"player_123\")\nend)\nif ok2 then\n    print(\"Loaded:\", data)\nelse\n    warn(\"Load failed:\", data)   -- data holds the error message here\nend",
+      "language": "lua"
     }
   ],
-  "related": ["error-handling", "assert", "datastore-save-load", "http-service"],
+  "related": [
+    "error-handling",
+    "assert",
+    "datastore-save-load",
+    "http-service"
+  ],
   "added": "2026-10-04"
 }

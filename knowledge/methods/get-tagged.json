@@ -4,8 +4,17 @@
   "category": "methods",
   "type": "method",
   "summary": "Returns every instance currently carrying a tag — instantly, no hierarchy scanning. Pair with GetInstanceAddedSignal to also catch future taggings.",
-  "keywords": ["all tagged", "find by tag", "tagged instances", "group lookup"],
-  "tags": ["tags", "collections", "architecture"],
+  "keywords": [
+    "all tagged",
+    "find by tag",
+    "tagged instances",
+    "group lookup"
+  ],
+  "tags": [
+    "tags",
+    "collections",
+    "architecture"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -24,7 +33,9 @@
       "Initial setup loops over existing tagged instances",
       "Any 'all X' question where X is a tag"
     ],
-    "whenNotToUse": ["Without also handling FUTURE tags — combine with GetInstanceAddedSignal"],
+    "whenNotToUse": [
+      "Without also handling FUTURE tags — combine with GetInstanceAddedSignal"
+    ],
     "tips": [
       "Canonical pattern: for loop over GetTagged + Connect(GetInstanceAddedSignal) — both",
       "Tag name constants in a shared module prevent typo drift"
@@ -37,9 +48,15 @@
   "examples": [
     {
       "title": "Both-halves pattern",
-      "code": "local CS = game:GetService(\"CollectionService\")\n\nlocal function initCoin(coin)\n    -- one-time setup\nend\n\nfor _, coin in CS:GetTagged(\"Coin\") do   -- existing\n    initCoin(coin)\nend\nCS:GetInstanceAddedSignal(\"Coin\"):Connect(initCoin)   -- future"
+      "code": "local CS = game:GetService(\"CollectionService\")\n\nlocal function initCoin(coin)\n    -- one-time setup\nend\n\nfor _, coin in CS:GetTagged(\"Coin\") do   -- existing\n    initCoin(coin)\nend\nCS:GetInstanceAddedSignal(\"Coin\"):Connect(initCoin)   -- future",
+      "language": "lua"
     }
   ],
-  "related": ["collection-service", "attributes", "get-descendants", "instance-hierarchy"],
+  "related": [
+    "collection-service",
+    "attributes",
+    "get-descendants",
+    "instance-hierarchy"
+  ],
   "added": "2026-10-04"
 }

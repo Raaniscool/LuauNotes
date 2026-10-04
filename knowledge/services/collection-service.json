@@ -4,8 +4,22 @@
   "category": "services",
   "type": "service",
   "summary": "Tag system for instances: AddTag/HasTag/GetTagged let you mark objects ('Coin', 'Trap', 'Interactable') and process them as groups — without scanning the hierarchy or keeping manual lists.",
-  "keywords": ["tags", "AddTag", "GetTagged", "HasTag", "GetInstanceAddedSignal", "tagged objects", "groups of parts", "interactables"],
-  "tags": ["services", "architecture", "tags", "essential"],
+  "keywords": [
+    "tags",
+    "AddTag",
+    "GetTagged",
+    "HasTag",
+    "GetInstanceAddedSignal",
+    "tagged objects",
+    "groups of parts",
+    "interactables"
+  ],
+  "tags": [
+    "services",
+    "architecture",
+    "tags",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,13 +29,41 @@
   },
   "reference": {
     "methods": [
-      { "name": "AddTag", "signature": "CollectionService:AddTag(instance: Instance, tag: string)", "description": "Tags the instance. Tags replicate to clients and survive parenting moves." },
-      { "name": "RemoveTag", "signature": "CollectionService:RemoveTag(instance: Instance, tag: string)", "description": "Untags." },
-      { "name": "HasTag", "signature": "CollectionService:HasTag(instance: Instance, tag: string) --> boolean", "description": "Membership check." },
-      { "name": "GetTags", "signature": "CollectionService:GetTags(instance: Instance) --> { string }", "description": "All tags on an instance." },
-      { "name": "GetTagged", "signature": "CollectionService:GetTagged(tag: string) --> { Instance }", "description": "Every instance currently carrying the tag." },
-      { "name": "GetInstanceAddedSignal", "signature": "CollectionService:GetInstanceAddedSignal(tag: string) --> RBXScriptSignal", "description": "Fires whenever an instance gains the tag (including at game start for pre-existing ones)." },
-      { "name": "GetInstanceRemovedSignal", "signature": "CollectionService:GetInstanceRemovedSignal(tag: string) --> RBXScriptSignal", "description": "Fires when the tag is removed or the instance is destroyed." }
+      {
+        "name": "AddTag",
+        "signature": "CollectionService:AddTag(instance: Instance, tag: string)",
+        "description": "Tags the instance. Tags replicate to clients and survive parenting moves."
+      },
+      {
+        "name": "RemoveTag",
+        "signature": "CollectionService:RemoveTag(instance: Instance, tag: string)",
+        "description": "Untags."
+      },
+      {
+        "name": "HasTag",
+        "signature": "CollectionService:HasTag(instance: Instance, tag: string) --> boolean",
+        "description": "Membership check."
+      },
+      {
+        "name": "GetTags",
+        "signature": "CollectionService:GetTags(instance: Instance) --> { string }",
+        "description": "All tags on an instance."
+      },
+      {
+        "name": "GetTagged",
+        "signature": "CollectionService:GetTagged(tag: string) --> { Instance }",
+        "description": "Every instance currently carrying the tag."
+      },
+      {
+        "name": "GetInstanceAddedSignal",
+        "signature": "CollectionService:GetInstanceAddedSignal(tag: string) --> RBXScriptSignal",
+        "description": "Fires whenever an instance gains the tag (including at game start for pre-existing ones)."
+      },
+      {
+        "name": "GetInstanceRemovedSignal",
+        "signature": "CollectionService:GetInstanceRemovedSignal(tag: string) --> RBXScriptSignal",
+        "description": "Fires when the tag is removed or the instance is destroyed."
+      }
     ],
     "details": [
       {
@@ -58,9 +100,16 @@
   "examples": [
     {
       "title": "The canonical tag handler",
-      "code": "-- Server Script\nlocal CollectionService = game:GetService(\"CollectionService\")\n\nlocal function setupCoin(coin)\n    if coin:GetAttribute(\"Collected\") then return end\n    coin.Touched:Connect(function(hit)\n        local player = game.Players:GetPlayerFromCharacter(hit.Parent)\n        if player and not coin:GetAttribute(\"Collected\") then\n            coin:SetAttribute(\"Collected\", true)\n            coin.Transparency = 1\n            coin.CanCollide = false\n            print(player.Name .. \" collected a coin\")\n        end\n    end)\nend\n\n-- 1) Everything tagged already:\nfor _, coin in CollectionService:GetTagged(\"Coin\") do\n    setupCoin(coin)\nend\n\n-- 2) Everything tagged in the future:\nCollectionService:GetInstanceAddedSignal(\"Coin\"):Connect(setupCoin)"
+      "code": "-- Server Script\nlocal CollectionService = game:GetService(\"CollectionService\")\n\nlocal function setupCoin(coin)\n    if coin:GetAttribute(\"Collected\") then return end\n    coin.Touched:Connect(function(hit)\n        local player = game.Players:GetPlayerFromCharacter(hit.Parent)\n        if player and not coin:GetAttribute(\"Collected\") then\n            coin:SetAttribute(\"Collected\", true)\n            coin.Transparency = 1\n            coin.CanCollide = false\n            print(player.Name .. \" collected a coin\")\n        end\n    end)\nend\n\n-- 1) Everything tagged already:\nfor _, coin in CollectionService:GetTagged(\"Coin\") do\n    setupCoin(coin)\nend\n\n-- 2) Everything tagged in the future:\nCollectionService:GetInstanceAddedSignal(\"Coin\"):Connect(setupCoin)",
+      "language": "lua"
     }
   ],
-  "related": ["get-tagged", "attributes", "part", "instance-hierarchy", "event-connections"],
+  "related": [
+    "get-tagged",
+    "attributes",
+    "part",
+    "instance-hierarchy",
+    "event-connections"
+  ],
   "added": "2026-10-04"
 }

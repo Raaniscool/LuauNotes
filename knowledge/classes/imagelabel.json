@@ -4,8 +4,20 @@
   "category": "classes",
   "type": "class",
   "summary": "Displays an image (asset id) in the GUI: icons, portraits, backgrounds. Supports scaling modes, slice-9 (ScaleType.Slice) for resizable panels, and image tinting via ImageColor3.",
-  "keywords": ["image", "icon", "Image", "rbxassetid", "ScaleType", "slice", "background image"],
-  "tags": ["classes", "gui", "images"],
+  "keywords": [
+    "image",
+    "icon",
+    "Image",
+    "rbxassetid",
+    "ScaleType",
+    "slice",
+    "background image"
+  ],
+  "tags": [
+    "classes",
+    "gui",
+    "images"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,11 +27,31 @@
   },
   "reference": {
     "properties": [
-      { "name": "Image", "type": "Content", "description": "Asset reference: \"rbxassetid://123456\"." },
-      { "name": "ImageColor3 / ImageTransparency", "type": "Color3 / number", "description": "Tint (multiplies pixels — white tint = original) and opacity." },
-      { "name": "ScaleType", "type": "Enum.ScaleType", "description": "Stretch, Slice (9-slice), Fit, Crop, Tile. Slice + SliceCenter = resizable panels." },
-      { "name": "SliceCenter / SliceScale", "type": "Rect / number", "description": "9-slice configuration." },
-      { "name": "ResampleMode", "type": "Enum.ResamplerMode", "description": "Pixelated vs smooth sampling." }
+      {
+        "name": "Image",
+        "type": "Content",
+        "description": "Asset reference: \"rbxassetid://123456\"."
+      },
+      {
+        "name": "ImageColor3 / ImageTransparency",
+        "type": "Color3 / number",
+        "description": "Tint (multiplies pixels — white tint = original) and opacity."
+      },
+      {
+        "name": "ScaleType",
+        "type": "Enum.ScaleType",
+        "description": "Stretch, Slice (9-slice), Fit, Crop, Tile. Slice + SliceCenter = resizable panels."
+      },
+      {
+        "name": "SliceCenter / SliceScale",
+        "type": "Rect / number",
+        "description": "9-slice configuration."
+      },
+      {
+        "name": "ResampleMode",
+        "type": "Enum.ResamplerMode",
+        "description": "Pixelated vs smooth sampling."
+      }
     ]
   },
   "explanation": {
@@ -48,9 +80,14 @@
   "examples": [
     {
       "title": "Player avatar icon",
-      "code": "local Players = game:GetService(\"Players\")\nlocal player = Players.LocalPlayer\n\nlocal icon = Instance.new(\"ImageLabel\")\nicon.Size = UDim2.fromOffset(64, 64)\nicon.Image = Players:GetUserThumbnailAsync(\n    player.UserId,\n    Enum.ThumbnailType.HeadShot,\n    Enum.ThumbnailSize.Size100x100\n)\nicon.Parent = script.Parent"
+      "code": "local Players = game:GetService(\"Players\")\nlocal player = Players.LocalPlayer\n\nlocal icon = Instance.new(\"ImageLabel\")\nicon.Size = UDim2.fromOffset(64, 64)\nicon.Image = Players:GetUserThumbnailAsync(\n    player.UserId,\n    Enum.ThumbnailType.HeadShot,\n    Enum.ThumbnailSize.Size100x100\n)\nicon.Parent = script.Parent",
+      "language": "lua"
     }
   ],
-  "related": ["imagebutton", "frame", "screengui"],
+  "related": [
+    "imagebutton",
+    "frame",
+    "screengui"
+  ],
   "added": "2026-10-04"
 }

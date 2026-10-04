@@ -4,8 +4,18 @@
   "category": "events",
   "type": "event",
   "summary": "Client-side event that fires when the server sends a message via FireClient/FireAllClients. Receives exactly the server's arguments — no player parameter on this side.",
-  "keywords": ["client receives", "server message", "update from server", "receive fireclient"],
-  "tags": ["remotes", "networking", "client-server", "essential"],
+  "keywords": [
+    "client receives",
+    "server message",
+    "update from server",
+    "receive fireclient"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -16,7 +26,11 @@
   "reference": {
     "signature": "RemoteEvent.OnClientEvent:Connect(function(...args: any) end)",
     "parameters": [
-      { "name": "...args", "type": "any (serialized)", "description": "The server's FireClient/FireAllClients arguments, verbatim. No injected player — unlike OnServerEvent." }
+      {
+        "name": "...args",
+        "type": "any (serialized)",
+        "description": "The server's FireClient/FireAllClients arguments, verbatim. No injected player — unlike OnServerEvent."
+      }
     ],
     "details": [
       {
@@ -51,9 +65,16 @@
   "examples": [
     {
       "title": "Multiplexed client handler",
-      "code": "-- LocalScript\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal remote = ReplicatedStorage:WaitForChild(\"Remotes\"):WaitForChild(\"GameState\")\n\nremote.OnClientEvent:Connect(function(kind, value)\n    if kind == \"Coins\" then\n        script.Parent.HUD.Coins.Text = `💰 {value}`\n    elseif kind == \"Phase\" then\n        print(\"Phase changed to:\", value)\n    elseif kind == \"PlaySound\" then\n        -- play sound id in value…\n    end\nend)"
+      "code": "-- LocalScript\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal remote = ReplicatedStorage:WaitForChild(\"Remotes\"):WaitForChild(\"GameState\")\n\nremote.OnClientEvent:Connect(function(kind, value)\n    if kind == \"Coins\" then\n        script.Parent.HUD.Coins.Text = `💰 {value}`\n    elseif kind == \"Phase\" then\n        print(\"Phase changed to:\", value)\n    elseif kind == \"PlaySound\" then\n        -- play sound id in value…\n    end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["remote-event", "fire-client", "fire-all-clients", "on-server-event", "replication"],
+  "related": [
+    "remote-event",
+    "fire-client",
+    "fire-all-clients",
+    "on-server-event",
+    "replication"
+  ],
   "added": "2026-10-04"
 }

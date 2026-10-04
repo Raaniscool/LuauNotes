@@ -4,8 +4,17 @@
   "category": "classes",
   "type": "class",
   "summary": "A server-side script: runs on the server, can touch everything authoritative (DataStores, ServerStorage, all players), and is invisible/inaccessible to clients.",
-  "keywords": ["server script", "server code", "authoritative", "Script object"],
-  "tags": ["script-types", "server", "essential"],
+  "keywords": [
+    "server script",
+    "server code",
+    "authoritative",
+    "Script object"
+  ],
+  "tags": [
+    "script-types",
+    "server",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,9 +24,21 @@
   },
   "reference": {
     "properties": [
-      { "name": "Disabled", "type": "boolean", "description": "When true, the script does not run." },
-      { "name": "RunContext", "type": "Enum.RunContext", "description": "Luau-era addition: can retarget a Script to client or shared contexts (Enum.RunContext.Client/Server/Shared). Default is Server." },
-      { "name": "Source", "type": "string", "description": "The script's code." }
+      {
+        "name": "Disabled",
+        "type": "boolean",
+        "description": "When true, the script does not run."
+      },
+      {
+        "name": "RunContext",
+        "type": "Enum.RunContext",
+        "description": "Luau-era addition: can retarget a Script to client or shared contexts (Enum.RunContext.Client/Server/Shared). Default is Server."
+      },
+      {
+        "name": "Source",
+        "type": "string",
+        "description": "The script's code."
+      }
     ],
     "details": [
       {
@@ -57,9 +78,16 @@
   "examples": [
     {
       "title": "A minimal authoritative Script",
-      "code": "-- ServerScriptService/Main (Script)\nlocal Players = game:GetService(\"Players\")\n\nPlayers.PlayerAdded:Connect(function(player)\n    print(player.Name .. \" joined (server knows first)\")\nend)\n\n-- Server-side only APIs work here:\nlocal DataStoreService = game:GetService(\"DataStoreService\")   -- OK\n-- game.Players.LocalPlayer would be nil here — server has no 'local player'"
+      "code": "-- ServerScriptService/Main (Script)\nlocal Players = game:GetService(\"Players\")\n\nPlayers.PlayerAdded:Connect(function(player)\n    print(player.Name .. \" joined (server knows first)\")\nend)\n\n-- Server-side only APIs work here:\nlocal DataStoreService = game:GetService(\"DataStoreService\")   -- OK\n-- game.Players.LocalPlayer would be nil here — server has no 'local player'",
+      "language": "lua"
     }
   ],
-  "related": ["localscript", "modulescript", "client-vs-server", "localscript-location-limits", "remote-event"],
+  "related": [
+    "localscript",
+    "modulescript",
+    "client-vs-server",
+    "localscript-location-limits",
+    "remote-event"
+  ],
   "added": "2026-10-04"
 }

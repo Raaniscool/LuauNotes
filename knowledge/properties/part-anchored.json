@@ -4,8 +4,18 @@
   "category": "properties",
   "type": "property",
   "summary": "Whether physics simulation moves the part. Anchored=true: frozen in place (buildings, floors). Anchored=false: simulated — falls, rolls, gets pushed. Most 'why did my part fall' bugs are this.",
-  "keywords": ["anchored", "falls down", "physics frozen", "static part", "dynamic part"],
-  "tags": ["properties", "physics", "essential"],
+  "keywords": [
+    "anchored",
+    "falls down",
+    "physics frozen",
+    "static part",
+    "dynamic part"
+  ],
+  "tags": [
+    "properties",
+    "physics",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,7 +25,11 @@
   },
   "reference": {
     "properties": [
-      { "name": "Anchored", "type": "boolean", "description": "true = excluded from physics simulation; position stays where set. false = simulated (gravity, forces, collisions)." }
+      {
+        "name": "Anchored",
+        "type": "boolean",
+        "description": "true = excluded from physics simulation; position stays where set. false = simulated (gravity, forces, collisions)."
+      }
     ]
   },
   "explanation": {
@@ -43,9 +57,16 @@
   "examples": [
     {
       "title": "Runtime spawn with correct anchoring",
-      "code": "local platform = Instance.new(\"Part\")\nplatform.Size = Vector3.new(8, 1, 8)\nplatform.Anchored = true            -- it's architecture\nplatform.Position = Vector3.new(0, 5, 0)\nplatform.Parent = workspace\n\nlocal crate = Instance.new(\"Part\")\ncrate.Size = Vector3.new(2, 2, 2)\ncrate.Anchored = false              -- it's a physics prop\ncrate.Position = Vector3.new(0, 12, 0)\ncrate.Parent = workspace            -- falls onto the platform"
+      "code": "local platform = Instance.new(\"Part\")\nplatform.Size = Vector3.new(8, 1, 8)\nplatform.Anchored = true            -- it's architecture\nplatform.Position = Vector3.new(0, 5, 0)\nplatform.Parent = workspace\n\nlocal crate = Instance.new(\"Part\")\ncrate.Size = Vector3.new(2, 2, 2)\ncrate.Anchored = false              -- it's a physics prop\ncrate.Position = Vector3.new(0, 12, 0)\ncrate.Parent = workspace            -- falls onto the platform",
+      "language": "lua"
     }
   ],
-  "related": ["part", "weldconstraint", "model", "moving-models", "position-vs-cframe"],
+  "related": [
+    "part",
+    "weldconstraint",
+    "model",
+    "moving-models",
+    "position-vs-cframe"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,18 @@
   "category": "gotchas",
   "type": "gotcha",
   "summary": "Declaring locals inside blocks makes them invisible outside; forgetting `local` creates globals; shadowing re-declares a name and the old value silently survives elsewhere. Most 'variable not updating' bugs are scope bugs.",
-  "keywords": ["variable lost", "scope bug", "shadowing", "local missing", "global accidentally"],
-  "tags": ["gotchas", "scope", "basics"],
+  "keywords": [
+    "variable lost",
+    "scope bug",
+    "shadowing",
+    "local missing",
+    "global accidentally"
+  ],
+  "tags": [
+    "gotchas",
+    "scope",
+    "basics"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -35,9 +45,15 @@
   "examples": [
     {
       "title": "Reset vs hoisted",
-      "code": "-- ❌ Resets every call:\nlocal function onHit()\n    local hits = 0        -- fresh zero every time\n    hits += 1\n    print(hits)           -- always 1\nend\n\n-- ✅ Hoisted:\nlocal hits = 0\nlocal function onHitSafe()\n    hits += 1\n    print(hits)           -- 1, 2, 3…\nend\n\n-- Shadowing trap:\nlocal mode = \"walk\"\ndo\n    local mode = \"run\"    -- NEW variable, dies with the block\n    print(mode)           --> run\nend\nprint(mode)               --> walk (unchanged!)"
+      "code": "-- ❌ Resets every call:\nlocal function onHit()\n    local hits = 0        -- fresh zero every time\n    hits += 1\n    print(hits)           -- always 1\nend\n\n-- ✅ Hoisted:\nlocal hits = 0\nlocal function onHitSafe()\n    hits += 1\n    print(hits)           -- 1, 2, 3…\nend\n\n-- Shadowing trap:\nlocal mode = \"walk\"\ndo\n    local mode = \"run\"    -- NEW variable, dies with the block\n    print(mode)           --> run\nend\nprint(mode)               --> walk (unchanged!)",
+      "language": "lua"
     }
   ],
-  "related": ["variables", "scope", "functions", "block-scope"],
+  "related": [
+    "variables",
+    "scope",
+    "functions",
+    "block-scope"
+  ],
   "added": "2026-10-04"
 }

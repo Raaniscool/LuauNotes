@@ -4,8 +4,18 @@
   "category": "classes",
   "type": "class",
   "summary": "A client-side script: runs on each player's machine with access to their input, camera, and UI. Only runs in specific locations (StarterPlayer, StarterGui, ReplicatedStorage, workspace…) and cannot be trusted by the server.",
-  "keywords": ["client script", "client code", "LocalScript locations", "UI code", "input code"],
-  "tags": ["script-types", "client", "essential"],
+  "keywords": [
+    "client script",
+    "client code",
+    "LocalScript locations",
+    "UI code",
+    "input code"
+  ],
+  "tags": [
+    "script-types",
+    "client",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,8 +25,16 @@
   },
   "reference": {
     "properties": [
-      { "name": "Enabled", "type": "boolean", "description": "Toggles execution." },
-      { "name": "ResetOnSpawn", "type": "boolean", "description": "Whether the LocalScript restarts each time the player's character respawns (relevant in StarterPlayer/StarterGui)." }
+      {
+        "name": "Enabled",
+        "type": "boolean",
+        "description": "Toggles execution."
+      },
+      {
+        "name": "ResetOnSpawn",
+        "type": "boolean",
+        "description": "Whether the LocalScript restarts each time the player's character respawns (relevant in StarterPlayer/StarterGui)."
+      }
     ],
     "details": [
       {
@@ -65,9 +83,17 @@
     {
       "title": "Client input → server action",
       "code": "-- StarterPlayerScripts/InputHandler (LocalScript)\nlocal UserInputService = game:GetService(\"UserInputService\")\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal dashEvent = ReplicatedStorage:WaitForChild(\"Dash\")\n\nUserInputService.InputBegan:Connect(function(input, processed)\n    if processed then return end   -- ignore when typing in chat etc.\n    if input.KeyCode == Enum.KeyCode.Q then\n        dashEvent:FireServer()     -- server decides if the dash is legal\n    end\nend)",
-      "whyItWorks": "Input only exists client-side, so detection happens here — but the ACTUAL dash (movement, cooldown) should be enforced by the server that receives FireServer."
+      "whyItWorks": "Input only exists client-side, so detection happens here — but the ACTUAL dash (movement, cooldown) should be enforced by the server that receives FireServer.",
+      "language": "lua"
     }
   ],
-  "related": ["script", "modulescript", "client-vs-server", "localscript-location-limits", "user-input-service", "starter-gui"],
+  "related": [
+    "script",
+    "modulescript",
+    "client-vs-server",
+    "localscript-location-limits",
+    "user-input-service",
+    "starter-gui"
+  ],
   "added": "2026-10-04"
 }

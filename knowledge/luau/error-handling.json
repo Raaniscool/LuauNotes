@@ -4,8 +4,19 @@
   "category": "luau",
   "type": "overview",
   "summary": "How Luau fails: error() raises, pcall/xpcall catch without killing the thread, assert() guards assumptions. Roblox scripts that error stop at the error line.",
-  "keywords": ["error", "raise", "catch errors", "runtime error", "assert", "pcall"],
-  "tags": ["errors", "robustness", "intermediate"],
+  "keywords": [
+    "error",
+    "raise",
+    "catch errors",
+    "runtime error",
+    "assert",
+    "pcall"
+  ],
+  "tags": [
+    "errors",
+    "robustness",
+    "intermediate"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -15,10 +26,26 @@
   },
   "reference": {
     "methods": [
-      { "name": "error", "signature": "error(message: any, level?: number)", "description": "Raises an error, stopping the current thread unless caught. message can be any value (strings are friendliest for readers)." },
-      { "name": "pcall", "signature": "pcall(f, ...) --> success: boolean, result | error", "description": "Protected call: runs f in protected mode. Returns true + results, or false + error message. Never throws." },
-      { "name": "xpcall", "signature": "xpcall(f, handler, ...) --> boolean, ...", "description": "Like pcall, but passes errors through handler (commonly debug.traceback) for richer messages." },
-      { "name": "assert", "signature": "assert(v, message?) --> v", "description": "Errors with message if v is falsy; otherwise returns v — usable inline: `local part = assert(workspace:FindFirstChild(\"Spawn\"))`." }
+      {
+        "name": "error",
+        "signature": "error(message: any, level?: number)",
+        "description": "Raises an error, stopping the current thread unless caught. message can be any value (strings are friendliest for readers)."
+      },
+      {
+        "name": "pcall",
+        "signature": "pcall(f, ...) --> success: boolean, result | error",
+        "description": "Protected call: runs f in protected mode. Returns true + results, or false + error message. Never throws."
+      },
+      {
+        "name": "xpcall",
+        "signature": "xpcall(f, handler, ...) --> boolean, ...",
+        "description": "Like pcall, but passes errors through handler (commonly debug.traceback) for richer messages."
+      },
+      {
+        "name": "assert",
+        "signature": "assert(v, message?) --> v",
+        "description": "Errors with message if v is falsy; otherwise returns v — usable inline: `local part = assert(workspace:FindFirstChild(\"Spawn\"))`."
+      }
     ],
     "details": [
       {
@@ -56,14 +83,22 @@
   "examples": [
     {
       "title": "pcall + retry (the DataStore idiom)",
-      "code": "local DataStoreService = game:GetService(\"DataStoreService\")\nlocal store = DataStoreService:GetDataStore(\"PlayerData\")\n\nlocal function loadWithRetry(key, attempts)\n    for i = 1, attempts do\n        local ok, result = pcall(function()\n            return store:GetAsync(key)\n        end)\n        if ok then\n            return result\n        end\n        warn(`Attempt {i} failed: {result}`)\n        task.wait(1)\n    end\n    error(`Failed to load {key} after {attempts} attempts`)\nend"
+      "code": "local DataStoreService = game:GetService(\"DataStoreService\")\nlocal store = DataStoreService:GetDataStore(\"PlayerData\")\n\nlocal function loadWithRetry(key, attempts)\n    for i = 1, attempts do\n        local ok, result = pcall(function()\n            return store:GetAsync(key)\n        end)\n        if ok then\n            return result\n        end\n        warn(`Attempt {i} failed: {result}`)\n        task.wait(1)\n    end\n    error(`Failed to load {key} after {attempts} attempts`)\nend",
+      "language": "lua"
     },
     {
       "title": "assert for invariants",
       "code": "local function setupRound()\n    local arena = assert(workspace:FindFirstChild(\"Arena\"), \"Arena missing from workspace!\")\n    local spawns = assert(arena:FindFirstChild(\"Spawns\"), \"No Spawns folder in Arena\")\n    print(\"Round ready:\", #spawns:GetChildren(), \"spawns\")\nend",
-      "whyItWorks": "assert either hands you the found instance or halts with a clear message — no nil-chasing later."
+      "whyItWorks": "assert either hands you the found instance or halts with a clear message — no nil-chasing later.",
+      "language": "lua"
     }
   ],
-  "related": ["pcall", "assert", "datastore-save-load", "debugging-workflow", "output-window"],
+  "related": [
+    "pcall",
+    "assert",
+    "datastore-save-load",
+    "debugging-workflow",
+    "output-window"
+  ],
   "added": "2026-10-04"
 }

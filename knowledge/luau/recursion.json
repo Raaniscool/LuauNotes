@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "concept",
   "summary": "A function that calls itself to solve smaller versions of a problem. Elegant for tree-shaped data (like the instance hierarchy); needs a base case to stop.",
-  "keywords": ["recursive function", "calls itself", "tree traversal", "base case"],
-  "tags": ["functions", "intermediate", "recursion"],
+  "keywords": [
+    "recursive function",
+    "calls itself",
+    "tree traversal",
+    "base case"
+  ],
+  "tags": [
+    "functions",
+    "intermediate",
+    "recursion"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -53,13 +62,20 @@
   "examples": [
     {
       "title": "Walk the hierarchy with custom logic",
-      "code": "local function tagAllParts(instance)\n    if instance:IsA(\"BasePart\") then\n        instance:SetAttribute(\"Scanned\", true)\n    end\n    for _, child in instance:GetChildren() do\n        tagAllParts(child)   -- recurse into each child\n    end\nend\n\ntagAllParts(workspace)\n-- (For pure collection, workspace:GetDescendants() is simpler.)"
+      "code": "local function tagAllParts(instance)\n    if instance:IsA(\"BasePart\") then\n        instance:SetAttribute(\"Scanned\", true)\n    end\n    for _, child in instance:GetChildren() do\n        tagAllParts(child)   -- recurse into each child\n    end\nend\n\ntagAllParts(workspace)\n-- (For pure collection, workspace:GetDescendants() is simpler.)",
+      "language": "lua"
     },
     {
       "title": "Classic: factorial",
-      "code": "local function factorial(n)\n    if n <= 1 then return 1 end   -- base case\n    return n * factorial(n - 1)   -- smaller problem\nend\n\nprint(factorial(5))   --> 120"
+      "code": "local function factorial(n)\n    if n <= 1 then return 1 end   -- base case\n    return n * factorial(n - 1)   -- smaller problem\nend\n\nprint(factorial(5))   --> 120",
+      "language": "lua"
     }
   ],
-  "related": ["functions", "local-functions", "instance-hierarchy", "get-descendants"],
+  "related": [
+    "functions",
+    "local-functions",
+    "instance-hierarchy",
+    "get-descendants"
+  ],
   "added": "2026-10-04"
 }

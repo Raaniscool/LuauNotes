@@ -4,8 +4,23 @@
   "category": "services",
   "type": "service",
   "summary": "Persistent cloud storage: GetDataStore gives you key → value stores that survive server shutdowns. GetAsync reads, SetAsync overwrites, UpdateAsync modifies atomically. Budget-limited and throttle-prone — always pcall + retry.",
-  "keywords": ["save data", "persistent data", "DataStore", "GetAsync", "SetAsync", "UpdateAsync", "player data saving", "data loss", "OrderedDataStore"],
-  "tags": ["services", "data", "persistence", "essential"],
+  "keywords": [
+    "save data",
+    "persistent data",
+    "DataStore",
+    "GetAsync",
+    "SetAsync",
+    "UpdateAsync",
+    "player data saving",
+    "data loss",
+    "OrderedDataStore"
+  ],
+  "tags": [
+    "services",
+    "data",
+    "persistence",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,9 +30,21 @@
   },
   "reference": {
     "methods": [
-      { "name": "GetDataStore", "signature": "DataStoreService:GetDataStore(name: string, scope?: string) --> DataStore", "description": "Opens (or creates) a named store. Same name + same game = same store, forever." },
-      { "name": "GetOrderedDataStore", "signature": "DataStoreService:GetOrderedDataStore(name: string, scope?: string) --> OrderedDataStore", "description": "Store whose numeric values can be ranked (GetSortedAsync) — classic leaderboards." },
-      { "name": "ListDataStoresAsync", "signature": "DataStoreService:ListDataStoresAsync() --> DataStoreListingPages", "description": "Enumerate existing stores (paged)." }
+      {
+        "name": "GetDataStore",
+        "signature": "DataStoreService:GetDataStore(name: string, scope?: string) --> DataStore",
+        "description": "Opens (or creates) a named store. Same name + same game = same store, forever."
+      },
+      {
+        "name": "GetOrderedDataStore",
+        "signature": "DataStoreService:GetOrderedDataStore(name: string, scope?: string) --> OrderedDataStore",
+        "description": "Store whose numeric values can be ranked (GetSortedAsync) — classic leaderboards."
+      },
+      {
+        "name": "ListDataStoresAsync",
+        "signature": "DataStoreService:ListDataStoresAsync() --> DataStoreListingPages",
+        "description": "Enumerate existing stores (paged)."
+      }
     ],
     "details": [
       {
@@ -72,9 +99,19 @@
     {
       "title": "The complete, safe player-data pattern",
       "code": "local Players = game:GetService(\"Players\")\nlocal DataStoreService = game:GetService(\"DataStoreService\")\nlocal RunService = game:GetService(\"RunService\")\n\nlocal store = DataStoreService:GetDataStore(\"PlayerData_v1\")\nlocal cache = {}   -- userId → data\n\nlocal function withRetry(fn, attempts)\n    for i = 1, attempts do\n        local ok, result = pcall(fn)\n        if ok then return result end\n        warn(`Attempt {i}: {result}`)\n        task.wait(1)\n    end\n    return nil\nend\n\nlocal function loadData(player)\n    local key = \"Player_\" .. player.UserId\n    local data = withRetry(function()\n        return store:UpdateAsync(key, function(old)\n            return old or { coins = 0, level = 1, version = 1 }\n        end)\n    end, 3)\n    cache[player.UserId] = data or { coins = 0, level = 1, version = 1 }\nend\n\nlocal function saveData(player)\n    local data = cache[player.UserId]\n    if not data then return end\n    withRetry(function()\n        store:SetAsync(\"Player_\" .. player.UserId, data)\n    end, 3)\nend\n\nPlayers.PlayerAdded:Connect(loadData)\nPlayers.PlayerRemoving:Connect(saveData)\n\n-- Periodic safety save every 5 minutes\nwhile true do\n    task.wait(300)\n    for _, player in Players:GetPlayers() do\n        task.spawn(saveData, player)\n    end\nend",
-      "whyItWorks": "UpdateAsync creates the default atomically if missing; retries absorb throttling; saving on leave plus periodically covers crashes and disconnects."
+      "whyItWorks": "UpdateAsync creates the default atomically if missing; retries absorb throttling; saving on leave plus periodically covers crashes and disconnects.",
+      "language": "lua"
     }
   ],
-  "related": ["datastore-save-load", "pcall", "error-handling", "serialization", "players", "player-added", "player-removing", "http-service"],
+  "related": [
+    "datastore-save-load",
+    "pcall",
+    "error-handling",
+    "serialization",
+    "players",
+    "player-added",
+    "player-removing",
+    "http-service"
+  ],
   "added": "2026-10-04"
 }

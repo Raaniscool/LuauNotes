@@ -4,8 +4,17 @@
   "category": "gotchas",
   "type": "gotcha",
   "summary": "ModuleScripts must return EXACTLY ONE value, at the end. Returning nothing gives nil, returning from inside a function returns nothing, and early returns kill the module. require() then hands you nil or errors.",
-  "keywords": ["module returns nil", "require nil", "module not returning", "module return rule"],
-  "tags": ["gotchas", "modules", "essential"],
+  "keywords": [
+    "module returns nil",
+    "require nil",
+    "module not returning",
+    "module return rule"
+  ],
+  "tags": [
+    "gotchas",
+    "modules",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -35,9 +44,14 @@
   "examples": [
     {
       "title": "Broken vs fixed",
-      "code": "-- ❌ Returns nil:\nlocal M = {}\nfunction M.init()\n    return M          -- return inside function ≠ module return!\nend\n\n-- ✅\nlocal M = {}\nfunction M.init() end\nreturn M              -- top level, exactly one value"
+      "code": "-- ❌ Returns nil:\nlocal M = {}\nfunction M.init()\n    return M          -- return inside function ≠ module return!\nend\n\n-- ✅\nlocal M = {}\nfunction M.init() end\nreturn M              -- top level, exactly one value",
+      "language": "lua"
     }
   ],
-  "related": ["modulescript", "require", "object-oriented-programming"],
+  "related": [
+    "modulescript",
+    "require",
+    "object-oriented-programming"
+  ],
   "added": "2026-10-04"
 }

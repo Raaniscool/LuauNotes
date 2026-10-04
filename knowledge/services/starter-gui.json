@@ -4,8 +4,18 @@
   "category": "services",
   "type": "service",
   "summary": "The template container for GUIs: its contents are COPIED into each player's PlayerGui when they spawn. Editing StarterGui at runtime does NOT change already-spawned players' screens.",
-  "keywords": ["gui template", "where gui goes", "starter gui vs player gui", "screen gui location", "SetCore"],
-  "tags": ["services", "gui", "essential"],
+  "keywords": [
+    "gui template",
+    "where gui goes",
+    "starter gui vs player gui",
+    "screen gui location",
+    "SetCore"
+  ],
+  "tags": [
+    "services",
+    "gui",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,11 +25,23 @@
   },
   "reference": {
     "methods": [
-      { "name": "SetCore", "signature": "StarterGui:SetCore(coreGuiItem: string, value: any)", "description": "Client only. Controls built-in core UI: e.g. SetCore(\"ResetButtonCallback\", false), SetCore(\"ChatMakeSystemMessage\", {...})." },
-      { "name": "GetCoreGuiEnabled / SetCoreGuiEnabled", "signature": "StarterGui:GetCoreGuiEnabled(coreGuiType: Enum.CoreGuiType) --> boolean", "description": "Client only. Read/toggle built-in core GUIs (chat, leaderboard, backpack…)." }
+      {
+        "name": "SetCore",
+        "signature": "StarterGui:SetCore(coreGuiItem: string, value: any)",
+        "description": "Client only. Controls built-in core UI: e.g. SetCore(\"ResetButtonCallback\", false), SetCore(\"ChatMakeSystemMessage\", {...})."
+      },
+      {
+        "name": "GetCoreGuiEnabled / SetCoreGuiEnabled",
+        "signature": "StarterGui:GetCoreGuiEnabled(coreGuiType: Enum.CoreGuiType) --> boolean",
+        "description": "Client only. Read/toggle built-in core GUIs (chat, leaderboard, backpack…)."
+      }
     ],
     "properties": [
-      { "name": "ResetPlayerGuiOnSpawn", "type": "boolean", "description": "Whether players' PlayerGui is cleared and re-copied from StarterGui on each respawn (default true)." }
+      {
+        "name": "ResetPlayerGuiOnSpawn",
+        "type": "boolean",
+        "description": "Whether players' PlayerGui is cleared and re-copied from StarterGui on each respawn (default true)."
+      }
     ],
     "details": [
       {
@@ -55,9 +77,17 @@
     {
       "title": "Updating the RIGHT gui at runtime",
       "code": "-- ❌ WRONG: template edits don't touch live screens\nlocal StarterGui = game:GetService(\"StarterGui\")\n-- StarterGui.MainHUD.CashLabel.Text = \"999\"  -- pointless at runtime\n\n-- ✅ RIGHT (LocalScript): edit the live copy\nlocal Players = game:GetService(\"Players\")\nlocal playerGui = Players.LocalPlayer:WaitForChild(\"PlayerGui\")\nlocal hud = playerGui:WaitForChild(\"MainHUD\")\nhud.CashLabel.Text = \"999\"",
-      "commonMistake": "StarterGui vs PlayerGui is the #1 'my GUI won't update' bug. Template = StarterGui; live screen = PlayerGui."
+      "commonMistake": "StarterGui vs PlayerGui is the #1 'my GUI won't update' bug. Template = StarterGui; live screen = PlayerGui.",
+      "language": "lua"
     }
   ],
-  "related": ["player-gui", "startergui-vs-playergui", "screengui", "gui-hierarchy-requirements", "localscript", "set-core"],
+  "related": [
+    "player-gui",
+    "startergui-vs-playergui",
+    "screengui",
+    "gui-hierarchy-requirements",
+    "localscript",
+    "set-core"
+  ],
   "added": "2026-10-04"
 }

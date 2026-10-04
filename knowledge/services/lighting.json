@@ -4,8 +4,21 @@
   "category": "services",
   "type": "service",
   "summary": "Controls the look of the world: time of day (ClockTime), ambient colors, fog, technology, and post-processing effects (Atmosphere, BloomEffect, ColorCorrectionEffect…) parented inside it.",
-  "keywords": ["time of day", "ClockTime", "fog", "atmosphere", "bloom", "color correction", "lighting effects", "day night cycle"],
-  "tags": ["services", "visuals", "environment"],
+  "keywords": [
+    "time of day",
+    "ClockTime",
+    "fog",
+    "atmosphere",
+    "bloom",
+    "color correction",
+    "lighting effects",
+    "day night cycle"
+  ],
+  "tags": [
+    "services",
+    "visuals",
+    "environment"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,12 +28,36 @@
   },
   "reference": {
     "properties": [
-      { "name": "ClockTime", "type": "number", "description": "Time of day, 0–24 (14 = 2pm). Tween it for smooth day/night cycles." },
-      { "name": "Brightness", "type": "number", "description": "Overall sun brightness." },
-      { "name": "Ambient / OutdoorAmbient", "type": "Color3", "description": "Base ambient light indoors/outdoors." },
-      { "name": "FogColor / FogStart / FogEnd", "type": "Color3 / number / number", "description": "Distance fog: color and the range where it fades in." },
-      { "name": "Technology", "type": "Enum.Technology", "description": "Renderer tier (Voxel, ShadowMap, Future)." },
-      { "name": "GlobalShadows / EnvironmentDiffuseScale / EnvironmentSpecularScale", "type": "boolean / number", "description": "Shadow and environment lighting tuning." }
+      {
+        "name": "ClockTime",
+        "type": "number",
+        "description": "Time of day, 0–24 (14 = 2pm). Tween it for smooth day/night cycles."
+      },
+      {
+        "name": "Brightness",
+        "type": "number",
+        "description": "Overall sun brightness."
+      },
+      {
+        "name": "Ambient / OutdoorAmbient",
+        "type": "Color3",
+        "description": "Base ambient light indoors/outdoors."
+      },
+      {
+        "name": "FogColor / FogStart / FogEnd",
+        "type": "Color3 / number / number",
+        "description": "Distance fog: color and the range where it fades in."
+      },
+      {
+        "name": "Technology",
+        "type": "Enum.Technology",
+        "description": "Renderer tier (Voxel, ShadowMap, Future)."
+      },
+      {
+        "name": "GlobalShadows / EnvironmentDiffuseScale / EnvironmentSpecularScale",
+        "type": "boolean / number",
+        "description": "Shadow and environment lighting tuning."
+      }
     ],
     "details": [
       {
@@ -57,13 +94,20 @@
   "examples": [
     {
       "title": "Simple day/night cycle",
-      "code": "-- Server Script\nlocal Lighting = game:GetService(\"Lighting\")\nlocal MINUTES_PER_CYCLE = 10   -- full day in 10 minutes\n\nlocal DAY_MINUTES = 24 * 60\nlocal secondsPerMinute = (MINUTES_PER_CYCLE * 60) / DAY_MINUTES\n\nwhile true do\n    Lighting.ClockTime += 1 / 60        -- one in-game minute\n    task.wait(secondsPerMinute)\nend"
+      "code": "-- Server Script\nlocal Lighting = game:GetService(\"Lighting\")\nlocal MINUTES_PER_CYCLE = 10   -- full day in 10 minutes\n\nlocal DAY_MINUTES = 24 * 60\nlocal secondsPerMinute = (MINUTES_PER_CYCLE * 60) / DAY_MINUTES\n\nwhile true do\n    Lighting.ClockTime += 1 / 60        -- one in-game minute\n    task.wait(secondsPerMinute)\nend",
+      "language": "lua"
     },
     {
       "title": "Foggy swamp zone",
-      "code": "local Lighting = game:GetService(\"Lighting\")\n\nlocal function enterSwamp()\n    Lighting.FogStart = 0\n    Lighting.FogEnd = 120\n    Lighting.FogColor = Color3.fromRGB(120, 140, 120)\nend\n\nlocal function leaveSwamp()\n    Lighting.FogEnd = 100000   -- effectively off\nend"
+      "code": "local Lighting = game:GetService(\"Lighting\")\n\nlocal function enterSwamp()\n    Lighting.FogStart = 0\n    Lighting.FogEnd = 120\n    Lighting.FogColor = Color3.fromRGB(120, 140, 120)\nend\n\nlocal function leaveSwamp()\n    Lighting.FogEnd = 100000   -- effectively off\nend",
+      "language": "lua"
     }
   ],
-  "related": ["tween-service", "workspace", "replication", "camera"],
+  "related": [
+    "tween-service",
+    "workspace",
+    "replication",
+    "camera"
+  ],
   "added": "2026-10-04"
 }

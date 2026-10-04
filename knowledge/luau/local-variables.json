@@ -4,8 +4,18 @@
   "category": "luau",
   "type": "keyword",
   "summary": "`local` declares a variable that only exists inside the block where it was created. It is faster and safer than globals — in Roblox code, nearly every variable should be local.",
-  "keywords": ["local keyword", "local scope", "declare local", "local vs global"],
-  "tags": ["basics", "variables", "scope", "local"],
+  "keywords": [
+    "local keyword",
+    "local scope",
+    "declare local",
+    "local vs global"
+  ],
+  "tags": [
+    "basics",
+    "variables",
+    "scope",
+    "local"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -57,15 +67,23 @@
     {
       "title": "Scope in action",
       "code": "local outside = \"I live in the whole script\"\n\nif true then\n    local inside = \"I only live in this if block\"\n    print(inside)   --> works\n    print(outside)  --> works (outer locals are visible inside)\nend\n\nprint(outside)      --> works\nprint(inside)       --> nil! `inside` no longer exists",
-      "commonMistake": "Beginners often declare a variable inside an `if`/`for` block and are surprised when it's nil afterwards. Declare it *before* the block if you need it after."
+      "commonMistake": "Beginners often declare a variable inside an `if`/`for` block and are surprised when it's nil afterwards. Declare it *before* the block if you need it after.",
+      "language": "lua"
     },
     {
       "title": "The accidental re-declaration bug",
       "code": "local total = 0\nfor i = 1, 5 do\n    local total = total + i   -- BUG: new local, shadows outer one\nend\nprint(total)                  --> still 0!\n\n-- Correct:\nlocal sum = 0\nfor i = 1, 5 do\n    sum = sum + i             -- no `local` here: updates the outer one\nend\nprint(sum)                    --> 15",
       "whyItWorks": "Inside the loop, `local total` creates a fresh variable that shadows the outer one each iteration, so the outer `total` is never touched.",
-      "commonMistake": "Adding `local` when you meant to update an existing variable. Only the *first* declaration gets `local`."
+      "commonMistake": "Adding `local` when you meant to update an existing variable. Only the *first* declaration gets `local`.",
+      "language": "lua"
     }
   ],
-  "related": ["variables", "scope", "closures", "while-loops", "functions"],
+  "related": [
+    "variables",
+    "scope",
+    "closures",
+    "while-loops",
+    "functions"
+  ],
   "added": "2026-10-04"
 }

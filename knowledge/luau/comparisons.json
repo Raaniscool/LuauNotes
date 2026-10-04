@@ -4,8 +4,18 @@
   "category": "luau",
   "type": "overview",
   "summary": "==, ~=, <, >, <=, >= — compare values and produce booleans. Values of different types are never equal; tables compare by reference unless a metatable says otherwise.",
-  "keywords": ["equals", "not equals", "greater than", "compare values", "equality"],
-  "tags": ["basics", "operators", "conditions"],
+  "keywords": [
+    "equals",
+    "not equals",
+    "greater than",
+    "compare values",
+    "equality"
+  ],
+  "tags": [
+    "basics",
+    "operators",
+    "conditions"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -51,9 +61,15 @@
   "examples": [
     {
       "title": "Everyday comparisons",
-      "code": "local health = 0\nprint(health <= 0)        --> true\nprint(health == nil)      --> false\n\nlocal state = Enum.HumanoidStateType.Running\nprint(state == Enum.HumanoidStateType.Running)   --> true\n\n-- Reference equality for tables:\nlocal a = {1, 2}\nlocal b = {1, 2}\nprint(a == b)             --> false\nprint(a == a)             --> true"
+      "code": "local health = 0\nprint(health <= 0)        --> true\nprint(health == nil)      --> false\n\nlocal state = Enum.HumanoidStateType.Running\nprint(state == Enum.HumanoidStateType.Running)   --> true\n\n-- Reference equality for tables:\nlocal a = {1, 2}\nlocal b = {1, 2}\nprint(a == b)             --> false\nprint(a == a)             --> true",
+      "language": "lua"
     }
   ],
-  "related": ["logical-operators", "if-statements", "booleans", "truthiness"],
+  "related": [
+    "logical-operators",
+    "if-statements",
+    "booleans",
+    "truthiness"
+  ],
   "added": "2026-10-04"
 }

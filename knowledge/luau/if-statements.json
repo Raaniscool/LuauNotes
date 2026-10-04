@@ -4,8 +4,18 @@
   "category": "luau",
   "type": "keyword",
   "summary": "Conditional branching: run code only when a condition is truthy. Only `nil` and `false` fail the test — 0, \"\" and {} all pass. Luau also has if-expressions.",
-  "keywords": ["conditional", "branching", "if then", "else if", "ternary"],
-  "tags": ["basics", "control-flow", "conditions"],
+  "keywords": [
+    "conditional",
+    "branching",
+    "if then",
+    "else if",
+    "ternary"
+  ],
+  "tags": [
+    "basics",
+    "control-flow",
+    "conditions"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -56,13 +66,20 @@
   "examples": [
     {
       "title": "Guards + if-expression",
-      "code": "local function openDoor(player)\n    if not player or not player.Character then\n        return   -- guard: bail out early\n    end\n\n    local hasKey = player:FindFirstChild(\"Key\") ~= nil\n\n    if hasKey then\n        print(\"Door opens!\")\n    else\n        print(\"Locked. Find the key.\")\n    end\n\n    -- if-expression picks a value:\n    local message = if hasKey then \"Welcome!\" else \"Locked.\"\n    print(message)\nend"
+      "code": "local function openDoor(player)\n    if not player or not player.Character then\n        return   -- guard: bail out early\n    end\n\n    local hasKey = player:FindFirstChild(\"Key\") ~= nil\n\n    if hasKey then\n        print(\"Door opens!\")\n    else\n        print(\"Locked. Find the key.\")\n    end\n\n    -- if-expression picks a value:\n    local message = if hasKey then \"Welcome!\" else \"Locked.\"\n    print(message)\nend",
+      "language": "lua"
     },
     {
       "title": "Dispatch table beats elseif chains",
-      "code": "-- Instead of:\n--   if cmd == \"heal\" then ... elseif cmd == \"kick\" then ... elseif ...\n\nlocal commands = {\n    heal = function(p) print(\"heal\", p) end,\n    kick = function(p) print(\"kick\", p) end,\n    tp   = function(p) print(\"tp\", p) end,\n}\n\nlocal function handle(cmd, player)\n    local fn = commands[cmd]\n    if fn then\n        fn(player)\n    else\n        warn(\"Unknown command:\", cmd)\n    end\nend"
+      "code": "-- Instead of:\n--   if cmd == \"heal\" then ... elseif cmd == \"kick\" then ... elseif ...\n\nlocal commands = {\n    heal = function(p) print(\"heal\", p) end,\n    kick = function(p) print(\"kick\", p) end,\n    tp   = function(p) print(\"tp\", p) end,\n}\n\nlocal function handle(cmd, player)\n    local fn = commands[cmd]\n    if fn then\n        fn(player)\n    else\n        warn(\"Unknown command:\", cmd)\n    end\nend",
+      "language": "lua"
     }
   ],
-  "related": ["comparisons", "logical-operators", "truthiness", "booleans"],
+  "related": [
+    "comparisons",
+    "logical-operators",
+    "truthiness",
+    "booleans"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,18 @@
   "category": "patterns",
   "type": "pattern",
   "summary": "The modern 'press E on this' system: ProximityPrompt gives you the hold-to-interact UI for free. Triggered (completed), TriggerEnded (cancelled), server + client flavors, cooldown via ObjectText/HoldDuration.",
-  "keywords": ["press e", "interact prompt", "hold to interact", "Triggered", "proximity interaction pattern"],
-  "tags": ["patterns", "interaction", "essential"],
+  "keywords": [
+    "press e",
+    "interact prompt",
+    "hold to interact",
+    "Triggered",
+    "proximity interaction pattern"
+  ],
+  "tags": [
+    "patterns",
+    "interaction",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -40,9 +50,16 @@
   "examples": [
     {
       "title": "Chest that opens once",
-      "code": "-- Setup (server Script):\nlocal chest = workspace.Chest\nlocal prompt = Instance.new(\"ProximityPrompt\")\nprompt.ActionText = \"Open\"\nprompt.ObjectText = \"Chest\"\nprompt.HoldDuration = 0.5\nprompt.MaxActivationDistance = 10\nprompt.RequiresLineOfSight = true\nprompt.Parent = chest\n\nprompt.Triggered:Connect(function(player)\n    prompt.Enabled = false          -- one-shot\n    giveLoot(player)\n    task.delay(60, function()\n        prompt.Enabled = true       -- respawn the interaction\n    end)\nend)"
+      "code": "-- Setup (server Script):\nlocal chest = workspace.Chest\nlocal prompt = Instance.new(\"ProximityPrompt\")\nprompt.ActionText = \"Open\"\nprompt.ObjectText = \"Chest\"\nprompt.HoldDuration = 0.5\nprompt.MaxActivationDistance = 10\nprompt.RequiresLineOfSight = true\nprompt.Parent = chest\n\nprompt.Triggered:Connect(function(player)\n    prompt.Enabled = false          -- one-shot\n    giveLoot(player)\n    task.delay(60, function()\n        prompt.Enabled = true       -- respawn the interaction\n    end)\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["proximity-prompt", "click-detector-interaction", "server-validation", "debounce", "tool"],
+  "related": [
+    "proximity-prompt",
+    "click-detector-interaction",
+    "server-validation",
+    "debounce",
+    "tool"
+  ],
   "added": "2026-10-04"
 }

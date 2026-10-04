@@ -4,8 +4,19 @@
   "category": "concepts",
   "type": "concept",
   "summary": "In Luau conditions, only nil and false count as false. 0, \"\", and {} are all TRUTHY — a constant source of surprises for people coming from other languages.",
-  "keywords": ["truthy", "falsy", "0 is true", "empty string true", "condition values", "nil and false"],
-  "tags": ["concepts", "basics", "conditions"],
+  "keywords": [
+    "truthy",
+    "falsy",
+    "0 is true",
+    "empty string true",
+    "condition values",
+    "nil and false"
+  ],
+  "tags": [
+    "concepts",
+    "basics",
+    "conditions"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -39,9 +50,16 @@
   "examples": [
     {
       "title": "The surprises, demonstrated",
-      "code": "if 0 then print(\"0 is truthy!\") end          -- prints\nif \"\" then print(\"empty string truthy!\") end  -- prints\nif {} then print(\"empty table truthy!\") end   -- prints\n\nif nil then else print(\"nil is falsy\") end    -- prints\nif false then else print(\"false is falsy\") end -- prints\n\n-- The or-default trap:\nlocal function greet(enabled)\n    local prefix = enabled or \"??\"   -- false → falls through to \"??\"!\n    print(prefix)\nend\ngreet(false)   --> \"??\"  (not what you wanted?)\n\n-- Explicit version:\nlocal function greetSafe(enabled)\n    local prefix = if enabled == nil then \"default\" else tostring(enabled)\n    print(prefix)\nend"
+      "code": "if 0 then print(\"0 is truthy!\") end          -- prints\nif \"\" then print(\"empty string truthy!\") end  -- prints\nif {} then print(\"empty table truthy!\") end   -- prints\n\nif nil then else print(\"nil is falsy\") end    -- prints\nif false then else print(\"false is falsy\") end -- prints\n\n-- The or-default trap:\nlocal function greet(enabled)\n    local prefix = enabled or \"??\"   -- false → falls through to \"??\"!\n    print(prefix)\nend\ngreet(false)   --> \"??\"  (not what you wanted?)\n\n-- Explicit version:\nlocal function greetSafe(enabled)\n    local prefix = if enabled == nil then \"default\" else tostring(enabled)\n    print(prefix)\nend",
+      "language": "lua"
     }
   ],
-  "related": ["booleans", "nil", "if-statements", "logical-operators", "or-default"],
+  "related": [
+    "booleans",
+    "nil",
+    "if-statements",
+    "logical-operators",
+    "or-default"
+  ],
   "added": "2026-10-04"
 }

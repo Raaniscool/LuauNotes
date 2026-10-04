@@ -4,8 +4,18 @@
   "category": "luau",
   "type": "concept",
   "summary": "Where a name is visible and alive. Locals live from their declaration to the end of their block; inner blocks see outer locals, but never the other way around.",
-  "keywords": ["visibility", "block", "lifetime", "shadowing", "out of scope"],
-  "tags": ["basics", "scope", "variables"],
+  "keywords": [
+    "visibility",
+    "block",
+    "lifetime",
+    "shadowing",
+    "out of scope"
+  ],
+  "tags": [
+    "basics",
+    "scope",
+    "variables"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -54,14 +64,21 @@
   "examples": [
     {
       "title": "Seeing scope boundaries",
-      "code": "local count = 0\n\nfor i = 1, 3 do\n    local doubled = i * 2      -- fresh each iteration\n    count = count + doubled\nend\n\nprint(count)      --> 12\nprint(doubled)    --> nil  — its scope ended with the loop\nprint(i)          --> nil  — loop variable is gone too"
+      "code": "local count = 0\n\nfor i = 1, 3 do\n    local doubled = i * 2      -- fresh each iteration\n    count = count + doubled\nend\n\nprint(count)      --> 12\nprint(doubled)    --> nil  — its scope ended with the loop\nprint(i)          --> nil  — loop variable is gone too",
+      "language": "lua"
     },
     {
       "title": "The shadowing trap",
       "code": "local coins = 10\n\ndo\n    local coins = coins + 5   -- BUG: new local, reads itself (nil)\n    print(coins)              --> nil + 5 = error!\nend",
-      "commonMistake": "Within its own initializer, the new `coins` is already in scope but unassigned. Don't redeclare with the same name."
+      "commonMistake": "Within its own initializer, the new `coins` is already in scope but unassigned. Don't redeclare with the same name.",
+      "language": "lua"
     }
   ],
-  "related": ["local-variables", "closures", "scope-mistakes", "functions"],
+  "related": [
+    "local-variables",
+    "closures",
+    "scope-mistakes",
+    "functions"
+  ],
   "added": "2026-10-04"
 }

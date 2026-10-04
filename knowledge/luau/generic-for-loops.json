@@ -4,8 +4,18 @@
   "category": "luau",
   "type": "keyword",
   "summary": "`for k, v in source do ... end` walks whatever a source yields: array elements, dictionary pairs, players, tagged instances. In Luau, built-in tables can be iterated directly.",
-  "keywords": ["iterate", "for k v in", "loop through table", "for in loop"],
-  "tags": ["basics", "loops", "iteration", "tables"],
+  "keywords": [
+    "iterate",
+    "for k v in",
+    "loop through table",
+    "for in loop"
+  ],
+  "tags": [
+    "basics",
+    "loops",
+    "iteration",
+    "tables"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -60,9 +70,16 @@
   "examples": [
     {
       "title": "Walking players and dictionaries",
-      "code": "local Players = game:GetService(\"Players\")\n\n-- Every player in the game\nfor _, player in Players:GetPlayers() do\n    print(player.Name, player.Team)\nend\n\n-- Every entry in a dictionary (order not guaranteed!)\nlocal config = { Speed = 16, Jump = 50, Health = 100 }\nfor key, value in config do\n    print(key, \"=\", value)\nend"
+      "code": "local Players = game:GetService(\"Players\")\n\n-- Every player in the game\nfor _, player in Players:GetPlayers() do\n    print(player.Name, player.Team)\nend\n\n-- Every entry in a dictionary (order not guaranteed!)\nlocal config = { Speed = 16, Jump = 50, Health = 100 }\nfor key, value in config do\n    print(key, \"=\", value)\nend",
+      "language": "lua"
     }
   ],
-  "related": ["ipairs", "pairs", "numeric-for-loops", "tables", "string-operations"],
+  "related": [
+    "ipairs",
+    "pairs",
+    "numeric-for-loops",
+    "tables",
+    "string-operations"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,18 @@
   "category": "luau",
   "type": "concept",
   "summary": "Tables keyed by names (strings) instead of numbers: instant lookup by key. Settings, inventories, caches, and 'sets' are all dictionaries.",
-  "keywords": ["map", "key value pairs", "hash table", "lookup table", "set"],
-  "tags": ["basics", "tables", "dictionaries"],
+  "keywords": [
+    "map",
+    "key value pairs",
+    "hash table",
+    "lookup table",
+    "set"
+  ],
+  "tags": [
+    "basics",
+    "tables",
+    "dictionaries"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -61,14 +71,21 @@
     {
       "title": "The set pattern: instant membership checks",
       "code": "local vip = {\n    [1234] = true,\n    [9876] = true,\n}\n\nlocal function isVip(userId)\n    return vip[userId] == true\nend\n\nprint(isVip(1236))   --> false\nprint(isVip(9876))   --> true",
-      "whyItWorks": "Keys are looked up directly — no loop needed. This scales to millions of entries just as fast."
+      "whyItWorks": "Keys are looked up directly — no loop needed. This scales to millions of entries just as fast.",
+      "language": "lua"
     },
     {
       "title": "Command dispatch table",
       "code": "local handlers = {\n    heal = function(player) print(\"Healing \" .. player.Name) end,\n    kick = function(player) print(\"Kicking \" .. player.Name) end,\n}\n\nlocal function runCommand(player, command)\n    local fn = handlers[command]\n    if fn then\n        fn(player)\n    else\n        warn(\"Unknown command:\", command)\n    end\nend",
-      "whyItWorks": "The dictionary replaces a growing if/elseif chain. Adding a command = adding one line."
+      "whyItWorks": "The dictionary replaces a growing if/elseif chain. Adding a command = adding one line.",
+      "language": "lua"
     }
   ],
-  "related": ["tables", "arrays", "pairs", "table-operations"],
+  "related": [
+    "tables",
+    "arrays",
+    "pairs",
+    "table-operations"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,18 @@
   "category": "gotchas",
   "type": "gotcha",
   "summary": "IntValue/StringValue/etc. are CONTAINERS — the data is in .Value. Using the object itself in math, comparisons, or Text silently fails: 'attempt to perform arithmetic on Instance', or always-false comparisons.",
-  "keywords": ["instance arithmetic", "coins not adding", "compare value object", "text shows instance", "missing .Value"],
-  "tags": ["gotchas", "values", "essential"],
+  "keywords": [
+    "instance arithmetic",
+    "coins not adding",
+    "compare value object",
+    "text shows instance",
+    "missing .Value"
+  ],
+  "tags": [
+    "gotchas",
+    "values",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -34,9 +44,15 @@
   "examples": [
     {
       "title": "Box vs contents",
-      "code": "local coins = player.leaderstats.Coins   -- IntValue (the box)\n\n-- ❌\n-- coins += 10\n-- if coins >= 50 then\n\n-- ✅\ncoins.Value += 10\nif coins.Value >= 50 then\n    print(\"Rich! Total:\", coins.Value)\nend"
+      "code": "local coins = player.leaderstats.Coins   -- IntValue (the box)\n\n-- ❌\n-- coins += 10\n-- if coins >= 50 then\n\n-- ✅\ncoins.Value += 10\nif coins.Value >= 50 then\n    print(\"Rich! Total:\", coins.Value)\nend",
+      "language": "lua"
     }
   ],
-  "related": ["value-base-value", "boolvalue-vs-boolean", "attributes", "leaderstats"],
+  "related": [
+    "value-base-value",
+    "boolvalue-vs-boolean",
+    "attributes",
+    "leaderstats"
+  ],
   "added": "2026-10-04"
 }

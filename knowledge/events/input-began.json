@@ -4,8 +4,19 @@
   "category": "events",
   "type": "event",
   "summary": "Client event firing for every input START: keys, mouse buttons, touches, gamepad buttons. Receives an InputObject (KeyCode + UserInputType) and a gameProcessed flag — always check the flag.",
-  "keywords": ["key press", "input started", "KeyCode", "gameProcessed", "input event", "keybind"],
-  "tags": ["input", "client", "essential"],
+  "keywords": [
+    "key press",
+    "input started",
+    "KeyCode",
+    "gameProcessed",
+    "input event",
+    "keybind"
+  ],
+  "tags": [
+    "input",
+    "client",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -16,8 +27,16 @@
   "reference": {
     "signature": "UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessed: boolean) end)",
     "parameters": [
-      { "name": "input", "type": "InputObject", "description": "Has .KeyCode (which key/button, Enum.KeyCode) and .UserInputType (what kind: Keyboard, MouseButton1, Touch, Gamepad1…)." },
-      { "name": "gameProcessed", "type": "boolean", "description": "true = the engine/core UI already consumed it (typing in chat, default controls). Skip your logic when true." }
+      {
+        "name": "input",
+        "type": "InputObject",
+        "description": "Has .KeyCode (which key/button, Enum.KeyCode) and .UserInputType (what kind: Keyboard, MouseButton1, Touch, Gamepad1…)."
+      },
+      {
+        "name": "gameProcessed",
+        "type": "boolean",
+        "description": "true = the engine/core UI already consumed it (typing in chat, default controls). Skip your logic when true."
+      }
     ]
   },
   "explanation": {
@@ -46,9 +65,15 @@
   "examples": [
     {
       "title": "Robust keybind",
-      "code": "local UserInputService = game:GetService(\"UserInputService\")\n\nUserInputService.InputBegan:Connect(function(input, gameProcessed)\n    if gameProcessed then return end\n\n    if input.KeyCode == Enum.KeyCode.F then\n        print(\"Flashlight toggled\")\n    elseif input.UserInputType == Enum.UserInputType.Touch then\n        print(\"Screen tapped at\", input.Position)\n    end\nend)"
+      "code": "local UserInputService = game:GetService(\"UserInputService\")\n\nUserInputService.InputBegan:Connect(function(input, gameProcessed)\n    if gameProcessed then return end\n\n    if input.KeyCode == Enum.KeyCode.F then\n        print(\"Flashlight toggled\")\n    elseif input.UserInputType == Enum.UserInputType.Touch then\n        print(\"Screen tapped at\", input.Position)\n    end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["user-input-service", "context-action-service", "localscript", "client-vs-server"],
+  "related": [
+    "user-input-service",
+    "context-action-service",
+    "localscript",
+    "client-vs-server"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "concept",
   "summary": "Named containers that store values. In Luau you almost always create them with `local` — bare assignments create globals, which is usually a mistake.",
-  "keywords": ["assignment", "store a value", "global variable", "naming variables"],
-  "tags": ["basics", "variables", "assignment"],
+  "keywords": [
+    "assignment",
+    "store a value",
+    "global variable",
+    "naming variables"
+  ],
+  "tags": [
+    "basics",
+    "variables",
+    "assignment"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -57,14 +66,22 @@
     {
       "title": "Creating and updating a variable",
       "code": "local coins = 50\nprint(coins)        --> 50\n\ncoins = coins + 25  -- update it\nprint(coins)        --> 75",
-      "whyItWorks": "`local coins = 50` creates the variable. `coins = coins + 25` reads the current value (50), adds 25, and reassigns the name to the new value (75)."
+      "whyItWorks": "`local coins = 50` creates the variable. `coins = coins + 25` reads the current value (50), adds 25, and reassigns the name to the new value (75).",
+      "language": "lua"
     },
     {
       "title": "Variables hold any type of value",
       "code": "local playerName = \"Raanis\"      -- string\nlocal health = 100                -- number\nlocal isAlive = true              -- boolean\nlocal inventory = {}              -- table\nlocal target = nil                -- explicitly \"nothing\"\n\nprint(playerName, health, isAlive)",
-      "whyItWorks": "A variable can hold any Luau value. Unlike some languages, Luau variables are not locked to one type — but in Roblox code it is still good habit to keep each variable's type consistent."
+      "whyItWorks": "A variable can hold any Luau value. Unlike some languages, Luau variables are not locked to one type — but in Roblox code it is still good habit to keep each variable's type consistent.",
+      "language": "lua"
     }
   ],
-  "related": ["local-variables", "data-types", "scope", "nil", "comparisons"],
+  "related": [
+    "local-variables",
+    "data-types",
+    "scope",
+    "nil",
+    "comparisons"
+  ],
   "added": "2026-10-04"
 }

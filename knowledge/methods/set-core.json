@@ -1,0 +1,81 @@
+{
+  "id": "set-core",
+  "title": "StarterGui:SetCore()",
+  "category": "methods",
+  "type": "method",
+  "summary": "Configures core Roblox UI from scripts: chat visibility, badge toasts, reset-button behavior, hints — via string keys like SetCore(\"ResetButtonCallback\", bool). Must be called from the client, and may need retries early in startup.",
+  "keywords": [
+    "SetCore",
+    "disable reset",
+    "chat visibility",
+    "core gui settings",
+    "BadgeNotification"
+  ],
+  "tags": [
+    "methods",
+    "gui",
+    "client"
+  ],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/StarterGui",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "StarterGui:SetCore(coreName: string, value: any)",
+    "parameters": [
+      {
+        "name": "coreName",
+        "type": "string",
+        "description": "Key such as \"ResetButtonCallback\", \"ResetEnabled\", \"ChatMakeSystemMessage\", \"PointsNotificationActive\", \"BadgeCommentsEnabled\"…"
+      },
+      {
+        "name": "value",
+        "type": "varies",
+        "description": "Depends on the key (boolean, table, string)."
+      }
+    ],
+    "details": [
+      {
+        "heading": "Startup race",
+        "body": "Core scripts may not be loaded when your LocalScript starts — SetCore can error then. The standard fix is a pcall retry loop."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A string-keyed control panel for the built-in UI layer you can't parent into directly.",
+    "whyItExists": "Core UI (chat, health, reset) is injected by the engine; SetCore is the sanctioned knob panel.",
+    "whenToUse": [
+      "Disabling/overriding the reset button in minigames",
+      "System messages into chat",
+      "Toggling default HUD pieces for custom experiences"
+    ],
+    "whenNotToUse": [
+      "Server scripts — SetCore is client-side only",
+      "As a substitute for building your own UI when you need real control"
+    ],
+    "tips": [
+      "Retry-with-pcall wrapper is the community standard",
+      "GetCore (where available) reads current settings"
+    ],
+    "commonMistakes": [
+      "Calling once at startup and silently failing (core not ready)",
+      "Expecting server-side effects"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Reliable SetCore wrapper",
+      "code": "local StarterGui = game:GetService(\"StarterGui\")\n\nlocal function safeSetCore(key, value)\n    for attempt = 1, 10 do\n        local ok = pcall(function()\n            StarterGui:SetCore(key, value)\n        end)\n        if ok then return true end\n        task.wait(1)\n    end\n    return false\nend\n\ntask.spawn(function()\n    safeSetCore(\"ResetButtonCallback\", false)  -- no reset menu in this minigame\nend)",
+      "language": "lua"
+    }
+  ],
+  "related": [
+    "starter-gui",
+    "player-gui",
+    "client-vs-server"
+  ],
+  "added": "2026-10-04"
+}

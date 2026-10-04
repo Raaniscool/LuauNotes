@@ -4,8 +4,24 @@
   "category": "classes",
   "type": "class",
   "summary": "The basic 3D building block: a primitive block/sphere/cylinder with physics, position, size, color, and the Touched event. Almost everything physical starts as a Part.",
-  "keywords": ["BasePart", "block", "brick", "3d object", "Anchored", "CanCollide", "Transparency", "Touched", "Position", "CFrame"],
-  "tags": ["classes", "world", "physics", "essential"],
+  "keywords": [
+    "BasePart",
+    "block",
+    "brick",
+    "3d object",
+    "Anchored",
+    "CanCollide",
+    "Transparency",
+    "Touched",
+    "Position",
+    "CFrame"
+  ],
+  "tags": [
+    "classes",
+    "world",
+    "physics",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,23 +31,75 @@
   },
   "reference": {
     "properties": [
-      { "name": "Position", "type": "Vector3", "description": "Center of the part in world coordinates. Use for measurements." },
-      { "name": "CFrame", "type": "CFrame", "description": "Position AND orientation. Use for placement/movement." },
-      { "name": "Size", "type": "Vector3", "description": "Dimensions in studs (X, Y, Z)." },
-      { "name": "Color / Material / MaterialVariant", "type": "Color3 / Enum", "description": "Appearance." },
-      { "name": "Anchored", "type": "boolean", "description": "true = physics frozen in place (buildings, floors). false = simulated (falls, pushed)." },
-      { "name": "CanCollide", "type": "boolean", "description": "Whether physical collisions occur with this part." },
-      { "name": "CanTouch", "type": "boolean", "description": "Whether Touched events can fire for this part." },
-      { "name": "Transparency", "type": "number", "description": "0 (opaque) to 1 (invisible). Note: 1 does NOT disable collision." },
-      { "name": "Mass / AssemblyLinearVelocity", "type": "number / Vector3", "description": "Computed mass; velocity of the assembly the part belongs to." },
-      { "name": "BrickColor", "type": "BrickColor", "description": "Legacy palette color — prefer Color (Color3)." }
+      {
+        "name": "Position",
+        "type": "Vector3",
+        "description": "Center of the part in world coordinates. Use for measurements."
+      },
+      {
+        "name": "CFrame",
+        "type": "CFrame",
+        "description": "Position AND orientation. Use for placement/movement."
+      },
+      {
+        "name": "Size",
+        "type": "Vector3",
+        "description": "Dimensions in studs (X, Y, Z)."
+      },
+      {
+        "name": "Color / Material / MaterialVariant",
+        "type": "Color3 / Enum",
+        "description": "Appearance."
+      },
+      {
+        "name": "Anchored",
+        "type": "boolean",
+        "description": "true = physics frozen in place (buildings, floors). false = simulated (falls, pushed)."
+      },
+      {
+        "name": "CanCollide",
+        "type": "boolean",
+        "description": "Whether physical collisions occur with this part."
+      },
+      {
+        "name": "CanTouch",
+        "type": "boolean",
+        "description": "Whether Touched events can fire for this part."
+      },
+      {
+        "name": "Transparency",
+        "type": "number",
+        "description": "0 (opaque) to 1 (invisible). Note: 1 does NOT disable collision."
+      },
+      {
+        "name": "Mass / AssemblyLinearVelocity",
+        "type": "number / Vector3",
+        "description": "Computed mass; velocity of the assembly the part belongs to."
+      },
+      {
+        "name": "BrickColor",
+        "type": "BrickColor",
+        "description": "Legacy palette color — prefer Color (Color3)."
+      }
     ],
     "events": [
-      { "name": "Touched", "signature": "Part.Touched:Connect(function(otherPart: BasePart) end)", "description": "Fires when another part begins touching this one. Passes the OTHER part. Requires CanTouch on both and actual physics contact." },
-      { "name": "TouchEnded", "signature": "Part.TouchEnded:Connect(function(otherPart: BasePart) end)", "description": "Fires when the touch ends." }
+      {
+        "name": "Touched",
+        "signature": "Part.Touched:Connect(function(otherPart: BasePart) end)",
+        "description": "Fires when another part begins touching this one. Passes the OTHER part. Requires CanTouch on both and actual physics contact."
+      },
+      {
+        "name": "TouchEnded",
+        "signature": "Part.TouchEnded:Connect(function(otherPart: BasePart) end)",
+        "description": "Fires when the touch ends."
+      }
     ],
     "methods": [
-      { "name": "ApplyImpulse", "signature": "Part:ApplyImpulse(impulse: Vector3)", "description": "Instant physics push (unanchored parts only)." }
+      {
+        "name": "ApplyImpulse",
+        "signature": "Part:ApplyImpulse(impulse: Vector3)",
+        "description": "Instant physics push (unanchored parts only)."
+      }
     ]
   },
   "explanation": {
@@ -65,13 +133,24 @@
     {
       "title": "Kill brick (the classic)",
       "code": "local killBrick = script.Parent\n\nkillBrick.Touched:Connect(function(hit)\n    local humanoid = hit.Parent:FindFirstChildOfClass(\"Humanoid\")\n    if humanoid then\n        humanoid.Health = 0\n    end\nend)",
-      "commonMistake": "No debounce here is fine (setting Health=0 is idempotent), but for rewards you MUST guard against multiple touches."
+      "commonMistake": "No debounce here is fine (setting Health=0 is idempotent), but for rewards you MUST guard against multiple touches.",
+      "language": "lua"
     },
     {
       "title": "A bouncy pad",
-      "code": "local pad = script.Parent\n\npad.Touched:Connect(function(hit)\n    local root = hit.Parent:FindFirstChild(\"HumanoidRootPart\")\n    if root then\n        root.AssemblyLinearVelocity = Vector3.new(0, 100, 0)\n    end\nend)"
+      "code": "local pad = script.Parent\n\npad.Touched:Connect(function(hit)\n    local root = hit.Parent:FindFirstChild(\"HumanoidRootPart\")\n    if root then\n        root.AssemblyLinearVelocity = Vector3.new(0, 100, 0)\n    end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["model-vs-basepart", "position-vs-cframe", "touched", "model", "debounce", "model", "humanoid", "part-anchored"],
+  "related": [
+    "model-vs-basepart",
+    "position-vs-cframe",
+    "touched",
+    "model",
+    "debounce",
+    "model",
+    "humanoid",
+    "part-anchored"
+  ],
   "added": "2026-10-04"
 }

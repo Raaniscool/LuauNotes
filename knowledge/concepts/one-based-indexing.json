@@ -4,8 +4,18 @@
   "category": "concepts",
   "type": "concept",
   "summary": "Luau arrays start at 1, not 0. The first element is t[1], the last is t[#t], and loops run `for i = 1, #t`. Off-by-one bugs usually come from 0-based instincts.",
-  "keywords": ["index starts at 1", "array bounds", "off by one", "first element", "#t"],
-  "tags": ["concepts", "basics", "arrays"],
+  "keywords": [
+    "index starts at 1",
+    "array bounds",
+    "off by one",
+    "first element",
+    "#t"
+  ],
+  "tags": [
+    "concepts",
+    "basics",
+    "arrays"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -39,9 +49,15 @@
   "examples": [
     {
       "title": "Bounds in practice",
-      "code": "local colors = {\"red\", \"green\", \"blue\"}\n\nprint(colors[1])        --> red      (first)\nprint(colors[#colors])  --> blue     (last)\n\nfor i = 1, #colors do\n    print(i, colors[i])\nend\n\n-- Cycling:\nlocal idx = 1\nlocal function nextColor()\n    idx = idx % #colors + 1\n    return colors[idx]\nend\nprint(nextColor(), nextColor(), nextColor())   --> green blue red"
+      "code": "local colors = {\"red\", \"green\", \"blue\"}\n\nprint(colors[1])        --> red      (first)\nprint(colors[#colors])  --> blue     (last)\n\nfor i = 1, #colors do\n    print(i, colors[i])\nend\n\n-- Cycling:\nlocal idx = 1\nlocal function nextColor()\n    idx = idx % #colors + 1\n    return colors[idx]\nend\nprint(nextColor(), nextColor(), nextColor())   --> green blue red",
+      "language": "lua"
     }
   ],
-  "related": ["arrays", "tables", "numeric-for-loops", "string-operations"],
+  "related": [
+    "arrays",
+    "tables",
+    "numeric-for-loops",
+    "string-operations"
+  ],
   "added": "2026-10-04"
 }

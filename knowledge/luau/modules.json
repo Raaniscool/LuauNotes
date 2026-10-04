@@ -4,8 +4,18 @@
   "category": "luau",
   "type": "concept",
   "summary": "How to structure code into reusable ModuleScripts: namespace tables, singletons, factories, and the conventions that keep large Roblox codebases sane.",
-  "keywords": ["module pattern", "code organization", "reusable code", "singleton module", "module design"],
-  "tags": ["modules", "architecture", "modulescripts"],
+  "keywords": [
+    "module pattern",
+    "code organization",
+    "reusable code",
+    "singleton module",
+    "module design"
+  ],
+  "tags": [
+    "modules",
+    "architecture",
+    "modulescripts"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -50,9 +60,16 @@
   "examples": [
     {
       "title": "The three classic shapes",
-      "code": "-- 1) NAMESPACE: bag of related functions\nlocal Utils = {}\nfunction Utils.shout(text) print(string.upper(text)) end\nreturn Utils\n\n-- 2) SINGLETON: shared state object\nlocal Scoreboard = { scores = {} }\nfunction Scoreboard.add(player, points)\n    Scoreboard.scores[player.UserId] = (Scoreboard.scores[player.UserId] or 0) + points\nend\nreturn Scoreboard\n\n-- 3) FACTORY: makes fresh objects\nlocal Pet = {}\nPet.__index = Pet\nfunction Pet.new(name)\n    return setmetatable({ name = name, hunger = 100 }, Pet)\nend\nfunction Pet:feed(amount) self.hunger = math.min(100, self.hunger + amount) end\nreturn Pet"
+      "code": "-- 1) NAMESPACE: bag of related functions\nlocal Utils = {}\nfunction Utils.shout(text) print(string.upper(text)) end\nreturn Utils\n\n-- 2) SINGLETON: shared state object\nlocal Scoreboard = { scores = {} }\nfunction Scoreboard.add(player, points)\n    Scoreboard.scores[player.UserId] = (Scoreboard.scores[player.UserId] or 0) + points\nend\nreturn Scoreboard\n\n-- 3) FACTORY: makes fresh objects\nlocal Pet = {}\nPet.__index = Pet\nfunction Pet.new(name)\n    return setmetatable({ name = name, hunger = 100 }, Pet)\nend\nfunction Pet:feed(amount) self.hunger = math.min(100, self.hunger + amount) end\nreturn Pet",
+      "language": "lua"
     }
   ],
-  "related": ["modulescript", "require", "metatables", "object-oriented-programming", "return"],
+  "related": [
+    "modulescript",
+    "require",
+    "metatables",
+    "object-oriented-programming",
+    "return"
+  ],
   "added": "2026-10-04"
 }

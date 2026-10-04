@@ -4,8 +4,19 @@
   "category": "patterns",
   "type": "pattern",
   "summary": "Time-gated actions: record when something last happened, reject attempts within the window. The backbone of ability systems, spam prevention, and rate limiting — best enforced server-side.",
-  "keywords": ["rate limit", "ability cooldown", "spam prevention", "last used", "timestamp check"],
-  "tags": ["patterns", "timing", "security", "essential"],
+  "keywords": [
+    "rate limit",
+    "ability cooldown",
+    "spam prevention",
+    "last used",
+    "timestamp check"
+  ],
+  "tags": [
+    "patterns",
+    "timing",
+    "security",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Community-established pattern; consistent with Roblox security guidance",
@@ -40,9 +51,16 @@
   "examples": [
     {
       "title": "Server-authoritative ability cooldown",
-      "code": "-- Server Script\nlocal lastCast = {}\nlocal COOLDOWN = 4\n\nremote.OnServerEvent:Connect(function(player)\n    local now = os.clock()\n    local last = lastCast[player]\n    if last and now - last < COOLDOWN then\n        return   -- too soon, ignore\n    end\n    lastCast[player] = now\n\n    castFireball(player)   -- the real work, server-side\nend)\n\nPlayers.PlayerRemoving:Connect(function(player)\n    lastCast[player] = nil\nend)"
+      "code": "-- Server Script\nlocal lastCast = {}\nlocal COOLDOWN = 4\n\nremote.OnServerEvent:Connect(function(player)\n    local now = os.clock()\n    local last = lastCast[player]\n    if last and now - last < COOLDOWN then\n        return   -- too soon, ignore\n    end\n    lastCast[player] = now\n\n    castFireball(player)   -- the real work, server-side\nend)\n\nPlayers.PlayerRemoving:Connect(function(player)\n    lastCast[player] = nil\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["debounce", "server-validation", "heartbeat", "remote-event", "never-trust-the-client"],
+  "related": [
+    "debounce",
+    "server-validation",
+    "heartbeat",
+    "remote-event",
+    "never-trust-the-client"
+  ],
   "added": "2026-10-04"
 }

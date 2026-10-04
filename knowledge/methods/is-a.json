@@ -4,8 +4,18 @@
   "category": "methods",
   "type": "method",
   "summary": "Class check with inheritance: part:IsA(\"BasePart\") is true for Part, MeshPart, WedgePart… Prefer it over ClassName comparisons whenever you mean 'is this kind of thing'.",
-  "keywords": ["class check", "inheritance check", "ClassName", "instance type check", "BasePart check"],
-  "tags": ["instance", "types", "essential"],
+  "keywords": [
+    "class check",
+    "inheritance check",
+    "ClassName",
+    "instance type check",
+    "BasePart check"
+  ],
+  "tags": [
+    "instance",
+    "types",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -30,7 +40,9 @@
       "Character checks: `model:FindFirstChildOfClass(\"Humanoid\")` + IsA(\"Model\")",
       "GUI element dispatch: IsA(\"TextButton\") vs IsA(\"GuiButton\")"
     ],
-    "whenNotToUse": ["When you genuinely need the exact class — ClassName =="],
+    "whenNotToUse": [
+      "When you genuinely need the exact class — ClassName =="
+    ],
     "tips": [
       "IsA(\"BasePart\") covers all physical parts — the most useful family check",
       "Everything IsA(\"Instance\") — useful as a generic validity test"
@@ -43,9 +55,15 @@
   "examples": [
     {
       "title": "Family filtering",
-      "code": "local parts = {}\nfor _, child in workspace.Map:GetChildren() do\n    if child:IsA(\"BasePart\") then          -- Part, MeshPart, WedgePart…\n        table.insert(parts, child)\n    elseif child:IsA(\"Model\") then\n        print(\"Found sub-model:\", child.Name)\n    end\nend"
+      "code": "local parts = {}\nfor _, child in workspace.Map:GetChildren() do\n    if child:IsA(\"BasePart\") then          -- Part, MeshPart, WedgePart…\n        table.insert(parts, child)\n    elseif child:IsA(\"Model\") then\n        print(\"Found sub-model:\", child.Name)\n    end\nend",
+      "language": "lua"
     }
   ],
-  "related": ["instance", "typeof-function", "find-first-child", "get-children"],
+  "related": [
+    "instance",
+    "typeof-function",
+    "find-first-child",
+    "get-children"
+  ],
   "added": "2026-10-04"
 }

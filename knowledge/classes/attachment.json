@@ -4,8 +4,18 @@
   "category": "classes",
   "type": "class",
   "summary": "A named point (with orientation) on a part: used by particles, beams, sounds, constraints, and animations to say 'right here'. Zero visual presence — pure positional marker.",
-  "keywords": ["anchor point", "particle emitter position", "beam endpoints", "constraint points", "attachment points"],
-  "tags": ["classes", "physics", "effects"],
+  "keywords": [
+    "anchor point",
+    "particle emitter position",
+    "beam endpoints",
+    "constraint points",
+    "attachment points"
+  ],
+  "tags": [
+    "classes",
+    "physics",
+    "effects"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,10 +25,26 @@
   },
   "reference": {
     "properties": [
-      { "name": "Position", "type": "Vector3", "description": "Offset from the parent part's center (in the part's local space)." },
-      { "name": "Orientation / Rotation", "type": "Vector3", "description": "Local rotation of the attachment's axes." },
-      { "name": "WorldPosition / WorldCFrame", "type": "Vector3 / CFrame", "description": "Read-only world-space pose." },
-      { "name": "Axis / SecondaryAxis", "type": "Vector3", "description": "Direction vectors used by constraints like HingeConstraint." }
+      {
+        "name": "Position",
+        "type": "Vector3",
+        "description": "Offset from the parent part's center (in the part's local space)."
+      },
+      {
+        "name": "Orientation / Rotation",
+        "type": "Vector3",
+        "description": "Local rotation of the attachment's axes."
+      },
+      {
+        "name": "WorldPosition / WorldCFrame",
+        "type": "Vector3 / CFrame",
+        "description": "Read-only world-space pose."
+      },
+      {
+        "name": "Axis / SecondaryAxis",
+        "type": "Vector3",
+        "description": "Direction vectors used by constraints like HingeConstraint."
+      }
     ],
     "details": [
       {
@@ -54,9 +80,15 @@
   "examples": [
     {
       "title": "Muzzle attachment for effects",
-      "code": "local gun = workspace.Gun\nlocal muzzle = Instance.new(\"Attachment\")\nmuzzle.Name = \"Muzzle\"\nmuzzle.Position = Vector3.new(0, 0, -2)   -- tip of barrel, local space\nmuzzle.Parent = gun\n\nlocal flash = Instance.new(\"ParticleEmitter\")\nflash.Rate = 0\nflash.Parent = muzzle      -- emits from the attachment\n\nlocal function fire()\n    flash:Emit(5)\nend"
+      "code": "local gun = workspace.Gun\nlocal muzzle = Instance.new(\"Attachment\")\nmuzzle.Name = \"Muzzle\"\nmuzzle.Position = Vector3.new(0, 0, -2)   -- tip of barrel, local space\nmuzzle.Parent = gun\n\nlocal flash = Instance.new(\"ParticleEmitter\")\nflash.Rate = 0\nflash.Parent = muzzle      -- emits from the attachment\n\nlocal function fire()\n    flash:Emit(5)\nend",
+      "language": "lua"
     }
   ],
-  "related": ["weldconstraint", "motor6d", "part", "sound"],
+  "related": [
+    "weldconstraint",
+    "motor6d",
+    "part",
+    "sound"
+  ],
   "added": "2026-10-04"
 }

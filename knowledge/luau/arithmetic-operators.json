@@ -4,8 +4,19 @@
   "category": "luau",
   "type": "overview",
   "summary": "+ - * / // % ^ for math, .. to concatenate strings, # for lengths, plus compound assignments like +=. A complete operator cheat sheet.",
-  "keywords": ["operators", "modulo", "concatenate", "power", "length operator", "compound assignment", "+="],
-  "tags": ["basics", "operators"],
+  "keywords": [
+    "operators",
+    "modulo",
+    "concatenate",
+    "power",
+    "length operator",
+    "compound assignment",
+    "+="
+  ],
+  "tags": [
+    "basics",
+    "operators"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -60,9 +71,16 @@
   "examples": [
     {
       "title": "Operator tour",
-      "code": "local seconds = 137\nprint(seconds // 60)          --> 2  (minutes)\nprint(seconds % 60)           --> 17 (leftover seconds)\n\nlocal coins = 10\ncoins += 5                    --> 15\ncoins *= 2                    --> 30\n\nlocal msg = \"Coins: \"\nmsg ..= tostring(coins)       --> \"Coins: 30\"\nprint(msg)\n\n-- cycling through options\nlocal modes = {\"Easy\", \"Normal\", \"Hard\"}\nlocal slot = 1\nslot = slot % #modes + 1      --> 2\nslot = slot % #modes + 1      --> 3\nslot = slot % #modes + 1      --> 1  (wraps around)"
+      "code": "local seconds = 137\nprint(seconds // 60)          --> 2  (minutes)\nprint(seconds % 60)           --> 17 (leftover seconds)\n\nlocal coins = 10\ncoins += 5                    --> 15\ncoins *= 2                    --> 30\n\nlocal msg = \"Coins: \"\nmsg ..= tostring(coins)       --> \"Coins: 30\"\nprint(msg)\n\n-- cycling through options\nlocal modes = {\"Easy\", \"Normal\", \"Hard\"}\nlocal slot = 1\nslot = slot % #modes + 1      --> 2\nslot = slot % #modes + 1      --> 3\nslot = slot % #modes + 1      --> 1  (wraps around)",
+      "language": "lua"
     }
   ],
-  "related": ["numbers", "strings", "comparisons", "logical-operators", "one-based-indexing"],
+  "related": [
+    "numbers",
+    "strings",
+    "comparisons",
+    "logical-operators",
+    "one-based-indexing"
+  ],
   "added": "2026-10-04"
 }

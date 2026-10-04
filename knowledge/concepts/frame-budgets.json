@@ -4,8 +4,19 @@
   "category": "concepts",
   "type": "concept",
   "summary": "Each frame gives your scripts a tiny time budget — about 1/60th of a second (16.7ms) for 60 FPS. Per-frame handlers that overrun it cause lag spikes and dropped frames. Measure, throttle, and spread work out.",
-  "keywords": ["fps", "performance", "lag", "16 milliseconds", "per-frame cost", "optimize", "profiler"],
-  "tags": ["concepts", "performance"],
+  "keywords": [
+    "fps",
+    "performance",
+    "lag",
+    "16 milliseconds",
+    "per-frame cost",
+    "optimize",
+    "profiler"
+  ],
+  "tags": [
+    "concepts",
+    "performance"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -42,9 +53,15 @@
   "examples": [
     {
       "title": "Throttled per-frame work",
-      "code": "local RunService = game:GetService(\"RunService\")\n\nlocal accumulator = 0\nlocal INTERVAL = 0.2   -- act every 200ms, not every frame\n\nRunService.Heartbeat:Connect(function(dt)\n    accumulator += dt\n    if accumulator >= INTERVAL then\n        accumulator = 0\n        -- expensive-ish work runs 5x/sec, not 60x/sec\n        updateOverheadStats()\n    end\nend)"
+      "code": "local RunService = game:GetService(\"RunService\")\n\nlocal accumulator = 0\nlocal INTERVAL = 0.2   -- act every 200ms, not every frame\n\nRunService.Heartbeat:Connect(function(dt)\n    accumulator += dt\n    if accumulator >= INTERVAL then\n        accumulator = 0\n        -- expensive-ish work runs 5x/sec, not 60x/sec\n        updateOverheadStats()\n    end\nend)",
+      "language": "lua"
     }
   ],
-  "related": ["heartbeat", "render-stepped", "task-library", "debugging-workflow"],
+  "related": [
+    "heartbeat",
+    "render-stepped",
+    "task-library",
+    "debugging-workflow"
+  ],
   "added": "2026-10-04"
 }

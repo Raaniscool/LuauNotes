@@ -4,8 +4,18 @@
   "category": "gotchas",
   "type": "gotcha",
   "summary": "The most common runtime error: you wrote a.b.c but somewhere in the chain a value was nil. FindFirstChild returns nil instead of erroring — so chains silently break. Guard each hop.",
-  "keywords": ["index nil error", "attempt to index", "nil chain", "FindFirstChild nil", "broken path"],
-  "tags": ["gotchas", "errors", "essential"],
+  "keywords": [
+    "index nil error",
+    "attempt to index",
+    "nil chain",
+    "FindFirstChild nil",
+    "broken path"
+  ],
+  "tags": [
+    "gotchas",
+    "errors",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -36,9 +46,16 @@
   "examples": [
     {
       "title": "Guarded traversal",
-      "code": "-- ❌ Explodes if Map or Spawn is missing:\n-- local p = workspace.Map.Spawn.Position\n\n-- ✅ Guard each hop:\nlocal map = workspace:FindFirstChild(\"Map\")\nlocal spawn = map and map:FindFirstChild(\"Spawn\")\nif spawn then\n    print(\"Spawn at\", spawn.Position)\nelse\n    warn(\"Map.Spawn missing — check hierarchy\")\nend\n\n-- ✅ Async arrival:\nlocal ok, part = pcall(function()\n    return workspace:WaitForChild(\"Map\", 5):WaitForChild(\"Spawn\", 5)\nend)\nif not ok then warn(\"Spawn never appeared\") end"
+      "code": "-- ❌ Explodes if Map or Spawn is missing:\n-- local p = workspace.Map.Spawn.Position\n\n-- ✅ Guard each hop:\nlocal map = workspace:FindFirstChild(\"Map\")\nlocal spawn = map and map:FindFirstChild(\"Spawn\")\nif spawn then\n    print(\"Spawn at\", spawn.Position)\nelse\n    warn(\"Map.Spawn missing — check hierarchy\")\nend\n\n-- ✅ Async arrival:\nlocal ok, part = pcall(function()\n    return workspace:WaitForChild(\"Map\", 5):WaitForChild(\"Spawn\", 5)\nend)\nif not ok then warn(\"Spawn never appeared\") end",
+      "language": "lua"
     }
   ],
-  "related": ["find-first-child", "wait-for-child", "wrong-object-paths", "replication-timing", "nil"],
+  "related": [
+    "find-first-child",
+    "wait-for-child",
+    "wrong-object-paths",
+    "replication-timing",
+    "nil"
+  ],
   "added": "2026-10-04"
 }

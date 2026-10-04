@@ -4,8 +4,17 @@
   "category": "services",
   "type": "service",
   "summary": "The canonical home for server Scripts: never replicates to clients, and Scripts here run automatically on the server at startup.",
-  "keywords": ["SSS", "where server scripts go", "server scripts run here"],
-  "tags": ["services", "containers", "security", "essential"],
+  "keywords": [
+    "SSS",
+    "where server scripts go",
+    "server scripts run here"
+  ],
+  "tags": [
+    "services",
+    "containers",
+    "security",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -46,9 +55,16 @@
   "examples": [
     {
       "title": "Clean server bootstrap",
-      "code": "-- ServerScriptService/Main (Script)\nlocal RoundManager = require(script.Parent.Modules.RoundManager)\nlocal DataManager = require(script.Parent.Modules.DataManager)\nlocal RemoteHandlers = require(script.Parent.Modules.RemoteHandlers)\n\nDataManager.init()\nRemoteHandlers.init()\nRoundManager.start()\n\nprint(\"Server systems online\")"
+      "code": "-- ServerScriptService/Main (Script)\nlocal RoundManager = require(script.Parent.Modules.RoundManager)\nlocal DataManager = require(script.Parent.Modules.DataManager)\nlocal RemoteHandlers = require(script.Parent.Modules.RemoteHandlers)\n\nDataManager.init()\nRemoteHandlers.init()\nRoundManager.start()\n\nprint(\"Server systems online\")",
+      "language": "lua"
     }
   ],
-  "related": ["script", "server-storage", "replicated-storage", "client-vs-server", "localscript-location-limits"],
+  "related": [
+    "script",
+    "server-storage",
+    "replicated-storage",
+    "client-vs-server",
+    "localscript-location-limits"
+  ],
   "added": "2026-10-04"
 }

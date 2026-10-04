@@ -4,8 +4,18 @@
   "category": "properties",
   "type": "property",
   "summary": "Whether this ScreenGui is destroyed and re-copied from StarterGui at each respawn (default TRUE). Persistent HUDs must set it false — or they vanish every death.",
-  "keywords": ["gui disappears on death", "hud resets", "respawn gui", "persistent gui", "ResetOnSpawn false"],
-  "tags": ["properties", "gui", "lifecycle"],
+  "keywords": [
+    "gui disappears on death",
+    "hud resets",
+    "respawn gui",
+    "persistent gui",
+    "ResetOnSpawn false"
+  ],
+  "tags": [
+    "properties",
+    "gui",
+    "lifecycle"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,7 +25,12 @@
   },
   "reference": {
     "properties": [
-      { "name": "ResetOnSpawn", "type": "boolean", "default": "true", "description": "When true, the engine removes this ScreenGui from PlayerGui and re-copies it from StarterGui on respawn — destroying runtime state." }
+      {
+        "name": "ResetOnSpawn",
+        "type": "boolean",
+        "default": "true",
+        "description": "When true, the engine removes this ScreenGui from PlayerGui and re-copies it from StarterGui on respawn — destroying runtime state."
+      }
     ]
   },
   "explanation": {
@@ -25,7 +40,9 @@
       "false: HUDs, inventories, minimaps — anything persistent",
       "true: per-life screens you want freshly re-copied"
     ],
-    "whenNotToUse": ["Leaving the default for persistent UI — that's the bug"],
+    "whenNotToUse": [
+      "Leaving the default for persistent UI — that's the bug"
+    ],
     "tips": [
       "Runtime-created ScreenGuis default true too — set it explicitly",
       "Also governed globally by StarterGui.ResetPlayerGuiOnSpawn"
@@ -38,9 +55,15 @@
   "examples": [
     {
       "title": "Persistent vs per-life GUIs",
-      "code": "local hud = Instance.new(\"ScreenGui\")\nhud.Name = \"HUD\"\nhud.ResetOnSpawn = false    -- survives deaths\nhud.Parent = playerGui\n\nlocal deathScreen = Instance.new(\"ScreenGui\")\ndeathScreen.Name = \"DeathScreen\"\ndeathScreen.ResetOnSpawn = true   -- fresh copy each life (default)\ndeathScreen.Enabled = false\ndeathScreen.Parent = playerGui"
+      "code": "local hud = Instance.new(\"ScreenGui\")\nhud.Name = \"HUD\"\nhud.ResetOnSpawn = false    -- survives deaths\nhud.Parent = playerGui\n\nlocal deathScreen = Instance.new(\"ScreenGui\")\ndeathScreen.Name = \"DeathScreen\"\ndeathScreen.ResetOnSpawn = true   -- fresh copy each life (default)\ndeathScreen.Enabled = false\ndeathScreen.Parent = playerGui",
+      "language": "lua"
     }
   ],
-  "related": ["screengui", "player-gui", "starter-gui", "startergui-vs-playergui"],
+  "related": [
+    "screengui",
+    "player-gui",
+    "starter-gui",
+    "startergui-vs-playergui"
+  ],
   "added": "2026-10-04"
 }

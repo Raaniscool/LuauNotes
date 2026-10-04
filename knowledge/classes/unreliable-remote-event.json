@@ -4,8 +4,23 @@
   "category": "classes",
   "type": "class",
   "summary": "The lightweight sibling of RemoteEvent: identical API (FireServer/FireClient/FireAllClients, OnServerEvent/OnClientEvent) but messages are NOT guaranteed to arrive or to arrive in order — in exchange for lower overhead. Ideal for frequent, replaceable state updates.",
-  "keywords": ["unreliable remote", "unreliable", "packet loss", "out of order", "position updates", "telemetry", "fire and forget unreliable", "reliability", "ordering"],
-  "tags": ["remotes", "networking", "client-server", "performance"],
+  "keywords": [
+    "unreliable remote",
+    "unreliable",
+    "packet loss",
+    "out of order",
+    "position updates",
+    "telemetry",
+    "fire and forget unreliable",
+    "reliability",
+    "ordering"
+  ],
+  "tags": [
+    "remotes",
+    "networking",
+    "client-server",
+    "performance"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,13 +30,33 @@
   },
   "reference": {
     "methods": [
-      { "name": "FireServer", "signature": "UnreliableRemoteEvent:FireServer(...: any)", "description": "Client only. Sends an unreliable message to the server. Same argument rules as RemoteEvent." },
-      { "name": "FireClient", "signature": "UnreliableRemoteEvent:FireClient(player: Player, ...: any)", "description": "Server only. Sends an unreliable message to one player." },
-      { "name": "FireAllClients", "signature": "UnreliableRemoteEvent:FireAllClients(...: any)", "description": "Server only. Broadcasts an unreliable message to all players." }
+      {
+        "name": "FireServer",
+        "signature": "UnreliableRemoteEvent:FireServer(...: any)",
+        "description": "Client only. Sends an unreliable message to the server. Same argument rules as RemoteEvent."
+      },
+      {
+        "name": "FireClient",
+        "signature": "UnreliableRemoteEvent:FireClient(player: Player, ...: any)",
+        "description": "Server only. Sends an unreliable message to one player."
+      },
+      {
+        "name": "FireAllClients",
+        "signature": "UnreliableRemoteEvent:FireAllClients(...: any)",
+        "description": "Server only. Broadcasts an unreliable message to all players."
+      }
     ],
     "events": [
-      { "name": "OnServerEvent", "signature": "UnreliableRemoteEvent.OnServerEvent:Connect(function(player: Player, ...: any) end)", "description": "Server only. Fires for each message that DOES arrive from a client. The Player is always the first parameter, exactly like RemoteEvent." },
-      { "name": "OnClientEvent", "signature": "UnreliableRemoteEvent.OnClientEvent:Connect(function(...: any) end)", "description": "Client only. Fires for each message that DOES arrive from the server." }
+      {
+        "name": "OnServerEvent",
+        "signature": "UnreliableRemoteEvent.OnServerEvent:Connect(function(player: Player, ...: any) end)",
+        "description": "Server only. Fires for each message that DOES arrive from a client. The Player is always the first parameter, exactly like RemoteEvent."
+      },
+      {
+        "name": "OnClientEvent",
+        "signature": "UnreliableRemoteEvent.OnClientEvent:Connect(function(...: any) end)",
+        "description": "Client only. Fires for each message that DOES arrive from the server."
+      }
     ],
     "details": [
       {
@@ -77,14 +112,25 @@
       "description": "Send full snapshots at a capped rate from Heartbeat, not per physics step.",
       "code": "-- == LocalScript ==\nlocal RunService = game:GetService(\"RunService\")\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal posRemote = ReplicatedStorage:WaitForChild(\"CustomPosition\")\n\nlocal player = game.Players.LocalPlayer\nlocal lastSent = 0\n\nRunService.Heartbeat:Connect(function()\n    local now = os.clock()\n    if now - lastSent < 0.1 then return end   -- ~10 updates/second max\n    lastSent = now\n\n    local root = player.Character and player.Character:FindFirstChild(\"HumanoidRootPart\")\n    if not root then return end\n\n    -- FULL state + timestamp: dropped messages never corrupt anything\n    posRemote:FireServer(root.Position, now)\nend)\n\n-- == Script (server) ==\nposRemote.OnServerEvent:Connect(function(player, position, timestamp)\n    if typeof(position) ~= \"Vector3\" or typeof(timestamp) ~= \"number\" then return end\n    player:SetAttribute(\"ReportedPosition\", position)\n    -- (a real anti-cheat would sanity-check distance from server truth)\nend)",
       "whyItWorks": "Every message is a complete, timestamped snapshot. If the network drops half of them, the receiver simply applies the newest one that arrives — no gaps, no drift.",
-      "commonMistake": "Sending `root.Position` 60+ times a second unthrottled. Unreliable sends are throttled anyway; coalescing keeps bandwidth sane."
+      "commonMistake": "Sending `root.Position` 60+ times a second unthrottled. Unreliable sends are throttled anyway; coalescing keeps bandwidth sane.",
+      "language": "lua"
     },
     {
       "title": "Why NOT: a one-shot event over unreliable",
       "code": "-- ❌ BAD: critical event on an unreliable remote\nchatRemote:FireServer(\"Hello everyone!\")   -- may simply never arrive\n\n-- ✅ GOOD: reliable RemoteEvent for chat, damage, purchases\nchatRemote:FireServer(\"Hello everyone!\")    -- RemoteEvent: guaranteed delivery",
-      "commonMistake": "Players report 'my chat messages sometimes don't send'. Cause: an UnreliableRemoteEvent carrying one-shot events."
+      "commonMistake": "Players report 'my chat messages sometimes don't send'. Cause: an UnreliableRemoteEvent carrying one-shot events.",
+      "language": "lua"
     }
   ],
-  "related": ["remote-event", "remote-function", "fire-server", "on-server-event", "remote-parameter-rules", "client-vs-server", "heartbeat", "serialization"],
+  "related": [
+    "remote-event",
+    "remote-function",
+    "fire-server",
+    "on-server-event",
+    "remote-parameter-rules",
+    "client-vs-server",
+    "heartbeat",
+    "serialization"
+  ],
   "added": "2026-10-04"
 }

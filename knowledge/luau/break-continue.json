@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "keyword",
   "summary": "Loop control: `break` exits the loop immediately; `continue` (Luau) skips the rest of the current iteration and jumps to the next one.",
-  "keywords": ["exit loop", "skip iteration", "stop looping", "continue statement"],
-  "tags": ["basics", "loops", "control-flow"],
+  "keywords": [
+    "exit loop",
+    "skip iteration",
+    "stop looping",
+    "continue statement"
+  ],
+  "tags": [
+    "basics",
+    "loops",
+    "control-flow"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -53,9 +62,15 @@
   "examples": [
     {
       "title": "Find the first matching part",
-      "code": "local found = nil\nfor _, child in workspace:GetChildren() do\n    if not child:IsA(\"BasePart\") then continue end\n    if child.Name == \"GoldenCoin\" then\n        found = child\n        break   -- no need to keep scanning\n    end\nend\nprint(found and `Found at {found.Position}` or \"Not found\")"
+      "code": "local found = nil\nfor _, child in workspace:GetChildren() do\n    if not child:IsA(\"BasePart\") then continue end\n    if child.Name == \"GoldenCoin\" then\n        found = child\n        break   -- no need to keep scanning\n    end\nend\nprint(found and `Found at {found.Position}` or \"Not found\")",
+      "language": "lua"
     }
   ],
-  "related": ["while-loops", "numeric-for-loops", "generic-for-loops", "if-statements"],
+  "related": [
+    "while-loops",
+    "numeric-for-loops",
+    "generic-for-loops",
+    "if-statements"
+  ],
   "added": "2026-10-04"
 }

@@ -4,8 +4,18 @@
   "category": "luau",
   "type": "overview",
   "summary": "The kinds of values Luau can store: nil, boolean, number, string, table, function, thread, plus Roblox types like Instance, Vector3, CFrame, and Enum.",
-  "keywords": ["typeof", "type()", "what type", "primitive types", "value types"],
-  "tags": ["basics", "types", "overview"],
+  "keywords": [
+    "typeof",
+    "type()",
+    "what type",
+    "primitive types",
+    "value types"
+  ],
+  "tags": [
+    "basics",
+    "types",
+    "overview"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -56,13 +66,23 @@
     {
       "title": "Inspecting types with typeof()",
       "code": "print(typeof(nil))                    --> nil\nprint(typeof(true))                   --> boolean\nprint(typeof(42))                     --> number\nprint(typeof(\"hi\"))                   --> string\nprint(typeof({}))                     --> table\nprint(typeof(print))                  --> function\nprint(typeof(workspace) )             --> Instance\nprint(typeof(Vector3.new(0,0,0)))     --> Vector3\nprint(typeof(Enum.HumanoidRig))       --> Enum",
-      "whyItWorks": "`typeof()` returns a string naming the value's type, including Roblox engine types."
+      "whyItWorks": "`typeof()` returns a string naming the value's type, including Roblox engine types.",
+      "language": "lua"
     },
     {
       "title": "Guarding with a type check",
-      "code": "local function double(value)\n    if typeof(value) ~= \"number\" then\n        warn(\"double() expected a number, got \" .. typeof(value))\n        return nil\n    end\n    return value * 2\nend\n\nprint(double(21))     --> 42\nprint(double(\"hi\"))   --> nil (with a warning)"
+      "code": "local function double(value)\n    if typeof(value) ~= \"number\" then\n        warn(\"double() expected a number, got \" .. typeof(value))\n        return nil\n    end\n    return value * 2\nend\n\nprint(double(21))     --> 42\nprint(double(\"hi\"))   --> nil (with a warning)",
+      "language": "lua"
     }
   ],
-  "related": ["nil", "booleans", "numbers", "strings", "tables", "type-checking", "truthiness"],
+  "related": [
+    "nil",
+    "booleans",
+    "numbers",
+    "strings",
+    "tables",
+    "type-checking",
+    "truthiness"
+  ],
   "added": "2026-10-04"
 }

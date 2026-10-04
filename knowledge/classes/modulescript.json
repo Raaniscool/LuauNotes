@@ -4,8 +4,20 @@
   "category": "classes",
   "type": "class",
   "summary": "A reusable code container that returns a value when loaded with require(). The backbone of organized Roblox projects: shared utilities, singletons, classes, and config all live in modules.",
-  "keywords": ["module", "require", "reusable code", "return a table", "library script", "shared code"],
-  "tags": ["modulescripts", "modules", "essential", "architecture"],
+  "keywords": [
+    "module",
+    "require",
+    "reusable code",
+    "return a table",
+    "library script",
+    "shared code"
+  ],
+  "tags": [
+    "modulescripts",
+    "modules",
+    "essential",
+    "architecture"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,8 +27,16 @@
   },
   "reference": {
     "properties": [
-      { "name": "Source", "type": "string", "description": "The module's Luau code, editable via Studio or the API (server only for protected contexts)." },
-      { "name": "LinkedSource", "type": "Content", "description": "Optional asset reference to shared module code." }
+      {
+        "name": "Source",
+        "type": "string",
+        "description": "The module's Luau code, editable via Studio or the API (server only for protected contexts)."
+      },
+      {
+        "name": "LinkedSource",
+        "type": "Content",
+        "description": "Optional asset reference to shared module code."
+      }
     ],
     "details": [
       {
@@ -70,13 +90,23 @@
     {
       "title": "The classic module + require",
       "code": "-- == ReplicatedStorage/Greeter (ModuleScript) ==\nlocal Greeter = {}\n\nfunction Greeter.hello(name)\n    return \"Hello, \" .. name .. \"!\"\nend\n\nreturn Greeter\n\n-- == Any Script or LocalScript ==\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\nlocal Greeter = require(ReplicatedStorage:WaitForChild(\"Greeter\"))\n\nprint(Greeter.hello(\"Raanis\"))   --> Hello, Raanis!",
-      "whyItWorks": "require() runs the module once and returns its table. Every script that requires Greeter gets the same table — one definition, many users."
+      "whyItWorks": "require() runs the module once and returns its table. Every script that requires Greeter gets the same table — one definition, many users.",
+      "language": "lua"
     },
     {
       "title": "Module as shared config",
-      "code": "-- == ReplicatedStorage/GameConfig (ModuleScript) ==\nreturn {\n    RoundLength = 120,\n    MaxPlayers = 12,\n    CoinValue = 5,\n}\n\n-- Server Script:\nlocal config = require(game.ReplicatedStorage.GameConfig)\nprint(config.RoundLength)   --> 120\n-- Client sees the same numbers — single source of truth."
+      "code": "-- == ReplicatedStorage/GameConfig (ModuleScript) ==\nreturn {\n    RoundLength = 120,\n    MaxPlayers = 12,\n    CoinValue = 5,\n}\n\n-- Server Script:\nlocal config = require(game.ReplicatedStorage.GameConfig)\nprint(config.RoundLength)   --> 120\n-- Client sees the same numbers — single source of truth.",
+      "language": "lua"
     }
   ],
-  "related": ["require", "modules", "script", "localscript", "return", "module-return-mistakes", "metatables"],
+  "related": [
+    "require",
+    "modules",
+    "script",
+    "localscript",
+    "return",
+    "module-return-mistakes",
+    "metatables"
+  ],
   "added": "2026-10-04"
 }

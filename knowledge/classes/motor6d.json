@@ -4,8 +4,21 @@
   "category": "classes",
   "type": "class",
   "summary": "A joint that connects two parts with a controllable transform — the joint type used in character rigs and animations. C0/C1 define rest poses; animating Transform (or via Animations) rotates limbs.",
-  "keywords": ["joint", "rig", "animation joint", "C0 C1", "Transform", "limb rotation", "character rig"],
-  "tags": ["classes", "physics", "animation", "advanced"],
+  "keywords": [
+    "joint",
+    "rig",
+    "animation joint",
+    "C0 C1",
+    "Transform",
+    "limb rotation",
+    "character rig"
+  ],
+  "tags": [
+    "classes",
+    "physics",
+    "animation",
+    "advanced"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,11 +28,31 @@
   },
   "reference": {
     "properties": [
-      { "name": "Part0 / Part1", "type": "BasePart", "description": "The two joined parts (Part0 is the 'parent' side in a rig)." },
-      { "name": "C0 / C1", "type": "CFrame", "description": "The joint's anchor CFrames relative to Part0 and Part1. They define how the parts sit at rest." },
-      { "name": "Transform", "type": "CFrame", "description": "The current joint rotation/offset between the C0 and C1 anchors — animations drive this." },
-      { "name": "DesiredAngle / MaxVelocity / CurrentAngle", "type": "number", "description": "Legacy motor controls (mostly superseded by Animations)." },
-      { "name": "Enabled", "type": "boolean", "description": "Joint on/off." }
+      {
+        "name": "Part0 / Part1",
+        "type": "BasePart",
+        "description": "The two joined parts (Part0 is the 'parent' side in a rig)."
+      },
+      {
+        "name": "C0 / C1",
+        "type": "CFrame",
+        "description": "The joint's anchor CFrames relative to Part0 and Part1. They define how the parts sit at rest."
+      },
+      {
+        "name": "Transform",
+        "type": "CFrame",
+        "description": "The current joint rotation/offset between the C0 and C1 anchors — animations drive this."
+      },
+      {
+        "name": "DesiredAngle / MaxVelocity / CurrentAngle",
+        "type": "number",
+        "description": "Legacy motor controls (mostly superseded by Animations)."
+      },
+      {
+        "name": "Enabled",
+        "type": "boolean",
+        "description": "Joint on/off."
+      }
     ],
     "details": [
       {
@@ -55,9 +88,16 @@
   "examples": [
     {
       "title": "Simple two-part joint",
-      "code": "local base = workspace.ArmBase\nlocal arm = workspace.ArmPart\n\nlocal joint = Instance.new(\"Motor6D\")\njoint.Part0 = base\njoint.Part1 = arm\n-- Anchor the joint at the top of the base / bottom of the arm:\njoint.C0 = CFrame.new(0, base.Size.Y / 2, 0)\njoint.C1 = CFrame.new(0, -arm.Size.Y / 2, 0)\njoint.Parent = base\n\n-- Later: swing the arm\njoint.Transform = CFrame.Angles(math.rad(45), 0, 0)"
+      "code": "local base = workspace.ArmBase\nlocal arm = workspace.ArmPart\n\nlocal joint = Instance.new(\"Motor6D\")\njoint.Part0 = base\njoint.Part1 = arm\n-- Anchor the joint at the top of the base / bottom of the arm:\njoint.C0 = CFrame.new(0, base.Size.Y / 2, 0)\njoint.C1 = CFrame.new(0, -arm.Size.Y / 2, 0)\njoint.Parent = base\n\n-- Later: swing the arm\njoint.Transform = CFrame.Angles(math.rad(45), 0, 0)",
+      "language": "lua"
     }
   ],
-  "related": ["weldconstraint", "attachment", "animation", "animator", "humanoid"],
+  "related": [
+    "weldconstraint",
+    "attachment",
+    "animation",
+    "animator",
+    "humanoid"
+  ],
   "added": "2026-10-04"
 }

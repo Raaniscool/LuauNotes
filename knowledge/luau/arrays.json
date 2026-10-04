@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "concept",
   "summary": "Tables with consecutive integer keys starting at 1: ordered lists. Players in a queue, loot drops, waypoints — if order matters, it's an array.",
-  "keywords": ["list", "sequence", "ordered table", "array index"],
-  "tags": ["basics", "tables", "arrays"],
+  "keywords": [
+    "list",
+    "sequence",
+    "ordered table",
+    "array index"
+  ],
+  "tags": [
+    "basics",
+    "tables",
+    "arrays"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -57,13 +66,21 @@
     {
       "title": "A simple queue",
       "code": "local queue = {}\n\ntable.insert(queue, \"Alice\")   -- join the back\ntable.insert(queue, \"Bob\")\n\nlocal next = table.remove(queue, 1)   -- serve the front\nprint(next)        --> Alice\nprint(queue[1])    --> Bob",
-      "whyItWorks": "`table.insert(t, v)` appends; `table.remove(t, 1)` takes the front and shifts everyone forward."
+      "whyItWorks": "`table.insert(t, v)` appends; `table.remove(t, 1)` takes the front and shifts everyone forward.",
+      "language": "lua"
     },
     {
       "title": "Removing safely while looping",
-      "code": "local enemies = { \"Goblin\", \"Slime\", \"Goblin\", \"Bat\" }\n\n-- WRONG: for i = 1, #enemies do ... table.remove(enemies, i) — skips items!\n-- RIGHT: walk backwards\nfor i = #enemies, 1, -1 do\n    if enemies[i] == \"Goblin\" then\n        table.remove(enemies, i)\n    end\nend\n\nprint(table.concat(enemies, \", \"))   --> Slime, Bat"
+      "code": "local enemies = { \"Goblin\", \"Slime\", \"Goblin\", \"Bat\" }\n\n-- WRONG: for i = 1, #enemies do ... table.remove(enemies, i) — skips items!\n-- RIGHT: walk backwards\nfor i = #enemies, 1, -1 do\n    if enemies[i] == \"Goblin\" then\n        table.remove(enemies, i)\n    end\nend\n\nprint(table.concat(enemies, \", \"))   --> Slime, Bat",
+      "language": "lua"
     }
   ],
-  "related": ["tables", "dictionaries", "table-operations", "one-based-indexing", "ipairs"],
+  "related": [
+    "tables",
+    "dictionaries",
+    "table-operations",
+    "one-based-indexing",
+    "ipairs"
+  ],
   "added": "2026-10-04"
 }

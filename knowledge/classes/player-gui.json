@@ -4,8 +4,17 @@
   "category": "classes",
   "type": "class",
   "summary": "Each player's LIVE GUI container: at spawn, StarterGui's contents are copied here, and this copy is what actually renders on screen. All runtime GUI changes happen here.",
-  "keywords": ["live gui", "gui on screen", "where gui renders", "player gui vs starter gui"],
-  "tags": ["classes", "gui", "essential"],
+  "keywords": [
+    "live gui",
+    "gui on screen",
+    "where gui renders",
+    "player gui vs starter gui"
+  ],
+  "tags": [
+    "classes",
+    "gui",
+    "essential"
+  ],
   "verification": {
     "status": "verified",
     "source": "Roblox Creator Documentation",
@@ -15,9 +24,21 @@
   },
   "reference": {
     "properties": [
-      { "name": "ScreenOrientation", "type": "Enum.ScreenOrientation", "description": "Forced orientation on mobile." },
-      { "name": "GuiInset", "type": "Vector2", "description": "Safe-area insets (notches etc.)." },
-      { "name": "TopbarTransparency", "type": "number", "description": "Roblox topbar transparency." }
+      {
+        "name": "ScreenOrientation",
+        "type": "Enum.ScreenOrientation",
+        "description": "Forced orientation on mobile."
+      },
+      {
+        "name": "GuiInset",
+        "type": "Vector2",
+        "description": "Safe-area insets (notches etc.)."
+      },
+      {
+        "name": "TopbarTransparency",
+        "type": "number",
+        "description": "Roblox topbar transparency."
+      }
     ],
     "details": [
       {
@@ -57,9 +78,16 @@
   "examples": [
     {
       "title": "Runtime GUI, the right way",
-      "code": "-- LocalScript\nlocal Players = game:GetService(\"Players\")\nlocal playerGui = Players.LocalPlayer:WaitForChild(\"PlayerGui\")\n\nlocal gui = Instance.new(\"ScreenGui\")\ngui.Name = \"RuntimeHUD\"\ngui.ResetOnSpawn = false\n\nlocal label = Instance.new(\"TextLabel\")\nlabel.Size = UDim2.fromOffset(300, 50)\nlabel.Position = UDim2.fromScale(0.5, 0)\nlabel.Text = \"Hello from PlayerGui!\"\nlabel.Parent = gui\n\ngui.Parent = playerGui   -- appears immediately on screen"
+      "code": "-- LocalScript\nlocal Players = game:GetService(\"Players\")\nlocal playerGui = Players.LocalPlayer:WaitForChild(\"PlayerGui\")\n\nlocal gui = Instance.new(\"ScreenGui\")\ngui.Name = \"RuntimeHUD\"\ngui.ResetOnSpawn = false\n\nlocal label = Instance.new(\"TextLabel\")\nlabel.Size = UDim2.fromOffset(300, 50)\nlabel.Position = UDim2.fromScale(0.5, 0)\nlabel.Text = \"Hello from PlayerGui!\"\nlabel.Parent = gui\n\ngui.Parent = playerGui   -- appears immediately on screen",
+      "language": "lua"
     }
   ],
-  "related": ["startergui-vs-playergui", "starter-gui", "screengui", "gui-hierarchy-requirements", "localscript"],
+  "related": [
+    "startergui-vs-playergui",
+    "starter-gui",
+    "screengui",
+    "gui-hierarchy-requirements",
+    "localscript"
+  ],
   "added": "2026-10-04"
 }

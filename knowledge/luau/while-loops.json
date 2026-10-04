@@ -4,8 +4,17 @@
   "category": "luau",
   "type": "keyword",
   "summary": "`while condition do ... end` repeats a block as long as the condition is true. Check happens before each iteration — zero iterations if the condition starts false.",
-  "keywords": ["loop", "repeat while", "infinite loop", "run every frame"],
-  "tags": ["basics", "loops", "control-flow"],
+  "keywords": [
+    "loop",
+    "repeat while",
+    "infinite loop",
+    "run every frame"
+  ],
+  "tags": [
+    "basics",
+    "loops",
+    "control-flow"
+  ],
   "verification": {
     "status": "verified",
     "source": "Luau documentation",
@@ -52,13 +61,21 @@
   "examples": [
     {
       "title": "Waiting for something to exist",
-      "code": "-- Poll until the part appears (see also: WaitForChild)\nlocal part\nwhile not part do\n    part = workspace:FindFirstChild(\"TreasureChest\")\n    task.wait(0.2)\nend\nprint(\"Found it:\", part.Name)"
+      "code": "-- Poll until the part appears (see also: WaitForChild)\nlocal part\nwhile not part do\n    part = workspace:FindFirstChild(\"TreasureChest\")\n    task.wait(0.2)\nend\nprint(\"Found it:\", part.Name)",
+      "language": "lua"
     },
     {
       "title": "A round timer",
-      "code": "local timeLeft = 30\nlocal roundActive = true\n\nwhile roundActive and timeLeft > 0 do\n    print(`Time left: {timeLeft}`)\n    timeLeft -= 1\n    task.wait(1)\nend\n\nprint(if timeLeft <= 0 then \"Round over!\" else \"Round ended early\")"
+      "code": "local timeLeft = 30\nlocal roundActive = true\n\nwhile roundActive and timeLeft > 0 do\n    print(`Time left: {timeLeft}`)\n    timeLeft -= 1\n    task.wait(1)\nend\n\nprint(if timeLeft <= 0 then \"Round over!\" else \"Round ended early\")",
+      "language": "lua"
     }
   ],
-  "related": ["repeat-loops", "numeric-for-loops", "task-library", "heartbeat", "break-continue"],
+  "related": [
+    "repeat-loops",
+    "numeric-for-loops",
+    "task-library",
+    "heartbeat",
+    "break-continue"
+  ],
   "added": "2026-10-04"
 }

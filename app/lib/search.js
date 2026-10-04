@@ -105,7 +105,7 @@ function searchKnowledge(store, query, opts = {}) {
   const results = [];
   for (const entry of store.entries.values()) {
     if (opts.category && entry.category !== opts.category) continue;
-    const score = scoreEntry(entry, q);
+    const score = scoreEntry(entry, { ...q, text: store.searchText.get(entry.id) || "" });
     if (score > 12) {
       results.push({ entry, score });
     }

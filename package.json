@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node app/server.js",
     "dev": "node app/server.js",
-    "test": "node --test tests/",
+    "test": "node --test tests/*.test.js",
     "validate": "node app/cli.js validate",
     "stats": "node app/cli.js stats",
     "search": "node app/cli.js search"

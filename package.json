@@ -1,0 +1,26 @@
+{
+  "name": "luaunotes",
+  "version": "0.1.0",
+  "description": "LuauNotes — a complete Roblox/Luau knowledge encyclopedia, reference system, and personal learning companion.",
+  "type": "commonjs",
+  "main": "app/server.js",
+  "scripts": {
+    "start": "node app/server.js",
+    "dev": "node app/server.js",
+    "test": "node --test tests/",
+    "validate": "node app/cli.js validate",
+    "stats": "node app/cli.js stats",
+    "search": "node app/cli.js search"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "roblox",
+    "luau",
+    "knowledge-base",
+    "reference",
+    "learning"
+  ],
+  "license": "MIT"
+}

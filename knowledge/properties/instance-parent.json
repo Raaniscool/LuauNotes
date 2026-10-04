@@ -1,0 +1,55 @@
+{
+  "id": "instance-parent",
+  "title": "Instance.Parent",
+  "category": "properties",
+  "type": "property",
+  "summary": "Where an instance lives in the hierarchy. Setting it moves/replicates the object; nil removes it from the world. Destroyed instances have Parent permanently locked to nil.",
+  "keywords": ["parenting", "move object", "remove from world", "set parent", "unparent"],
+  "tags": ["properties", "instance", "replication", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "Parent", "type": "Instance?", "description": "Current container. Writing moves the instance (and triggers replication when crossing the server→client boundary rules). Destroy() locks it at nil forever." }
+    ],
+    "events": [
+      { "name": "AncestryChanged", "signature": "instance.AncestryChanged", "description": "Observe parenting changes." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "An object's address. Change the address, the object moves — into the world, into storage, or out of existence (nil).",
+    "whyItExists": "The DataModel tree IS the game; parenting is how objects enter and leave it.",
+    "whenToUse": [
+      "Spawning: build object, configure, parent LAST",
+      "Soft removal: Parent = nil keeps the object alive in memory for reuse",
+      "Moving objects between containers (e.g., tool Backpack → Character happens automatically)"
+    ],
+    "whenNotToUse": [
+      "Parenting before configuring — each property write can replicate; configure first",
+      "Parenting server-only content into replicated containers by accident"
+    ],
+    "tips": [
+      "Create→configure→parent pattern is both faster and replication-cleaner",
+      "Parent=nil is reversible; Destroy is not",
+      "Setting Parent to a destroyed instance errors ('The Parent property is locked')"
+    ],
+    "commonMistakes": [
+      "Parenting half-built objects into workspace (visible pop-in, extra replication)",
+      "Assuming Parent=nil destroyed the object — it's still in memory, still referenced",
+      "Client parenting expecting server effects — client-side parenting only affects that client"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Configure-first pattern",
+      "code": "-- ❌ Replicates half-finished state:\n-- local p = Instance.new(\"Part\"); p.Parent = workspace; p.Size = ...; p.Color = ...\n\n-- ✅ One clean arrival:\nlocal p = Instance.new(\"Part\")\np.Size = Vector3.new(4, 1, 4)\np.Anchored = true\np.Color = Color3.fromRGB(200, 50, 50)\np.Position = Vector3.new(0, 10, 0)\np.Parent = workspace   -- last!\n\n-- Soft-hide, keep alive:\np.Parent = nil\n-- Later: p.Parent = workspace   (still configured!)"
+    }
+  ],
+  "related": ["instance", "destroy", "clone", "replication", "object-lifetime", "instance-hierarchy"],
+  "added": "2026-10-04"
+}

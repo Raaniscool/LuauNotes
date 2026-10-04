@@ -1,0 +1,65 @@
+{
+  "id": "on-server-event",
+  "title": "RemoteEvent.OnServerEvent",
+  "category": "events",
+  "type": "event",
+  "summary": "Server-side event that fires when ANY client calls FireServer. The firing Player is automatically the first callback parameter — guaranteed authentic by the engine, unspoofable.",
+  "keywords": ["server receives", "player parameter", "who fired", "automatic player argument", "first parameter is player", "remote handler"],
+  "tags": ["remotes", "networking", "client-server", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/RemoteEvent",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "RemoteEvent.OnServerEvent:Connect(function(player: Player, ...args: any) end)",
+    "parameters": [
+      { "name": "player", "type": "Player", "description": "Injected by Roblox — the exact Player whose client called FireServer. Cannot be spoofed. Always first." },
+      { "name": "...args", "type": "any (serialized)", "description": "Exactly the arguments the client passed, in order. Client-controlled: always validate." }
+    ],
+    "details": [
+      {
+        "heading": "Where it works",
+        "body": "Server only (Scripts). Connecting it in a LocalScript never fires — client reception is OnClientEvent."
+      },
+      {
+        "heading": "Security posture",
+        "body": "The player identity is trustworthy; everything after it is not. Rate-limit per player and type/range-check arguments before acting."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The server's doorbell for client messages — and it always announces exactly who rang.",
+    "whyItExists": "Multiplayer games live here: every legitimate client action funnels through OnServerEvent handlers with a verified actor attached.",
+    "whenToUse": [
+      "Every client → server interaction: buying, building, abilities, chat commands",
+      "Central dispatch with a command-string first argument"
+    ],
+    "whenNotToUse": [
+      "Client-side reception — OnClientEvent",
+      "Request/response flows — RemoteFunction"
+    ],
+    "tips": [
+      "Connect handlers at server startup, BEFORE clients can fire",
+      "Validate in this exact order: identity (given) → types → ranges → cooldowns → game rules",
+      "One remote + dispatch table scales better than dozens of remotes"
+    ],
+    "commonMistakes": [
+      "Writing the callback WITHOUT the leading player parameter — every argument shifts and logic silently misreads",
+      "Trusting arguments: `local amount = args[1]` applied directly = exploiters printing money",
+      "Connecting in a LocalScript and debugging forever why nothing happens"
+    ]
+  },
+  "examples": [
+    {
+      "title": "The player parameter, demonstrated",
+      "code": "-- Client fires:\n-- remote:FireServer(\"Heal\", 50)\n\n-- Server receives:\nremote.OnServerEvent:Connect(function(player, action, amount)\n    --                  ↑ Roblox adds this!  ↑ client's arg 1  ↑ client's arg 2\n    if typeof(action) ~= \"string\" then return end\n    if typeof(amount) ~= \"number\" then return end\n\n    if action == \"Heal\" then\n        local humanoid = player.Character and player.Character:FindFirstChildOfClass(\"Humanoid\")\n        if humanoid then\n            humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + amount)\n        end\n    end\nend)",
+      "whyItWorks": "The engine supplies `player` — the handler knows WHO wants healing without the client ever sending identity data. The amount is still client-controlled, so a real game would cap/rate-limit it.",
+      "commonMistake": "Omitting `player` from the signature: function(action, amount) makes action receive the Player object instead of \"Heal\"."
+    }
+  ],
+  "related": ["remote-event", "fire-server", "on-client-event", "never-trust-the-client", "remote-parameter-rules", "server-validation", "fire-all-clients"],
+  "added": "2026-10-04"
+}

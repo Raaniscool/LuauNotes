@@ -1,0 +1,52 @@
+{
+  "id": "enum",
+  "title": "Enum & EnumItem",
+  "category": "datatypes",
+  "type": "datatype",
+  "summary": "Roblox's named-constant system: Enum.HumanoidStateType.Running, Enum.KeyCode.E, Enum.Material.Neon. An Enum is a collection; each entry is an EnumItem with Name and Value.",
+  "keywords": ["enum", "constants", "EnumItem", "KeyCode", "Material", "named values", "GetEnumItems"],
+  "tags": ["datatypes", "api", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/datatypes/Enum",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "methods": [
+      { "name": "Enum.GetEnums", "signature": "Enum:GetEnums() --> { Enum }", "description": "Every enum collection." },
+      { "name": "Enum:GetEnumItems", "signature": "Enum.KeyCode:GetEnumItems() --> { EnumItem }", "description": "Every item in one enum." }
+    ],
+    "properties": [
+      { "name": "EnumItem.Name / Value / EnumType", "type": "string / number / Enum", "description": "The item's name, underlying integer, and parent enum." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Named choices instead of magic numbers: Enum.EasingStyle.Bounce beats remembering 12.",
+    "whyItExists": "Roblox APIs take hundreds of fixed-option parameters; enums name them.",
+    "whenToUse": [
+      "Anywhere an API parameter lists options (Material, KeyCode, EasingStyle, PartType…)",
+      "Comparisons: state == Enum.HumanoidStateType.Running",
+      "Iterating options: Enum.Material:GetEnumItems()"
+    ],
+    "whenNotToUse": ["Your own option sets — plain tables/strings are simpler until you need engine interop"],
+    "tips": [
+      "Autocomplete in Studio/VSCode is the enum explorer",
+      "EnumItems compare with == safely",
+      "tostring(item) gives 'Enum.X.Y' — handy for logging"
+    ],
+    "commonMistakes": [
+      "Comparing an EnumItem to its string name: state == \"Running\" is false",
+      "Misspelling and using a wrong sibling item (silently valid code)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Enums everywhere",
+      "code": "part.Material = Enum.Material.Neon\npart.Shape = Enum.PartType.Ball\n\nif input.KeyCode == Enum.KeyCode.E then\n    print(\"E!\")\nend\n\n-- List every material:\nfor _, item in Enum.Material:GetEnumItems() do\n    print(item.Name)\nend"
+    }
+  ],
+  "related": ["data-types", "typeof-function", "user-input-service", "tween-info"],
+  "added": "2026-10-04"
+}

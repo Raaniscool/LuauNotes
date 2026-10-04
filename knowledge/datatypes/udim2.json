@@ -1,0 +1,53 @@
+{
+  "id": "udim2",
+  "title": "UDim2",
+  "category": "datatypes",
+  "type": "datatype",
+  "summary": "2D GUI size/position value combining SCALE (fraction of parent, resolution-independent) and OFFSET (pixels). UDim2.fromScale, fromOffset, or new(scaleX, offX, scaleY, offY).",
+  "keywords": ["gui size", "gui position", "scale vs offset", "responsive ui", "UDim", "fromScale", "fromOffset"],
+  "tags": ["datatypes", "gui", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/datatypes/UDim2",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "UDim2.new(xScale, xOffset, yScale, yOffset) / UDim2.fromScale(x, y) / UDim2.fromOffset(x, y)",
+    "properties": [
+      { "name": "X / Y", "type": "UDim", "description": "Each axis = { Scale, Offset }." },
+      { "name": "Width / Height", "type": "UDim", "description": "Aliases of X/Y." },
+      { "name": "AbsoluteSize / AbsolutePosition", "type": "Vector2", "description": "Resolved pixel size/position after layout (read-only)." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "GUI measurement with two dials per axis: a percentage of the parent, plus fixed pixels. Mix them freely.",
+    "whyItExists": "Screens come in every size; pure pixels break, pure percentages can't express 'exactly 300px'. Scale+Offset does both.",
+    "whenToUse": [
+      "Responsive layouts: Size = fromScale(0.5, 0.3)",
+      "Pixel-precise elements: fromOffset(300, 50)",
+      "Mixes: full width minus margins — UDim2.new(1, -20, 0, 40)"
+    ],
+    "whenNotToUse": ["World-space sizes — studs/Vector3"],
+    "mentalModel": "```text\nUDim2.new(scaleX, offX, scaleY, offY)\n          │        │\n          │        └─ pixels (fixed)\n          └─ fraction of parent (responsive)\n\n(1, -20, 0, 40) = full width minus 20px, 40px tall\n```",
+    "tips": [
+      "Design in Scale for structure, Offset for fine detail",
+      "AnchorPoint + Position Scale 0.5 = centering",
+      "AbsoluteSize tells you the resolved pixels after layout"
+    ],
+    "commonMistakes": [
+      "All-offset UIs shattering on phones",
+      "Confusing argument order: X(scale,offset) then Y(scale,offset)",
+      "Negative scale confusion: scale fractions can be negative too"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Responsive centered panel",
+      "code": "local panel = Instance.new(\"Frame\")\npanel.Size = UDim2.new(0.5, 0, 0.4, 0)      -- 50% wide, 40% tall\npanel.AnchorPoint = Vector2.new(0.5, 0.5)\npanel.Position = UDim2.fromScale(0.5, 0.5)  -- dead center\n\nlocal bar = Instance.new(\"Frame\")\nbar.Size = UDim2.new(1, -16, 0, 12)         -- full width minus 16px, 12px tall\nbar.Parent = panel"
+    }
+  ],
+  "related": ["screengui", "frame", "vector2", "gui-hierarchy-requirements"],
+  "added": "2026-10-04"
+}

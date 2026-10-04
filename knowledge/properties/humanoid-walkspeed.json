@@ -1,0 +1,53 @@
+{
+  "id": "humanoid-walkspeed",
+  "title": "Humanoid.WalkSpeed",
+  "category": "properties",
+  "type": "property",
+  "summary": "Character movement speed in studs/second (default 16). Change it for sprints, slows, and power-ups — server-side for authority. Pairs with JumpPower/JumpHeight.",
+  "keywords": ["speed boost", "sprint", "slow effect", "movement speed", "WalkSpeed change", "JumpPower"],
+  "tags": ["properties", "characters", "gameplay"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Humanoid",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "WalkSpeed", "type": "number", "default": "16", "description": "Studs per second while walking/running." },
+      { "name": "JumpPower / JumpHeight", "type": "number", "default": "50 / 7.2", "description": "Jump strength (mode chosen by UseJumpPower)." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The character's speed dial.",
+    "whyItExists": "Sprint abilities, swamp-slow zones, speed potions — all are WalkSpeed math.",
+    "whenToUse": [
+      "Buffs/debuffs: modify on the SERVER when events validate",
+      "Per-character modifiers on respawn (apply in CharacterAdded)",
+      "Zone effects (Touched + restore on TouchEnded)"
+    ],
+    "whenNotToUse": [
+      "Client-side speed hacks — the server won't trust them and movement is mostly server-owned",
+      "As the only anti-cheat: validate plausibility server-side too"
+    ],
+    "tips": [
+      "Re-apply modifiers in CharacterAdded — respawns reset to defaults",
+      "Layer buffs with a small effect system (base × multipliers) instead of raw overwrites",
+      "Sprint toggle: 16 → 24, with FOV boost for feel"
+    ],
+    "commonMistakes": [
+      "Setting WalkSpeed once and losing it on respawn",
+      "Two systems overwriting each other's values — use additive/multiplicative state",
+      "Trusting client-set speeds for server logic"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Speed pad with restore",
+      "code": "-- Server Script\nlocal pad = workspace.SpeedPad\nlocal BOOST = 32\n\npad.Touched:Connect(function(hit)\n    local character = hit.Parent\n    local humanoid = character and character:FindFirstChildOfClass(\"Humanoid\")\n    if humanoid and humanoid.WalkSpeed ~= BOOST then\n        humanoid.WalkSpeed = BOOST\n        task.delay(5, function()\n            if humanoid and humanoid.Parent then\n                humanoid.WalkSpeed = 16\n            end\n        end)\n    end\nend)"
+    }
+  ],
+  "related": ["humanoid", "character-added", "touched", "client-vs-server"],
+  "added": "2026-10-04"
+}

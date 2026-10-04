@@ -1,0 +1,46 @@
+{
+  "id": "screen-gui-reset-on-spawn",
+  "title": "ScreenGui.ResetOnSpawn",
+  "category": "properties",
+  "type": "property",
+  "summary": "Whether this ScreenGui is destroyed and re-copied from StarterGui at each respawn (default TRUE). Persistent HUDs must set it false — or they vanish every death.",
+  "keywords": ["gui disappears on death", "hud resets", "respawn gui", "persistent gui", "ResetOnSpawn false"],
+  "tags": ["properties", "gui", "lifecycle"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ScreenGui",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "ResetOnSpawn", "type": "boolean", "default": "true", "description": "When true, the engine removes this ScreenGui from PlayerGui and re-copies it from StarterGui on respawn — destroying runtime state." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The 'does my UI die with me?' switch.",
+    "whyItExists": "Some GUIs should reset per life (death screens), others must survive (HUDs, inventory).",
+    "whenToUse": [
+      "false: HUDs, inventories, minimaps — anything persistent",
+      "true: per-life screens you want freshly re-copied"
+    ],
+    "whenNotToUse": ["Leaving the default for persistent UI — that's the bug"],
+    "tips": [
+      "Runtime-created ScreenGuis default true too — set it explicitly",
+      "Also governed globally by StarterGui.ResetPlayerGuiOnSpawn"
+    ],
+    "commonMistakes": [
+      "'My HUD disappears when I die' → ResetOnSpawn was true",
+      "Rebuilding state after every respawn instead of fixing the property"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Persistent vs per-life GUIs",
+      "code": "local hud = Instance.new(\"ScreenGui\")\nhud.Name = \"HUD\"\nhud.ResetOnSpawn = false    -- survives deaths\nhud.Parent = playerGui\n\nlocal deathScreen = Instance.new(\"ScreenGui\")\ndeathScreen.Name = \"DeathScreen\"\ndeathScreen.ResetOnSpawn = true   -- fresh copy each life (default)\ndeathScreen.Enabled = false\ndeathScreen.Parent = playerGui"
+    }
+  ],
+  "related": ["screengui", "player-gui", "starter-gui", "startergui-vs-playergui"],
+  "added": "2026-10-04"
+}

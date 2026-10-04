@@ -1,0 +1,55 @@
+{
+  "id": "player-removing",
+  "title": "Players.PlayerRemoving",
+  "category": "events",
+  "type": "event",
+  "summary": "Fires just BEFORE a player leaves the server — the standard save hook. Pair with periodic saves and BindToClose; don't rely on it alone (crashes skip it).",
+  "keywords": ["player left", "leave event", "save on leave", "disconnect handling", "cleanup player"],
+  "tags": ["players", "lifecycle", "data", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Players",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Players.PlayerRemoving:Connect(function(player: Player) end)",
+    "details": [
+      {
+        "heading": "Timing",
+        "body": "Fires while the Player object still exists (character may already be gone). After it returns, the Player is removed."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The checkout counter: last chance to save and clean up before someone leaves.",
+    "whyItExists": "Data loss on exit is the classic multiplayer bug; this event is the designed countermeasure.",
+    "whenToUse": [
+      "Saving player data (DataStore writes with pcall/retry)",
+      "Cleaning up per-player objects",
+      "Broadcasting 'X left' messages"
+    ],
+    "whenNotToUse": [
+      "As the SOLE save strategy — server crashes never fire it; add periodic saves + BindToClose"
+    ],
+    "tips": [
+      "Save synchronously here (no task.delay) so it completes before removal",
+      "game:BindToClose for shutdown-time saves of everyone still present",
+      "Keep a session cache so saves are cheap table writes"
+    ],
+    "commonMistakes": [
+      "task.wait/task.delay inside the handler — the player may be gone when it resumes",
+      "Assuming the event fires on server crash — it doesn't",
+      "Reading character state after it's already destroyed — capture data earlier"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Save-on-leave with BindToClose",
+      "code": "local Players = game:GetService(\"Players\")\n\nlocal function savePlayer(player)\n    local data = sessionCache[player.UserId]\n    if not data then return end\n    local ok, err = pcall(function()\n        dataStore:SetAsync(\"Player_\" .. player.UserId, data)\n    end)\n    if not ok then warn(\"Save failed for \" .. player.Name .. \": \" .. err) end\nend\n\nPlayers.PlayerRemoving:Connect(savePlayer)\n\ngame:BindToClose(function()\n    for _, player in Players:GetPlayers() do\n        savePlayer(player)\n    end\nend)"
+    }
+  ],
+  "related": ["player-added", "players", "datastore-save-load", "pcall", "datastore-service"],
+  "added": "2026-10-04"
+}

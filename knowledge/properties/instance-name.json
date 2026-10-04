@@ -1,0 +1,50 @@
+{
+  "id": "instance-name",
+  "title": "Instance.Name",
+  "category": "properties",
+  "type": "property",
+  "summary": "An instance's display name — NOT a unique ID. Siblings can share names, names can change at runtime; use FindFirstChild for lookups and don't key critical logic on names alone.",
+  "keywords": ["name property", "renaming", "find by name", "name collisions", "GetName"],
+  "tags": ["properties", "instance", "lookup"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "Name", "type": "string", "description": "Readable name. Not guaranteed unique among siblings. Renamable at runtime (server authority for replicated instances)." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The label on an object. Convenient for humans, treacherous as a program key.",
+    "whyItExists": "Hierarchy navigation and display need names; uniqueness was never promised.",
+    "whenToUse": [
+      "Human-readable organization",
+      "FindFirstChild lookups when you control the naming",
+      "Display purposes"
+    ],
+    "whenNotToUse": [
+      "As unique identifiers — players can rename characters; builders duplicate names",
+      "For security checks ('if tool.Name == \"AdminSword\"' — clients can rename)"
+    ],
+    "tips": [
+      "For uniqueness use tags, attributes, or object references",
+      "GetFullName() gives the dot-path for debugging"
+    ],
+    "commonMistakes": [
+      "Trusting Name equality for authority",
+      "Assuming name lookups are unique — FindFirstChild returns 'the first' found, whatever that is"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Name-based lookup with caveats",
+      "code": "local chest = workspace:FindFirstChild(\"TreasureChest\")\n-- fine when YOU control naming…\n\n-- …but never base security on names:\n-- if tool.Name == \"GoldenKey\" then (client can rename!)\n-- Instead: check an attribute/tag set by the server:\n-- if tool:GetAttribute(\"IsGoldenKey\") then"
+    }
+  ],
+  "related": ["instance", "find-first-child", "attributes", "collection-service", "wrong-object-paths"],
+  "added": "2026-10-04"
+}

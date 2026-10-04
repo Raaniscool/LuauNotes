@@ -1,0 +1,39 @@
+{
+  "id": "vector2",
+  "title": "Vector2",
+  "category": "datatypes",
+  "type": "datatype",
+  "summary": "A 2D pair of numbers: X, Y. Used for screen/GUI math (mouse location, AnchorPoint, CanvasPosition) and texture coordinates.",
+  "keywords": ["2d vector", "screen coordinates", "gui math", "mouse position value"],
+  "tags": ["datatypes", "gui", "math"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/datatypes/Vector2",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Vector2.new(x: number?, y: number?) --> Vector2",
+    "properties": [
+      { "name": "X / Y", "type": "number", "description": "Components." },
+      { "name": "Magnitude / Unit", "type": "number / Vector2", "description": "Same semantics as Vector3." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Vector3's flat sibling for 2D contexts — screens and surfaces.",
+    "whyItExists": "GUIs and input are two-dimensional.",
+    "whenToUse": ["Mouse/touch positions", "AnchorPoints", "Canvas scrolling math"],
+    "whenNotToUse": ["3D spatial work — Vector3/CFrame"],
+    "tips": ["UDim2 combines Vector2-style scale+offset for GUIs"],
+    "commonMistakes": ["Mixing screen pixels with studs — convert deliberately (Camera:ScreenPointToRay)"]
+  },
+  "examples": [
+    {
+      "title": "Mouse position",
+      "code": "local UserInputService = game:GetService(\"UserInputService\")\nlocal mouse = UserInputService:GetMouseLocation()   -- Vector2 in pixels\nprint(mouse.X, mouse.Y)"
+    }
+  ],
+  "related": ["vector3", "udim2", "user-input-service", "screengui"],
+  "added": "2026-10-04"
+}

@@ -1,0 +1,51 @@
+{
+  "id": "part-anchored",
+  "title": "Part.Anchored",
+  "category": "properties",
+  "type": "property",
+  "summary": "Whether physics simulation moves the part. Anchored=true: frozen in place (buildings, floors). Anchored=false: simulated — falls, rolls, gets pushed. Most 'why did my part fall' bugs are this.",
+  "keywords": ["anchored", "falls down", "physics frozen", "static part", "dynamic part"],
+  "tags": ["properties", "physics", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/BasePart",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "Anchored", "type": "boolean", "description": "true = excluded from physics simulation; position stays where set. false = simulated (gravity, forces, collisions)." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The 'nailed to the universe' switch.",
+    "whyItExists": "Worlds need both immovable architecture and physical objects; one boolean separates them.",
+    "whenToUse": [
+      "Architecture, terrain accents, spawn pads → Anchored",
+      "Projectiles, pickups, physics props → unanchored",
+      "Temporarily anchoring for placement, then unanchoring (build systems)"
+    ],
+    "whenNotToUse": [
+      "Anchoring things you want to move with physics — tween/CFrame them deliberately instead"
+    ],
+    "tips": [
+      "A model falls apart at runtime? Some part isn't anchored or welded",
+      "AssemblyRootPart determines who 'carries' an assembly — anchoring any part pins the whole welded assembly",
+      "Unanchored + CanCollide=false parts fall through the world"
+    ],
+    "commonMistakes": [
+      "Building in Studio, forgetting to anchor, and watching the build collapse on Play",
+      "Moving anchored parts with physics forces (nothing happens) — use CFrames",
+      "Network ownership confusion: unanchored parts are simulated by the server or an owning client"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Runtime spawn with correct anchoring",
+      "code": "local platform = Instance.new(\"Part\")\nplatform.Size = Vector3.new(8, 1, 8)\nplatform.Anchored = true            -- it's architecture\nplatform.Position = Vector3.new(0, 5, 0)\nplatform.Parent = workspace\n\nlocal crate = Instance.new(\"Part\")\ncrate.Size = Vector3.new(2, 2, 2)\ncrate.Anchored = false              -- it's a physics prop\ncrate.Position = Vector3.new(0, 12, 0)\ncrate.Parent = workspace            -- falls onto the platform"
+    }
+  ],
+  "related": ["part", "weldconstraint", "model", "moving-models", "position-vs-cframe"],
+  "added": "2026-10-04"
+}

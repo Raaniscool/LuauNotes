@@ -1,0 +1,63 @@
+{
+  "id": "vector3",
+  "title": "Vector3",
+  "category": "datatypes",
+  "type": "datatype",
+  "summary": "A 3D point or direction: X, Y, Z. Positions, sizes, velocities, offsets — the fundamental spatial value. Supports arithmetic, Magnitude, Unit, Lerp, Dot/Cross products.",
+  "keywords": ["3d vector", "position value", "X Y Z", "Magnitude", "Unit", "direction", "lerp", "distance"],
+  "tags": ["datatypes", "math", "spatial", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/datatypes/Vector3",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Vector3.new(x: number?, y: number?, z: number?) --> Vector3",
+    "methods": [
+      { "name": "Vector3.new", "signature": "Vector3.new(x, y, z)", "description": "Constructor (defaults 0,0,0)." },
+      { "name": "Magnitude / Unit", "signature": "v.Magnitude --> number / v.Unit --> Vector3", "description": "Length of the vector / same direction with length 1." },
+      { "name": "Lerp", "signature": "v:Lerp(goal: Vector3, alpha: number) --> Vector3", "description": "Interpolate toward goal (alpha 0–1)." },
+      { "name": "Dot / Cross", "signature": "v:Dot(other) --> number / v:Cross(other) --> Vector3", "description": "Dot: alignment (-1..1 scaled by lengths). Cross: perpendicular vector." },
+      { "name": "FuzzyEq", "signature": "v:FuzzyEq(other, epsilon?) --> boolean", "description": "Approximate equality — use instead of == for floats." }
+    ],
+    "properties": [
+      { "name": "X / Y / Z", "type": "number", "description": "The three components. Y is UP in Roblox." },
+      { "name": "Vector3.zero / one", "type": "Vector3", "description": "Constants (0,0,0) and (1,1,1)." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Three numbers with spatial meaning: where something is, which way it points, or how fast it moves.",
+    "whyItExists": "A 3D world needs a 3D number. Everything spatial flows through Vector3.",
+    "whenToUse": [
+      "Positions and offsets: part.Position + Vector3.new(0, 5, 0)",
+      "Directions: (target.Position - origin).Unit",
+      "Distance checks: (a.Position - b.Position).Magnitude < 20",
+      "Velocities and forces"
+    ],
+    "whenNotToUse": [
+      "When orientation matters too — CFrame combines position + rotation",
+      "Storing unrelated triples of numbers — a table is clearer"
+    ],
+    "mentalModel": "```text\nVector3.new(x, y, z)\n        ↑        ↑\n     sideways   Y is UP!\n\nb - a           = vector from a to b\n(b - a).Magnitude = distance between\n(b - a).Unit      = direction a→b\n```",
+    "tips": [
+      "Distance WITHOUT sqrt: compare MagnitudeSquared against range² (faster)",
+      "Directions: always normalize with .Unit before scaling",
+      "Lerp for smooth follows: pos = pos:Lerp(goal, alpha)"
+    ],
+    "commonMistakes": [
+      "Using == for equality — float precision; use FuzzyEq or tolerance",
+      "Forgetting Y is up (not Z like some engines)",
+      "Adding to Position without considering orientation — CFrame math for facing-aware offsets"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Distance + direction idioms",
+      "code": "local a = workspace.PartA.Position\nlocal b = workspace.PartB.Position\n\nlocal offset = b - a\nlocal distance = offset.Magnitude\nlocal direction = offset.Unit          -- normalized\n\nprint(`{distance} studs apart`)\n\nif distance < 10 then\n    print(\"Close!\")\nend\n\n-- Move 5 studs toward B:\nlocal step = a + direction * 5"
+    }
+  ],
+  "related": ["cframe", "vector2", "position-vs-cframe", "part", "math-library"],
+  "added": "2026-10-04"
+}

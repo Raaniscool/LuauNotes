@@ -1,0 +1,62 @@
+{
+  "id": "render-stepped",
+  "title": "RunService.RenderStepped",
+  "category": "events",
+  "type": "event",
+  "summary": "Client-only event firing just before each rendered frame — the only place guaranteed to sync with what the player sees. Camera updates and aim smoothing live here. Never on the server.",
+  "keywords": ["before render", "camera update", "client frame", "smooth aim", "render loop"],
+  "tags": ["loop", "timing", "client", "camera"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/RunService",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "RunService.RenderStepped:Connect(function(deltaTime: number) end)",
+    "details": [
+      {
+        "heading": "Client only",
+        "body": "Never fires on the server (there's no rendering). Code guarded by RenderStepped connections must be client-reachable."
+      },
+      {
+        "heading": "Frame-critical",
+        "body": "Work here directly delays the frame being drawn — heavy RenderStepped handlers visibly drop FPS. Also consider BindToRenderStep with priorities."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The last possible moment before pixels: perfect for anything that must align with the visible frame.",
+    "whyItExists": "Camera math done in Heartbeat can lag one frame behind rendering; RenderStepped removes that gap.",
+    "whenToUse": [
+      "Custom cameras (CFrame writes)",
+      "Aim/look smoothing, recoil",
+      "Visual-only per-frame effects",
+      "Anything measured against 'what the player sees right now'"
+    ],
+    "whenNotToUse": [
+      "Server logic — doesn't exist there",
+      "Gameplay state changes (keep those in Heartbeat or events)",
+      "Heavy computation — it taxes the frame directly"
+    ],
+    "tips": [
+      "BindToRenderStep for ordered camera systems with named priorities",
+      "Disconnect when the effect ends",
+      "Don't mix RenderStepped movement with physics simulation of the same object"
+    ],
+    "commonMistakes": [
+      "Connecting RenderStepped in a Script (server) and wondering why it never fires",
+      "Doing expensive work every frame 'because it's smooth'",
+      "Forgetting to scale by dt like everywhere else"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Camera look-at smoothing",
+      "code": "local RunService = game:GetService(\"RunService\")\nlocal camera = workspace.CurrentCamera\nlocal target = workspace.Beacon\n\nlocal conn\nconn = RunService.RenderStepped:Connect(function(dt)\n    local current = camera.CFrame\n    local goal = CFrame.lookAt(current.Position, target.Position)\n    camera.CFrame = current:Lerp(goal, math.min(1, dt * 5))\nend)\n\n-- later: conn:Disconnect()"
+    }
+  ],
+  "related": ["run-service", "heartbeat", "camera", "event-cleanup"],
+  "added": "2026-10-04"
+}

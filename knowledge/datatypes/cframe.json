@@ -1,0 +1,75 @@
+{
+  "id": "cframe",
+  "title": "CFrame",
+  "category": "datatypes",
+  "type": "datatype",
+  "summary": "Coordinate Frame: position AND orientation in one value. The right tool for placing, moving, and rotating parts and cameras. Built via CFrame.new, lookAt, Angles; composed with multiplication.",
+  "keywords": ["coordinate frame", "position and rotation", "orientation", "lookAt", "Angles", "LookVector", "multiply cframes", "rotate part"],
+  "tags": ["datatypes", "math", "spatial", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/datatypes/CFrame",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "CFrame.new(x, y, z) / CFrame.lookAt(position, target) / CFrame.Angles(rx, ry, rz)",
+    "methods": [
+      { "name": "CFrame.new", "signature": "CFrame.new(pos: Vector3) / CFrame.new(pos, lookAt: Vector3)", "description": "Position-only, or position facing a point." },
+      { "name": "CFrame.lookAt", "signature": "CFrame.lookAt(at: Vector3, target: Vector3, up?: Vector3) --> CFrame", "description": "Positioned at `at`, facing `target` — the clearest way to aim things." },
+      { "name": "CFrame.Angles", "signature": "CFrame.Angles(rx, ry, rz) --> CFrame", "description": "Rotation in RADIANS (wrap degrees with math.rad)." },
+      { "name": "Lerp", "signature": "cf:Lerp(goal: CFrame, alpha: number) --> CFrame", "description": "Interpolate position+rotation smoothly." },
+      { "name": "ToWorldSpace / ToObjectSpace", "signature": "cf:ToWorldSpace(localCF: CFrame) --> CFrame", "description": "Convert between the frame's local space and world space." },
+      { "name": "PointToWorldSpace / VectorToWorldSpace", "signature": "cf:PointToWorldSpace(point: Vector3) --> Vector3", "description": "Transform points/directions through this frame." }
+    ],
+    "properties": [
+      { "name": "Position", "type": "Vector3", "description": "The translation component." },
+      { "name": "LookVector / RightVector / UpVector", "type": "Vector3", "description": "The frame's facing/side/up directions." },
+      { "name": "X / Y / Z", "type": "number", "description": "Position components directly." }
+    ],
+    "details": [
+      {
+        "heading": "Multiplication = composition",
+        "body": "`cfA * cfB` applies cfB relative to cfA's space: `part.CFrame * CFrame.new(0, 0, -5)` is 5 studs IN FRONT of the part, wherever it faces. Order matters: A*B ≠ B*A."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "A full 'pose': where you are AND which way you face. Positions are points; CFrames are points with compass directions.",
+    "whyItExists": "3D objects need rotation as much as location. One composable value handles teleporting, aiming, orbiting, and attaching.",
+    "whenToUse": [
+      "Placing/rotating parts: part.CFrame = CFrame.lookAt(pos, target)",
+      "Offsets relative to facing: cf * CFrame.new(0, 0, -3) = '3 studs in front'",
+      "Camera work and cutscenes",
+      "Smooth motion: CFrame:Lerp each frame"
+    ],
+    "whenNotToUse": [
+      "Pure distance/direction math — Vector3",
+      "Physics-driven objects you want the engine to move"
+    ],
+    "mentalModel": "```text\nCFrame = position + 3 orientation axes\n         ┌→ LookVector (forward, -Z)\n    pos ─┼→ RightVector (+X)\n         └→ UpVector (+Y)\n\ncf * offset  = offset applied in cf's local space\nA * B * C    = do C, then B, then A (right to left)\n```",
+    "tips": [
+      "math.rad(90) — Angles wants radians",
+      "lookAt for 'face that thing'; Angles for fixed tilts",
+      "Lerp alpha: clamp 0..1; framerate-independent alpha = 1 - math.exp(-rate * dt)"
+    ],
+    "commonMistakes": [
+      "Position-only changes when rotation matters — CFrame, not Vector3",
+      "Reversed multiplication order and mystery sideways offsets",
+      "Passing degrees to CFrame.Angles (silent wrongness)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Facing and relative offsets",
+      "code": "local part = workspace.Part\n\n-- Face the nearest player:\nlocal target = workspace.Dummy.Position\npart.CFrame = CFrame.lookAt(part.Position, target)\n\n-- 5 studs in front of wherever it now faces:\npart.CFrame = part.CFrame * CFrame.new(0, 0, -5)\n\n-- Tilt 45 degrees around X:\npart.CFrame = part.CFrame * CFrame.Angles(math.rad(45), 0, 0)\n\n-- Spawn point: position + face a direction\nlocal spawnCF = CFrame.lookAt(Vector3.new(0, 3, 0), Vector3.new(0, 3, -10))"
+    },
+    {
+      "title": "Smooth orbit",
+      "code": "local RunService = game:GetService(\"RunService\")\nlocal center = workspace.CenterPart\nlocal orb = workspace.Orb\n\nRunService.Heartbeat:Connect(function(dt)\n    local angle = os.clock() % (2 * math.pi)\n    local offset = Vector3.new(math.cos(angle), 0, math.sin(angle)) * 8\n    orb.CFrame = CFrame.lookAt(center.Position + offset + Vector3.new(0, 2, 0), center.Position)\nend)"
+    }
+  ],
+  "related": ["vector3", "position-vs-cframe", "camera", "moving-models", "model"],
+  "added": "2026-10-04"
+}

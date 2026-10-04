@@ -1,0 +1,56 @@
+{
+  "id": "value-base-value",
+  "title": ".Value (ValueBase objects)",
+  "category": "properties",
+  "type": "property",
+  "summary": "The stored data inside value objects — IntValue, BoolValue, StringValue, NumberValue, ObjectValue, etc. The VALUE lives in .Value; the object itself is a container. Forgetting .Value is a classic bug.",
+  "keywords": ["IntValue", "BoolValue", "StringValue", "NumberValue", ".Value property", "value objects", "forgetting value"],
+  "tags": ["properties", "values", "data", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ValueBase",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "properties": [
+      { "name": "Value", "type": "varies by class", "description": "IntValue: number (integer), NumberValue: number (float), BoolValue: boolean, StringValue: string, ObjectValue: Instance reference, Color3Value: Color3, CFrameValue, Vector3Value…" }
+    ],
+    "events": [
+      { "name": "Changed", "signature": "valueObject.Changed:Connect(function(newValue) end)", "description": "Fires when Value changes — note it passes the NEW VALUE, not a property name (unlike Instance.Changed)." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "Value objects are boxes with one slot. The slot is .Value. You almost never want the box itself — you want what's in the slot.",
+    "whyItExists": "The instance hierarchy can only hold instances; value objects wrap plain data so it can be parented, replicated, and watched with events.",
+    "whenToUse": [
+      "leaderstats entries (IntValue/NumberValue)",
+      "Replicated simple state with change events",
+      "ObjectValue for references (e.g., 'this zone belongs to that Team')"
+    ],
+    "whenNotToUse": [
+      "As your primary data model — tables in code/DataStores are usually better",
+      "Where attributes suffice — attributes cover most simple per-instance data without extra objects"
+    ],
+    "mentalModel": "```text\nCoins (IntValue)\n   └─ .Value = 50     ← the actual data\n\ncoins.Value + 1       ✔\ncoins + 1             ✘ (you're adding an instance!)\n```",
+    "tips": [
+      "leaderstats uses these: the leaderboard displays each child's .Value automatically",
+      "Changed on value objects passes the new value — different signature from Instance.Changed",
+      "Attributes often replace value objects for new projects"
+    ],
+    "commonMistakes": [
+      "Using the object instead of .Value: `label.Text = coins` instead of coins.Value",
+      "Comparing the object to a number: `if coins == 50` is always false",
+      "Creating value objects for data that could be an attribute"
+    ]
+  },
+  "examples": [
+    {
+      "title": "leaderstats IntValue in action",
+      "code": "local stats = Instance.new(\"Folder\")\nstats.Name = \"leaderstats\"\n\nlocal coins = Instance.new(\"IntValue\")\ncoins.Name = \"Coins\"\ncoins.Value = 0\ncoins.Parent = stats\nstats.Parent = player\n\n-- Reading/writing always through .Value:\ncoins.Value += 10\nprint(coins.Value)   --> 10\n\ncoins.Changed:Connect(function(newValue)\n    print(\"Coins is now\", newValue)   -- passes the VALUE\nend)"
+    }
+  ],
+  "related": ["boolvalue-vs-boolean", "forgetting-dot-value", "leaderstats", "attributes", "player"],
+  "added": "2026-10-04"
+}

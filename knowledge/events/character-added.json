@@ -1,0 +1,55 @@
+{
+  "id": "character-added",
+  "title": "Player.CharacterAdded",
+  "category": "events",
+  "type": "event",
+  "summary": "Fires every time a player's character (re)spawns — including the first spawn. The right place for per-spawn logic: connecting Died, equipping items, applying buffs.",
+  "keywords": ["respawn", "spawn event", "per-spawn setup", "character spawned", "new character"],
+  "tags": ["players", "lifecycle", "characters", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Player",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "Player.CharacterAdded:Connect(function(character: Model) end)",
+    "details": [
+      {
+        "heading": "Fresh model every time",
+        "body": "Each spawn is a NEW Model with a NEW Humanoid. Connections made on the old character do not carry over — re-wire everything per spawn."
+      }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The respawn bell. Characters die and are rebuilt constantly; this event marks each fresh body.",
+    "whyItExists": "Per-spawn setup is unavoidable (death hooks, loadouts); per-PLAYER setup isn't enough because bodies keep changing.",
+    "whenToUse": [
+      "Connecting Humanoid.Died for this character",
+      "Giving spawn equipment or applying modifiers",
+      "Respawn-position logic, spawn-protection timers"
+    ],
+    "whenNotToUse": [
+      "Once-per-session setup — that belongs in PlayerAdded"
+    ],
+    "tips": [
+      "Nested pattern: PlayerAdded → CharacterAdded → Died covers the whole lifecycle",
+      "Also check `player.Character` right after connecting — a character may already exist",
+      "Use WaitForChild inside for Humanoid if you need it immediately"
+    ],
+    "commonMistakes": [
+      "Connecting Died once in PlayerAdded — after the first death there's no hook on the new humanoid",
+      "Holding old character references across respawns",
+      "Assuming CharacterAdded fires before the character is fully loaded — WaitForChild the parts you need"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Per-spawn death hook",
+      "code": "Players.PlayerAdded:Connect(function(player)\n    player.CharacterAdded:Connect(function(character)\n        local humanoid = character:WaitForChild(\"Humanoid\")\n        humanoid.Died:Connect(function()\n            print(player.Name .. \" died — respawn incoming\")\n        end)\n\n        -- spawn loadout:\n        -- giveTool(player, \"StarterSword\")\n    end)\n\n    -- Cover the already-spawned case:\n    if player.Character then\n        -- (same setup; in real code extract to a function)\n    end\nend)"
+    }
+  ],
+  "related": ["player-added", "humanoid-died", "player", "humanoid", "players"],
+  "added": "2026-10-04"
+}

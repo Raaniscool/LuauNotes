@@ -1,0 +1,53 @@
+{
+  "id": "tween-info",
+  "title": "TweenInfo",
+  "category": "datatypes",
+  "type": "datatype",
+  "summary": "The recipe for a tween: duration, easing style/direction, repeat count, reverses, and delay. TweenInfo.new(time, EasingStyle, EasingDirection, repeatCount, reverses, delayTime).",
+  "keywords": ["tween config", "easing", "EasingStyle", "EasingDirection", "repeat", "reverses", "duration"],
+  "tags": ["datatypes", "animation", "tweening"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/datatypes/TweenInfo",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "reference": {
+    "signature": "TweenInfo.new(time?, easingStyle?, easingDirection?, repeatCount?, reverses?, delayTime?) --> TweenInfo",
+    "parameters": [
+      { "name": "time", "type": "number", "default": "1", "description": "Duration in seconds." },
+      { "name": "easingStyle", "type": "Enum.EasingStyle", "default": "Quad", "description": "Curve shape: Linear, Quad, Cubic, Sine, Bounce, Elastic, Back, Circular, Quart, Quint, Expo." },
+      { "name": "easingDirection", "type": "Enum.EasingDirection", "default": "Out", "description": "In, Out, or InOut — where the curve applies." },
+      { "name": "repeatCount", "type": "number", "default": "0", "description": "Extra repeats; -1 = infinite." },
+      { "name": "reverses", "type": "boolean", "default": "false", "description": "Ping-pong back on each repeat." },
+      { "name": "delayTime", "type": "number", "default": "0", "description": "Wait before starting." }
+    ]
+  },
+  "explanation": {
+    "whatItIs": "The motion personality settings for a tween — how long, what curve, how many times.",
+    "whyItExists": "Separating timing config from target values keeps Create() clean and configs reusable.",
+    "whenToUse": [
+      "UI polish: Quad.Out for snappy panels, Sine.InOut for gentle fades",
+      "Bounce/Elastic for game-feel pops",
+      "reverses=true + repeatCount=-1 for idle bobbing animations"
+    ],
+    "whenNotToUse": ["Linear for UI — it feels mechanical (except progress bars)"],
+    "tips": [
+      "Keep a few shared TweenInfo constants (FAST_UI, SLOW_FADE) per project",
+      "Bounce.Out on the way down feels like landing; Elastic.Out overshoots"
+    ],
+    "commonMistakes": [
+      "Arguments in the wrong order (style before direction)",
+      "Infinite loops with no stored reference to Cancel later"
+    ]
+  },
+  "examples": [
+    {
+      "title": "A menu of feels",
+      "code": "local TweenService = game:GetService(\"TweenService\")\n\nlocal snappy   = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)\nlocal gentle   = TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)\nlocal bouncy   = TweenInfo.new(0.5, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out)\nlocal forever  = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)\n\nTweenService:Create(frame, snappy, { Position = target }):Play()\nTweenService:Create(part, forever, { Position = part.Position + Vector3.new(0, 2, 0) }):Play()"
+    }
+  ],
+  "related": ["tween-service", "tween-create", "tweening", "enum"],
+  "added": "2026-10-04"
+}

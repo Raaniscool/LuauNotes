@@ -1,0 +1,48 @@
+{
+  "id": "attributes",
+  "title": "Attributes",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Custom typed key-value data attached to any instance at runtime (or in Studio): SetAttribute/GetAttribute, watched with GetAttributeChangedSignal. They replicate, validate in the Properties window, and often replace child value objects.",
+  "keywords": ["SetAttribute", "GetAttribute", "custom instance data", "attribute changed", "typed properties", "metadata"],
+  "tags": ["concepts", "data", "instance"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/Instance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Per-instance custom fields with real types — like giving any object its own typed sticky notes that replicate and can be watched.",
+    "whyItExists": "Before attributes, attaching data meant creating child value objects or parallel tables. Attributes are lighter, inspectable, and engine-managed.",
+    "whenToUse": [
+      "Gameplay flags/metadata: part:SetAttribute(\"IsTrap\", true)",
+      "Designer-editable values declared in Studio's Properties panel",
+      "Reacting to changes: GetAttributeChangedSignal(\"Health\")",
+      "Tags are for 'belongs to a set' (CollectionService); attributes for 'has a value'"
+    ],
+    "whenNotToUse": [
+      "Large/complex structures — tables aren't attributes; use children or modules",
+      "Security-critical state stored client-side — clients can read them"
+    ],
+    "tips": [
+      "Types allowed: number, string, bool, Color3, Vector2/3, CFrame, Enum, etc.",
+      "SetAttribute(nil) removes the attribute",
+      "GetAttributes() returns a dict copy of all"
+    ],
+    "commonMistakes": [
+      "Reading an unset attribute → nil (guard like any lookup)",
+      "Confusing with CollectionService tags — different tools",
+      "Expecting attribute writes from clients to reach the server (server authority)"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Trap part with attributes",
+      "code": "-- setup (server):\nlocal trap = workspace.Trap\ntrap:SetAttribute(\"Damage\", 25)\ntrap:SetAttribute(\"Cooldown\", 1.5)\n\n-- use:\nlocal dmg = trap:GetAttribute(\"Damage\") or 10\n\ntrap:GetAttributeChangedSignal(\"Damage\"):Connect(function()\n    print(\"Trap damage is now\", trap:GetAttribute(\"Damage\"))\nend)\n\nprint(trap:GetAttributes())   -- { Damage = 25, Cooldown = 1.5 }"
+    }
+  ],
+  "related": ["collection-service", "get-tagged", "value-base-value", "instance", "replication"],
+  "added": "2026-10-04"
+}

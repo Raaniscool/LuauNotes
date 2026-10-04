@@ -1,0 +1,50 @@
+{
+  "id": "frame-budgets",
+  "title": "Frame Budgets",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Each frame gives your scripts a tiny time budget — about 1/60th of a second (16.7ms) for 60 FPS. Per-frame handlers that overrun it cause lag spikes and dropped frames. Measure, throttle, and spread work out.",
+  "keywords": ["fps", "performance", "lag", "16 milliseconds", "per-frame cost", "optimize", "profiler"],
+  "tags": ["concepts", "performance"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/production/performance",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "A frame is a deadline. Physics, rendering, and YOUR code all share ~16.7ms at 60 FPS; go over and the next frame starts late — visible stutter.",
+    "whyItExists": "Games are real-time: late frames are lost frames.",
+    "whenToUse": [
+      "Budgeting Heartbeat/RenderStepped handlers to microseconds",
+      "Throttling work to every N frames or seconds",
+      "Deferring heavy work across frames (time-slicing)",
+      "Using the MicroProfiler/Stats to find real costs"
+    ],
+    "whenNotToUse": [
+      "Premature micro-optimization of rare code paths — optimize hot loops first"
+    ],
+    "mentalModel": "```text\nFrame budget @60fps ≈ 16.7ms total\n  physics + rendering + scripts share it\n\nYour Heartbeat handler: keep it UNDER A MILLISECOND.\nBig job? Slice it:\n  do 10 items per frame until done.\n```",
+    "tips": [
+      "Cache FindFirstChild results outside per-frame handlers",
+      "Accumulate dt and act every 0.2s instead of every frame",
+      "table.create + table.move beat repeated inserts for big batches",
+      "MicroProfiler (Ctrl+F6 in Studio) shows truth, not guesses"
+    ],
+    "commonMistakes": [
+      "Per-frame FindFirstChild/GetChildren allocations",
+      "Nested loops over all players × all NPCs × all parts every frame",
+      "Heavy RemoteEvent traffic per frame",
+      "Blaming 'Roblox lag' before measuring"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Throttled per-frame work",
+      "code": "local RunService = game:GetService(\"RunService\")\n\nlocal accumulator = 0\nlocal INTERVAL = 0.2   -- act every 200ms, not every frame\n\nRunService.Heartbeat:Connect(function(dt)\n    accumulator += dt\n    if accumulator >= INTERVAL then\n        accumulator = 0\n        -- expensive-ish work runs 5x/sec, not 60x/sec\n        updateOverheadStats()\n    end\nend)"
+    }
+  ],
+  "related": ["heartbeat", "render-stepped", "task-library", "debugging-workflow"],
+  "added": "2026-10-04"
+}

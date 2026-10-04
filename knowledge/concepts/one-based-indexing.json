@@ -1,0 +1,47 @@
+{
+  "id": "one-based-indexing",
+  "title": "1-Based Indexing",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Luau arrays start at 1, not 0. The first element is t[1], the last is t[#t], and loops run `for i = 1, #t`. Off-by-one bugs usually come from 0-based instincts.",
+  "keywords": ["index starts at 1", "array bounds", "off by one", "first element", "#t"],
+  "tags": ["concepts", "basics", "arrays"],
+  "verification": {
+    "status": "verified",
+    "source": "Luau documentation",
+    "sourceUrl": "https://luau.org/docs/tables",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "Array indices count 1, 2, 3… The 'zeroth' slot doesn't participate in the array part.",
+    "whyItExists": "Lua's heritage chose human counting: 'the first element' is element 1. Ecosystem consistency followed.",
+    "whenToUse": [
+      "t[1] first · t[#t] last · `for i = 1, #t`",
+      "string.sub(s, 1, 3) = first three characters (inclusive ends)",
+      "math.random(1, n) covers 1..n inclusive"
+    ],
+    "whenNotToUse": [
+      "Writing t[0] expecting the head — that's a dictionary key, not the array"
+    ],
+    "mentalModel": "```text\nitems = {\"a\", \"b\", \"c\"}\n          [1]  [2]  [3]\n\n#items = 3\nitems[#items] = \"c\"   (last)\nitems[0] = nil        (not part of the array!)\n```",
+    "tips": [
+      "Inclusive bounds everywhere: loops, sub(), random(m, n)",
+      "Cycling idiom: i = i % #list + 1",
+      "Negative string indices count from the end: s:sub(-1) = last char"
+    ],
+    "commonMistakes": [
+      "Off-by-one loops: `for i = 0, #t` overshoots with a nil at the end",
+      "Treating t[0] as special storage and confusing #t",
+      "Porting 0-based algorithms without shifting bounds"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Bounds in practice",
+      "code": "local colors = {\"red\", \"green\", \"blue\"}\n\nprint(colors[1])        --> red      (first)\nprint(colors[#colors])  --> blue     (last)\n\nfor i = 1, #colors do\n    print(i, colors[i])\nend\n\n-- Cycling:\nlocal idx = 1\nlocal function nextColor()\n    idx = idx % #colors + 1\n    return colors[idx]\nend\nprint(nextColor(), nextColor(), nextColor())   --> green blue red"
+    }
+  ],
+  "related": ["arrays", "tables", "numeric-for-loops", "string-operations"],
+  "added": "2026-10-04"
+}

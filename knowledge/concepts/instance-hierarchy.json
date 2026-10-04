@@ -1,0 +1,49 @@
+{
+  "id": "instance-hierarchy",
+  "title": "The Instance Hierarchy (DataModel)",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Everything in Roblox is an Instance parented in one giant tree rooted at game (the DataModel). Services are children of game; your content lives in their subtrees. Paths through this tree are how code finds anything.",
+  "keywords": ["datamodel", "game object", "tree structure", "parent child tree", "explorer", "object paths"],
+  "tags": ["concepts", "architecture", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/DataModel",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "One tree to rule them all: game → services → your objects → their children. The Explorer window IS this tree; your code walks it with dots, FindFirstChild, and WaitForChild.",
+    "whyItExists": "Parenting defines existence (unparented = gone), replication (which container), rendering (workspace), and lifetime (destroy cascades).",
+    "whenToUse": [
+      "Reach anything by path: game.Workspace.Map.Boss",
+      "Choose containers deliberately: what lives where defines who sees it",
+      "Use FindFirstChild/WaitForChild for unsafe/async hops",
+      "Remember Parent defines membership — reparenting moves objects between worlds"
+    ],
+    "whenNotToUse": [
+      "Deeply long paths as your primary API — fragile; pass references or use tags"
+    ],
+    "mentalModel": "```text\ngame (DataModel)\n ├─ Workspace          (the 3D world)\n ├─ Players            (the people)\n ├─ ReplicatedStorage  (shared, replicated)\n ├─ ServerStorage      (server-only)\n ├─ ServerScriptService (server code)\n ├─ StarterGui / StarterPlayer / StarterPack\n ├─ Lighting, SoundService, …\n └─ your stuff lives INSIDE these\n```",
+    "tips": [
+      "game is a global; game:GetService(\"X\") is the robust accessor",
+      "script.Parent chains from inside a script: script.Parent is its container",
+      "Services like Players are also Instances with children (each Player!)",
+      "GetFullName() prints an object's full path for debugging"
+    ],
+    "commonMistakes": [
+      "Dot-pathing through possibly-missing objects — nil crashes; guard the hops",
+      "Moving gameplay objects between containers casually (replication changes!)",
+      "Confusing the Workspace service with 'everything that exists'"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Paths and guards",
+      "code": "-- Direct (only when existence is guaranteed):\nlocal lighting = game.Lighting\n\n-- Guarded hops:\nlocal map = workspace:FindFirstChild(\"Map\")\nlocal boss = map and map:FindFirstChild(\"Boss\")\nif boss then\n    print(\"Boss found at\", boss:GetFullName())\nend\n\n-- From inside a script:\nlocal tool = script.Parent          -- if script sits in a Tool\nprint(tool:GetFullName())           -- e.g. \"Workspace.Raani.Wand\" (example)"
+    }
+  ],
+  "related": ["instance", "instance-parent", "replication", "workspace", "wrong-object-paths", "find-first-child", "wait-for-child"],
+  "added": "2026-10-04"
+}

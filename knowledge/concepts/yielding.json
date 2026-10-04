@@ -1,0 +1,48 @@
+{
+  "id": "yielding",
+  "title": "Yielding",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Pausing the current thread without blocking the game: task.wait, WaitForChild, InvokeServer, Completed:Wait all yield. Other threads keep running; the yielded one resumes later. Know which calls yield — and avoid yielding in hot paths.",
+  "keywords": ["yield", "pause thread", "blocking", "wait yields", "thread pauses", "non-blocking"],
+  "tags": ["concepts", "concurrency", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/libraries/task",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "When code yields, its thread naps at that exact line and the engine schedules it to wake up later (after time passes, an event fires, a response returns). The rest of the game never notices.",
+    "whyItExists": "Waiting is constant in games (delays, responses, loading). Yielding turns 'wait' from a freeze into a polite pause.",
+    "whenToUse": [
+      "task.wait for delays; WaitForChild for replication; InvokeServer for answers",
+      "Event:Wait() inside spawned threads for sequencing",
+      "Designing APIs: document whether YOUR functions yield"
+    ],
+    "whenNotToUse": [
+      "In RenderStepped / hot loops — a yield there stalls your frame logic",
+      "Where you need the result RIGHT NOW on the same line for rendering math"
+    ],
+    "mentalModel": "```text\nThread A:   print(\"a\")\n            task.wait(1)      ← A naps here\n            print(\"b\")        ← A wakes a second later\n\nMeanwhile: other threads, physics, rendering — all continue.\nYielding ≠ freezing. It's thread-level cooperation.\n```",
+    "tips": [
+      "If a function might yield, call it in task.spawn when you can't afford the pause",
+      "Event:Wait() is powerful for one-shot sequencing — but pair with timeouts",
+      "Chains of yields are fine; deep yield stacks are usually a design smell"
+    ],
+    "commonMistakes": [
+      "Yielding inside RenderStepped → choppy frames",
+      "Forgetting a function yields and writing frame-dependent code after it",
+      "Deadlocks: thread A waits for something only thread B can fire, while B waits for A"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Yield vs spawn",
+      "code": "-- This WHOLE handler pauses at wait:\npart.Touched:Connect(function(hit)\n    task.wait(1)               -- handler thread naps 1s\n    print(\"late:\", hit.Name)\nend)\n\n-- Keep the handler snappy; offload the waiting:\npart.Touched:Connect(function(hit)\n    task.delay(1, function()\n        print(\"delayed:\", hit.Name)\n    end)\nend)"
+    }
+  ],
+  "related": ["task-library", "coroutines", "invoke-server", "wait-for-child", "frame-budgets"],
+  "added": "2026-10-04"
+}

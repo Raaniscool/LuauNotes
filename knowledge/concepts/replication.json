@@ -1,0 +1,49 @@
+{
+  "id": "replication",
+  "title": "Replication",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "How the server's world state reaches clients: containers like ReplicatedStorage replicate automatically, property changes propagate, and clients receive copies (with streaming!). Replication is asynchronous — timing bugs come from forgetting that.",
+  "keywords": ["network replication", "what clients see", "streaming", "replicated containers", "property replication", "async arrival"],
+  "tags": ["concepts", "networking", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/reference/engine/classes/ReplicatedStorage",
+    "lastVerified": "2026-10-04",
+    "notes": "See Roblox docs on replication and streaming for authoritative details."
+  },
+  "explanation": {
+    "whatItIs": "The automatic pipeline copying (parts of) the server's DataModel to every client — objects, property changes, and removals — without you writing network code.",
+    "whyItExists": "Clients need a world to render. Roblox ships the server's version down automatically, piece by piece.",
+    "whenToUse": [
+      "Place shared content in replicating containers (ReplicatedStorage) or workspace",
+      "Keep secrets OUT of replicated containers (ServerStorage/SSS stay server-only)",
+      "Expect arrival delays on clients — WaitForChild bridges them",
+      "Remember streaming may unload far-away content on clients (StreamingEnabled)"
+    ],
+    "whenNotToUse": [
+      "As a substitute for explicit messages — gameplay events go through remotes",
+      "For data that shouldn't reach clients at all"
+    ],
+    "mentalModel": "```text\nSERVER DataModel                    CLIENTS\n ReplicatedStorage ─────auto──────▶ copies arrive (async!)\n ServerStorage     ─────✗ never\n workspace changes ─────auto──────▶ property updates\n\nClient code must tolerate: 'not here yet' / 'streamed out'.\n```",
+    "tips": [
+      "WaitForChild on the client for anything replicated",
+      "StreamingEnabled: use WaitForChild around player-local content or set streaming-friendly patterns",
+      "Frequent property changes replicate — but don't use replication as a high-bandwidth channel"
+    ],
+    "commonMistakes": [
+      "Assuming replicated content exists when a LocalScript starts",
+      "Storing secrets in ReplicatedStorage/workspace — clients (and exploiters) read all of it",
+      "Client-side changes expected to reach the server — client edits stay client-local"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Timing-safe client access",
+      "code": "-- LocalScript: content may arrive AFTER we start\nlocal ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\n\nlocal modules = ReplicatedStorage:WaitForChild(\"SharedModules\", 10)\nassert(modules, \"SharedModules never replicated\")\n\nlocal config = require(modules:WaitForChild(\"GameConfig\"))\nprint(\"Config loaded:\", config.RoundLength)"
+    }
+  ],
+  "related": ["client-vs-server", "replicated-storage", "server-storage", "wait-for-child", "replication-timing", "instance-hierarchy"],
+  "added": "2026-10-04"
+}

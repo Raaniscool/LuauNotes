@@ -1,0 +1,48 @@
+{
+  "id": "event-connections",
+  "title": "Event Connections",
+  "category": "concepts",
+  "type": "concept",
+  "summary": "Events are broadcast lists: Connect registers your function, and EVERY registered handler runs whenever the event fires — unless you Disconnect. Connections are objects you own: keep them, disconnect them, don't leak them.",
+  "keywords": ["Connect", "Disconnect", "event handlers", "RBXScriptConnection", "Once", "multiple handlers"],
+  "tags": ["concepts", "events", "essential"],
+  "verification": {
+    "status": "verified",
+    "source": "Roblox Creator Documentation",
+    "sourceUrl": "https://create.roblox.com/docs/scripting/events",
+    "lastVerified": "2026-10-04",
+    "notes": ""
+  },
+  "explanation": {
+    "whatItIs": "A connection is a live wire between an event and your function. Events don't care how many wires attach — they energize all of them, in registration order.",
+    "whyItExists": "Many systems care about the same moment (a touch, a player joining); broadcasting lets each subscribe independently.",
+    "whenToUse": [
+      "Connect for persistent reactions; store the returned connection",
+      "Once for single-shot reactions (auto-disconnects)",
+      "Disconnect when the reaction should stop (object death, round end)",
+      "Wait() in a thread for sequencing on the next fire"
+    ],
+    "whenNotToUse": [
+      "Connecting repeatedly per frame/per spawn without disconnecting — duplicate handlers stack"
+    ],
+    "mentalModel": "```text\nTouched\n  ├─ wire 1 → handler A\n  ├─ wire 2 → handler B   ← fire: A runs, THEN B\n  └─ wire 3 → handler C\n\nDisconnect = pull ONE wire.\nLeak = wires you forgot you plugged in.\n```",
+    "tips": [
+      "Once covers 90% of one-shot needs — no manual cleanup",
+      "Guard re-entrancy: handlers can fire overlapping (multiple touches same frame)",
+      "Connection objects also expose .Connected to check"
+    ],
+    "commonMistakes": [
+      "Re-Connecting in a loop: N handlers doing the job N times",
+      "Never disconnecting handlers on destroyed/short-lived objects",
+      "Assuming handler order across different scripts — only registration order within a script is predictable"
+    ]
+  },
+  "examples": [
+    {
+      "title": "Connect vs Once vs Wait",
+      "code": "local prompt = workspace.Part.ProximityPrompt\n\n-- Persistent:\nlocal conn = prompt.Triggered:Connect(function(player)\n    print(player.Name, \"triggered\")\nend)\n-- later: conn:Disconnect()\n\n-- One-shot, auto-cleaning:\nworkspace.Treasure.Touched:Once(function(hit)\n    print(\"First touch only:\", hit.Name)\nend)\n\n-- Sequencing:\ntask.spawn(function()\n    prompt.Triggered:Wait()\n    print(\"Someone triggered it — continuing!\")\nend)"
+    }
+  ],
+  "related": ["event-cleanup", "touched", "humanoid-died", "yielding", "bindable-event"],
+  "added": "2026-10-04"
+}
